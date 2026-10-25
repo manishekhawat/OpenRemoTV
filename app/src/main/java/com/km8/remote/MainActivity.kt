@@ -404,11 +404,19 @@ private fun TidyScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (Stri
                         Icon(Icons.Filled.Lock, "Needed by the TV", tint = Ink.muted)
                     } else {
                         Switch(app.enabled, { on ->
-                            run {
-                                apps.setEnabled(app.pkg, on)
+                            // Optimistic: the switch moves at once and moves back only if the TV says no.
+                            fun show(state: Boolean) {
                                 val i = list.indexOfFirst { it.pkg == app.pkg }
-                                if (i >= 0) list[i] = app.copy(enabled = on)
-                                say(if (on) "${app.name}: ON!" else "${app.name}: OFF! Poof.")
+                                if (i >= 0) list[i] = list[i].copy(enabled = state)
+                            }
+                            show(on)
+                            run {
+                                try {
+                                    apps.setEnabled(app.pkg, on)
+                                } catch (e: Exception) {
+                                    show(!on)
+                                    say("Couldn't switch ${app.name}: ${e.message}")
+                                }
                             }
                         }, colors = inkSwitch())
                     }
@@ -452,7 +460,17 @@ internal fun CheckScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (St
                     Panel(Modifier.fillMaxWidth(), shadow = 3.dp) {
                         Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                             Text(app.name, Modifier.weight(1f), fontWeight = FontWeight.Bold)
-                            MangaButton("OFF") { run { apps.setEnabled(app.pkg, false); back.remove(app); say("${app.name} is off again") } }
+                            MangaButton("OFF") {
+                                back.remove(app)
+                                run {
+                                    try {
+                                        apps.setEnabled(app.pkg, false)
+                                    } catch (e: Exception) {
+                                        back.add(app)
+                                        say("Couldn't turn ${app.name} off: ${e.message}")
+                                    }
+                                }
+                            }
                         }
                     }
                 }

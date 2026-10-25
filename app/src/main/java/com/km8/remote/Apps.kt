@@ -50,15 +50,15 @@ class Apps(private val context: Context, private val tv: Tv) {
 
     suspend fun setEnabled(pkg: String, on: Boolean): String {
         require(on || !isProtected(pkg)) { "$pkg is needed by the TV" }
-        val result = tv.shell(if (on) "pm enable $pkg" else "pm disable-user --user 0 $pkg").trim()
+        tv.setAppEnabled(pkg, on)
         record(pkg, on)
-        return result
+        return "ok"
     }
 
     /** Turns back on everything this app ever turned off, newest first, and clears the log. */
     suspend fun undoAll(): Int {
         val off = changes().filter { !it.second }.map { it.first }.distinct()
-        for (pkg in off) tv.shell("pm enable $pkg")
+        for (pkg in off) tv.setAppEnabled(pkg, true)
         prefs.edit().remove("log").apply()
         tv.shell("echo \"$(date) undo all\" >> /sdcard/KM8Remote/changes.txt")
         return off.size

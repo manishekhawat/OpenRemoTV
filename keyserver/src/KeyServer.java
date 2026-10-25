@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
  *   "23"               press key 23
  *   "t:hello"          type text
  *   "f:<name>:<size>"  followed by exactly <size> bytes: saved as /sdcard/Download/KM8Remote/<name>
+ *   "e:<package>:1|0"  turn an app on, or off for this user (what "pm enable" and "pm disable-user" do)
  * Each command answers one line: "ok", "untypeable" or "error ...". It quits after 15 minutes with no phone.
  * Starting a JVM for every "input keyevent" took about six seconds on the KM8; this pays that cost once.
  */
@@ -90,6 +91,9 @@ public final class KeyServer {
                             left -= n;
                         }
                     }
+                } else if (line.startsWith("e:")) {
+                    int at = line.lastIndexOf(':');
+                    setEnabled(line.substring(2, at), line.endsWith(":1"));
                 } else {
                     int code = Integer.parseInt(line);
                     long now = SystemClock.uptimeMillis();
@@ -103,6 +107,16 @@ public final class KeyServer {
                 say(out, "error " + e);
             }
         }
+    }
+
+    /** IPackageManager.setApplicationEnabledSetting, as the shell may: ENABLED (1) or DISABLED_USER (3), user 0. */
+    private static void setEnabled(String pkg, boolean on) throws Exception {
+        Object binder = Class.forName("android.os.ServiceManager").getMethod("getService", String.class)
+                .invoke(null, "package");
+        Object pm = Class.forName("android.content.pm.IPackageManager$Stub")
+                .getMethod("asInterface", android.os.IBinder.class).invoke(null, binder);
+        pm.getClass().getMethod("setApplicationEnabledSetting", String.class, int.class, int.class, int.class,
+                String.class).invoke(pm, pkg, on ? 1 : 3, 0, 0, "com.android.shell");
     }
 
     private static String line(InputStream in) throws java.io.IOException {

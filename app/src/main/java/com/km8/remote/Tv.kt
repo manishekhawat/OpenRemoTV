@@ -184,6 +184,14 @@ class Tv(private val context: Context) {
         shell("input text " + shellQuote(text.replace(" ", "%s")))
     }
 
+    /** Turns an app on, or off for this user, through the helper (instant), else through pm (seconds). */
+    suspend fun setAppEnabled(pkg: String, on: Boolean) {
+        val answer = runCatching { ask("e:$pkg:${if (on) 1 else 0}") }.getOrNull()
+        if (answer == "ok") return
+        val out = shell(if (on) "pm enable $pkg" else "pm disable-user --user 0 $pkg")
+        check(out.contains("new state")) { out.trim().ifEmpty { "the TV refused" } }
+    }
+
     /** Copies a file into the TV's Download/KM8Remote folder under {@code name}. */
     suspend fun upload(file: File, name: String) {
         val answer = ask("f:$name:${file.length()}", file)
