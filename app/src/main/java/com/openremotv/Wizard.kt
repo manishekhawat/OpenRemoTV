@@ -251,7 +251,7 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                             if (ok) { homeName = "MangaHome"; if (homeOnly) { homeOnly = false; step = null; say("MangaHome is on your TV!") } else step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
-                    HomeChoice("INDIAMINIMALIST", "Monuments of India and the world, the Panchang, festivals and glass cards.") {
+                    HomeChoice("INDIAMINIMALIST", "Monuments and landscapes of India, the Panchang, festivals and glass cards.") {
                         if (busy.isNotEmpty()) return@HomeChoice
                         busy = "Putting IndiaMinimalist on your TV…"
                         run {

@@ -8,7 +8,7 @@ each under its own licence.
 | The TV home screen, OpenRemoTV Home, is a fork of the cleanyourtv launcher | `homescreen/` | Gathin ([cleanyourtv](https://github.com/Gathin23/cleanyourtv)) | MIT, see [homescreen/LICENSE-cleanyourtv](homescreen/LICENSE-cleanyourtv) |
 | Tested debloat lists for 260 TVs, built from cleanyourtv's `examples/` | `app/src/main/assets/lists.json` | Gathin and cleanyourtv contributors | MIT |
 | Outfit font | `homescreen/app/src/main/res/font/` | The Outfit Project Authors | SIL Open Font License 1.1, see [homescreen/FONT-LICENSE-OFL.txt](homescreen/FONT-LICENSE-OFL.txt) |
-| 20 IndiaMinimalist wallpapers | `app/src/main/assets/themes/india/wallpapers/` | Wikimedia Commons photographers, named per photo | CC BY-SA 3.0/4.0, CC BY 4.0 and Free Art License, see [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md) |
+| 10 IndiaMinimalist wallpapers | `app/src/main/assets/themes/india/wallpapers/` | Wikimedia Commons photographers, named per photo | CC BY-SA 3.0/4.0 and CC BY 4.0, see [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md) |
 | dadb (ADB client) | dependency | mobile.dev | Apache 2.0 |
 | AndroidX, Jetpack Compose, Material components | dependency | Google / The Android Open Source Project | Apache 2.0 |
 | Kotlin standard library and coroutines | dependency | JetBrains | Apache 2.0 |
