@@ -64,11 +64,17 @@ class Apps(private val context: Context, private val tv: Tv) {
         return off.size
     }
 
-    /** What should stay off: the TV's first cleanup (2026-10-24) and everything switched off here since. */
+    /**
+     * What should stay off: what was off at the newest backup taken on this phone (Sweep backs up before every
+     * sweep), and everything switched off here since.
+     */
     fun meantToBeOff(): Set<String> {
+        val newest = java.io.File(context.filesDir, "backups").listFiles { f -> f.name.endsWith(".json") }
+            ?.maxByOrNull { it.lastModified() }
         val first = try {
-            context.assets.open("cleanup-2026-10-24.txt").bufferedReader().readLines()
-                .map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }
+            newest?.let { f ->
+                org.json.JSONObject(f.readText()).optJSONArray("disabled")?.let { a -> (0 until a.length()).map { a.getString(it) } }
+            }.orEmpty()
         } catch (e: Exception) {
             emptyList()
         }

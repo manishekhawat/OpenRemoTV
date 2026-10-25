@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Theme keys added for the KM8 home screen, read straight from the theme's config.json so the long
+ * Theme keys added for OpenRemoTV Home, read straight from the theme's config.json so the long
  * {@link Config} constructor stays as it is. Every key is optional and off unless the theme sets it.
  */
 final class Extras {

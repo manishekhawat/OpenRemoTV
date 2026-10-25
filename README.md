@@ -17,7 +17,7 @@ and **Undo anytime** (back to the original backup). Rebuild the lists with `pyth
   Download/OpenRemoTV folder. Share from YouTube, Photos or Files to "OpenRemoTV" to send in one tap.
 - **Sweep:** turn apps off and on (disabled, never uninstalled); apps the TV needs are locked. "Undo everything"
   turns back on all that this phone turned off. Each change is logged on the TV in /sdcard/OpenRemoTV/changes.txt.
-- **Check:** finds apps a TV update switched back on (from the 2026-10-24 cleanup and this app's own changes).
+- **Check:** finds apps a TV update switched back on (compared with the last backup on this phone and this app's own changes).
 
 ## What's in this repo
 
@@ -45,8 +45,23 @@ The APK is `app/build/outputs/apk/release/app-release.apk`. Copy it to the phone
 
 ## First connection
 
-Phone and TV on the same Wi-Fi. Open the app, press "Find my TV" (or type the address, 192.168.1.50), then
+Phone and TV on the same Wi-Fi. Open the app, press "Find my TV" (or type its address, for example 192.168.1.50), then
 "Connect". The TV shows "Allow USB debugging?": tick "Always allow" and press OK. That is needed only once.
 
-`LiveTvTest` checks the library against the real TV from a Mac: `KM8_HOST=192.168.1.50 ./gradlew testReleaseUnitTest`
+`LiveTvTest` checks the library against a real TV from a computer: `OPENREMOTV_TV_HOST=192.168.1.50 ./gradlew testReleaseUnitTest`
 (macOS must allow Java on the local network).
+
+## Security
+
+OpenRemoTV talks to the TV through ADB over Wi-Fi (port 5555), which the TV owner turns on and approves once per
+phone. Turn network debugging off again when you're done with the Sweep. For instant keys the app starts a small
+helper on the TV (port 8766). It answers only the phone that started it, and it signs in with a challenge, so its
+secret never crosses the network.
+
+## Licence
+
+OpenRemoTV is released under the [MIT licence](LICENSE). The home screen is a fork of
+[cleanyourtv](https://github.com/Gathin23/cleanyourtv) by Gathin (MIT). The IndiaMinimalist wallpapers are
+Wikimedia Commons photos under their own Creative Commons licences, credited in
+[CREDITS.md](app/src/main/assets/themes/india/CREDITS.md). See [NOTICE.md](NOTICE.md) for everything else.
+

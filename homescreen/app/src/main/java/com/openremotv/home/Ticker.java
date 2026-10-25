@@ -154,7 +154,7 @@ final class Ticker {
         HttpURLConnection connection = (HttpURLConnection) new URL(address).openConnection();
         connection.setConnectTimeout(8000);
         connection.setReadTimeout(8000);
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 8.0) KM8Home");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 8.0) OpenRemoTVHome");
         try (InputStream in = connection.getInputStream()) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];

@@ -28,7 +28,7 @@ class Tv(private val context: Context) {
     private val prefs = context.getSharedPreferences("tv", Context.MODE_PRIVATE)
 
     var host: String
-        get() = prefs.getString("host", "192.168.1.50") ?: "192.168.1.50"
+        get() = prefs.getString("host", "") ?: ""
         set(value) = prefs.edit().putString("host", value.trim()).apply()
 
     private fun keyPair(): AdbKeyPair {
@@ -76,8 +76,9 @@ class Tv(private val context: Context) {
 
     /**
      * The helper on the TV (assets/keyserver.dex, source in keyserver/): started once in the background by the adb
-     * shell, then reached over its own TCP port (8766) with a token only this phone knows. Keys land in a few
-     * milliseconds, where "input keyevent" started a JVM per key (six seconds on the KM8), and files stream
+     * shell, then reached over its own TCP port (8766). It answers only this phone's address, and only after a
+     * challenge signed with a secret that never crosses the network. Keys land in a few milliseconds, where
+     * "input keyevent" started a JVM per key (six seconds on slow TVs), and files stream
      * straight into Download/OpenRemoTV, where ADB's own push left empty files. Nothing stays open inside adb:
      * long-lived adb shell streams left adbd threads spinning.
      */
@@ -86,7 +87,7 @@ class Tv(private val context: Context) {
     private val agentLock = Mutex()
 
     /** This phone's secret, plus the helper's size: a helper from another app version won't answer to it. */
-    private val token: String
+    private val secret: String
         get() = (prefs.getString("token", null) ?: java.util.UUID.randomUUID().toString().replace("-", "")
             .also { prefs.edit().putString("token", it).apply() }) + "-" + helperSize
 
@@ -97,14 +98,21 @@ class Tv(private val context: Context) {
             val s = java.net.Socket()
             s.connect(InetSocketAddress(host, AGENT_PORT), 1500)
             s.tcpNoDelay = true
-            s.soTimeout = 15_000
+            // An old helper never sends a challenge: give up quickly and start a fresh one.
+            s.soTimeout = 3_000
             val reader = s.getInputStream().bufferedReader()
-            s.getOutputStream().write("$token\n".toByteArray())
+            val nonce = reader.readLine()?.removePrefix("nonce ")
+            if (nonce == null) {
+                s.close()
+                return false
+            }
+            s.getOutputStream().write((sign(nonce) + "\n").toByteArray())
             s.getOutputStream().flush()
             if (reader.readLine() != "ready") {
                 s.close()
                 return false
             }
+            s.soTimeout = 15_000
             agent = s
             agentIn = reader
             true
@@ -120,15 +128,16 @@ class Tv(private val context: Context) {
         val dex = context.assets.open("keyserver.dex").use { it.readBytes() }
         val b64 = android.util.Base64.encodeToString(dex, android.util.Base64.NO_WRAP)
         // A helper left from an older version (another token) would hold the port.
-        shell("pkill -f KeyServer; rm -f /data/local/tmp/km8keys.b64")
-        b64.chunked(2000).forEach { shell("echo -n $it >> /data/local/tmp/km8keys.b64") }
-        val size = shell(
-            "base64 -d /data/local/tmp/km8keys.b64 > /data/local/tmp/km8keys.dex && rm /data/local/tmp/km8keys.b64 && " +
-                    "stat -c %s /data/local/tmp/km8keys.dex"
-        ).trim()
+        shell("pkill -f KeyServer; rm -f $HELPER.b64 /data/local/tmp/km8keys.*")
+        b64.chunked(2000).forEach { shell("echo -n $it >> $HELPER.b64") }
+        val size = shell("base64 -d $HELPER.b64 > $HELPER.dex && rm $HELPER.b64 && stat -c %s $HELPER.dex").trim()
         check(size == dex.size.toString()) { "the helper didn't copy to the TV ($size)" }
+        // The helper answers this phone's address only; a new address (DHCP) means a fresh start here.
+        val phone = ownAddress(context) ?: error("the phone has no Wi-Fi address")
+        // The secret goes into a file only the shell user can read; the helper reads it, then deletes it.
+        shell("umask 077; echo -n ${shellQuote(secret)} > $HELPER.key")
         shell(
-            "setsid sh -c 'CLASSPATH=/data/local/tmp/km8keys.dex exec app_process / KeyServer $AGENT_PORT $token' " +
+            "setsid sh -c 'CLASSPATH=$HELPER.dex exec app_process / KeyServer $AGENT_PORT $HELPER.key $phone' " +
                     "</dev/null >/dev/null 2>&1 &"
         )
         // The TV needs a few seconds to start it.
@@ -201,8 +210,23 @@ class Tv(private val context: Context) {
         check(answer == "ok") { answer }
     }
 
+    /** The answer to the helper's challenge: HMAC-SHA256 of its nonce with this phone's secret, in hex. */
+    private fun sign(nonce: String): String {
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(secret.toByteArray(), "HmacSHA256"))
+        return mac.doFinal(nonce.toByteArray()).joinToString("") { "%02x".format(it) }
+    }
+
     companion object {
         const val AGENT_PORT = 8766
+        private const val HELPER = "/data/local/tmp/openremotv-helper"
+
+        /** This phone's IPv4 address on its current network, or null. */
+        fun ownAddress(context: Context): String? {
+            val cm = context.getSystemService(ConnectivityManager::class.java)
+            return cm?.getLinkProperties(cm.activeNetwork)?.linkAddresses
+                ?.map { it.address }?.firstOrNull { it is Inet4Address }?.hostAddress
+        }
 
         fun shellQuote(s: String) = "'" + s.replace("'", "'\\''") + "'"
 
@@ -211,9 +235,7 @@ class Tv(private val context: Context) {
          * timeout, which takes a second or two.
          */
         suspend fun scan(context: Context): List<String> = coroutineScope {
-            val cm = context.getSystemService(ConnectivityManager::class.java)
-            val own = cm?.getLinkProperties(cm.activeNetwork)?.linkAddresses
-                ?.map { it.address }?.firstOrNull { it is Inet4Address }?.hostAddress ?: return@coroutineScope emptyList()
+            val own = ownAddress(context) ?: return@coroutineScope emptyList()
             val prefix = own.substringBeforeLast('.')
             (1..254).map { i ->
                 async(Dispatchers.IO) {

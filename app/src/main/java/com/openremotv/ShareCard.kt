@@ -19,7 +19,7 @@ import kotlin.math.sin
 object ShareCard {
 
     fun share(context: Context, tvName: String, swept: Int, home: String) {
-        val file = File(File(context.cacheDir, "share").apply { mkdirs() }, "km8-sweep.png")
+        val file = File(File(context.cacheDir, "share").apply { mkdirs() }, "openremotv-sweep.png")
         file.outputStream().use { draw(tvName, swept, home).compress(Bitmap.CompressFormat.PNG, 100, it) }
         val uri = FileProvider.getUriForFile(context, context.packageName + ".files", file)
         val send = Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri)

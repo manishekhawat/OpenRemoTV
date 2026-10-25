@@ -297,7 +297,7 @@ public class PhoneDropActivity extends Activity {
 
     /**
      * The TV's IPv4 address on the network it is actually using, or null. The active network's own address, not
-     * the first interface found: the KM8 keeps a stale address on its unplugged Ethernet port.
+     * the first interface found: some TVs keep a stale address on its unplugged Ethernet port.
      */
     private String address() {
         try {

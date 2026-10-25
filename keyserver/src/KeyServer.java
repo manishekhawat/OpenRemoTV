@@ -17,24 +17,30 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * The phone app's helper on the TV, started once in the background by the adb shell (app_process) and then talked
- * to over its own TCP port, not through adb: long-lived adb shell streams left adbd threads spinning on the KM8.
- * Usage: CLASSPATH=km8keys.dex app_process / KeyServer <port> <token>
+ * to over its own TCP port, not through adb: long-lived adb shell streams left adbd threads spinning on some TVs.
+ * Usage: CLASSPATH=openremotv-helper.dex app_process / KeyServer <port> <secret file> <phone address>
  *
- * The first line from the phone must be the token. Then, one command per line:
+ * Only the phone that started it gets in: connections from any other address are closed at once. The secret is read
+ * from a file only the shell user can read (then deleted), never passed on the command line, and never sent over
+ * the network: the helper sends "nonce <hex>", the phone answers with HMAC-SHA256(secret, nonce) in hex, and only
+ * then hears "ready". Then, one command per line:
  *   "23"               press key 23
  *   "t:hello"          type text
  *   "f:<name>:<size>"  followed by exactly <size> bytes: saved as /sdcard/Download/OpenRemoTV/<name>,
  *                      or /data/local/tmp/<name> for "tmp/<name>"
  *   "e:<package>:1|0"  turn an app on, or off for this user (what "pm enable" and "pm disable-user" do)
  * Each command answers one line: "ok", "untypeable" or "error ...". It quits after 15 minutes with no phone.
- * Starting a JVM for every "input keyevent" took about six seconds on the KM8; this pays that cost once.
+ * Starting a JVM for every "input keyevent" took about six seconds on slow TVs; this pays that cost once.
  */
 public final class KeyServer {
     private static final int IDLE_MS = 15 * 60_000;
 
     public static void main(String[] args) throws Exception {
         int port = Integer.parseInt(args[0]);
-        String token = args[1];
+        File secretFile = new File(args[1]);
+        byte[] secret = java.nio.file.Files.readAllBytes(secretFile.toPath());
+        secretFile.delete();
+        String phoneAddress = args[2];
         Class<?> im = Class.forName("android.hardware.input.InputManager");
         Object manager = im.getMethod("getInstance").invoke(null);
         Method inject = im.getMethod("injectInputEvent", InputEvent.class, int.class);
@@ -49,9 +55,11 @@ public final class KeyServer {
                     return;
                 }
                 try (Socket s = phone) {
+                    // Anyone else on the Wi-Fi: closed before a single byte.
+                    if (!s.getInetAddress().getHostAddress().equals(phoneAddress)) continue;
                     s.setTcpNoDelay(true);
                     s.setSoTimeout(IDLE_MS);
-                    serve(s, token, manager, inject, keys);
+                    serve(s, secret, manager, inject, keys);
                 } catch (Exception ignored) {
                     // the phone went away; wait for the next one
                 }
@@ -59,11 +67,17 @@ public final class KeyServer {
         }
     }
 
-    private static void serve(Socket s, String token, Object manager, Method inject, KeyCharacterMap keys)
+    private static void serve(Socket s, byte[] secret, Object manager, Method inject, KeyCharacterMap keys)
             throws Exception {
         InputStream in = new BufferedInputStream(s.getInputStream());
         OutputStream out = s.getOutputStream();
-        if (!token.equals(line(in))) return;
+        byte[] nonce = new byte[32];
+        new java.security.SecureRandom().nextBytes(nonce);
+        String challenge = hex(nonce);
+        say(out, "nonce " + challenge);
+        String answer = line(in);
+        byte[] expected = hex(hmac(secret, challenge)).getBytes(StandardCharsets.US_ASCII);
+        if (answer == null || !java.security.MessageDigest.isEqual(expected, answer.trim().getBytes(StandardCharsets.US_ASCII))) return;
         say(out, "ready");
         for (String line; (line = line(in)) != null; ) {
             line = line.trim();
@@ -120,6 +134,18 @@ public final class KeyServer {
                 .getMethod("asInterface", android.os.IBinder.class).invoke(null, binder);
         pm.getClass().getMethod("setApplicationEnabledSetting", String.class, int.class, int.class, int.class,
                 String.class).invoke(pm, pkg, on ? 1 : 3, 0, 0, "com.android.shell");
+    }
+
+    static byte[] hmac(byte[] secret, String message) throws Exception {
+        javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+        mac.init(new javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"));
+        return mac.doFinal(message.getBytes(StandardCharsets.US_ASCII));
+    }
+
+    static String hex(byte[] bytes) {
+        StringBuilder b = new StringBuilder(bytes.length * 2);
+        for (byte x : bytes) b.append(String.format("%02x", x));
+        return b.toString();
     }
 
     private static String line(InputStream in) throws java.io.IOException {
