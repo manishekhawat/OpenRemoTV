@@ -2,6 +2,11 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.5 (2026-10-25)
+
+- Picking a theme no longer fails with "INSTALL_FAILED_VERSION_DOWNGRADE" when the TV has a newer test build of the
+  home screen: the app replaces it, then copies the theme back in.
+
 ## 0.1.4 (2026-10-25)
 
 - The weather, Panchang, sun times and night sky follow where the TV is, not a fixed Delhi: set it from the phone's
