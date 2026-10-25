@@ -54,12 +54,7 @@ class Tv(private val context: Context) {
     val connected: Boolean get() = dadb != null
 
     fun disconnect() {
-        try {
-            keys?.close()
-        } catch (e: Exception) {
-            // already closed
-        }
-        keys = null
+        dropAgent()
         dadb?.close()
         dadb = null
     }
@@ -77,101 +72,127 @@ class Tv(private val context: Context) {
         }
     }
 
-    /**
-     * Copies a file to the TV through a shell's input ("head -c" reads exactly its size) instead of ADB's sync
-     * protocol: on the KM8 a sync push left empty files behind and kept the TV's adbd busy.
-     */
-    suspend fun push(file: File, remotePath: String) = withContext(Dispatchers.IO) {
-        lock.withLock {
-            val d = dadb ?: open()
-            val size = file.length()
-            val stream = d.open("shell:head -c $size > ${shellQuote(remotePath)} && echo copied")
-            try {
-                file.inputStream().use { input ->
-                    val buffer = ByteArray(64 * 1024)
-                    while (true) {
-                        val n = input.read(buffer)
-                        if (n < 0) break
-                        stream.sink.write(buffer, 0, n)
-                    }
-                }
-                stream.sink.flush()
-                val answer = stream.source.readUtf8()
-                check(answer.contains("copied")) { "the TV kept only part of the file" }
-            } finally {
-                try {
-                    stream.close()
-                } catch (e: Exception) {
-                    // already closed by the TV
-                }
-            }
-        }
-    }
-
     private fun open(): Dadb = Dadb.create(host, 5555, keyPair(), 15_000, 30_000).also { dadb = it }
 
     /**
-     * The key server on the TV (assets/keyserver.dex, see keyserver/): one JVM started once per connection that
-     * injects each key the moment it arrives. "input keyevent" starts a new JVM per key, about six seconds on the
-     * KM8, so a few presses queued up for half a minute.
+     * The helper on the TV (assets/keyserver.dex, source in keyserver/): started once in the background by the adb
+     * shell, then reached over its own TCP port (8766) with a token only this phone knows. Keys land in a few
+     * milliseconds, where "input keyevent" started a JVM per key (six seconds on the KM8), and files stream
+     * straight into Download/KM8Remote, where ADB's own push left empty files. Nothing stays open inside adb:
+     * long-lived adb shell streams left adbd threads spinning.
      */
-    private var keys: dadb.AdbStream? = null
-    private val keysLock = Mutex()
+    private var agent: java.net.Socket? = null
+    private var agentIn: java.io.BufferedReader? = null
+    private val agentLock = Mutex()
 
-    private suspend fun keyStream(): dadb.AdbStream = keysLock.withLock {
-        keys ?: withContext(Dispatchers.IO) {
-            // Written through the shell rather than pushed: a push racing the other commands left an empty file.
-            val dex = context.assets.open("keyserver.dex").use { it.readBytes() }
-            val b64 = android.util.Base64.encodeToString(dex, android.util.Base64.NO_WRAP)
-            // In pieces small enough for any ADB connection's packet size.
-            shell("rm -f /data/local/tmp/km8keys.b64")
-            b64.chunked(2000).forEach { shell("echo -n $it >> /data/local/tmp/km8keys.b64") }
-            val size = shell(
-                "base64 -d /data/local/tmp/km8keys.b64 > /data/local/tmp/km8keys.dex && rm /data/local/tmp/km8keys.b64 && " +
-                        "stat -c %s /data/local/tmp/km8keys.dex"
-            ).trim()
-            check(size == dex.size.toString()) { "key helper not copied ($size)" }
-            val d = lock.withLock { dadb ?: open() }
-            val stream = d.open("shell:CLASSPATH=/data/local/tmp/km8keys.dex exec app_process / KeyServer")
-            // Read its answers as they come so its output never backs up; the stream closing means it ended.
-            Thread {
-                try {
-                    while (!stream.source.exhausted()) stream.source.readUtf8Line()
-                } catch (e: Exception) {
-                    // closed
-                }
-                if (keys === stream) keys = null
-            }.apply { isDaemon = true }.start()
-            keys = stream
-            stream
-        }
-    }
+    private val token: String
+        get() = prefs.getString("token", null) ?: java.util.UUID.randomUUID().toString().replace("-", "")
+            .also { prefs.edit().putString("token", it).apply() }
 
-    private suspend fun sendToKeyServer(line: String): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val s = keyStream()
-            s.sink.writeUtf8(line + "\n")
-            s.sink.flush()
+    private fun dial(): Boolean {
+        return try {
+            val s = java.net.Socket()
+            s.connect(InetSocketAddress(host, AGENT_PORT), 1500)
+            s.tcpNoDelay = true
+            s.soTimeout = 15_000
+            val reader = s.getInputStream().bufferedReader()
+            s.getOutputStream().write("$token\n".toByteArray())
+            s.getOutputStream().flush()
+            if (reader.readLine() != "ready") {
+                s.close()
+                return false
+            }
+            agent = s
+            agentIn = reader
             true
         } catch (e: Exception) {
-            keys = null
             false
         }
     }
 
+    /** Connects to the helper, starting it on the TV first when it isn't running. */
+    private suspend fun ensureAgent() {
+        if (agent != null) return
+        if (withContext(Dispatchers.IO) { dial() }) return
+        val dex = context.assets.open("keyserver.dex").use { it.readBytes() }
+        val b64 = android.util.Base64.encodeToString(dex, android.util.Base64.NO_WRAP)
+        // A helper left from an older version (another token) would hold the port.
+        shell("pkill -f KeyServer; rm -f /data/local/tmp/km8keys.b64")
+        b64.chunked(2000).forEach { shell("echo -n $it >> /data/local/tmp/km8keys.b64") }
+        val size = shell(
+            "base64 -d /data/local/tmp/km8keys.b64 > /data/local/tmp/km8keys.dex && rm /data/local/tmp/km8keys.b64 && " +
+                    "stat -c %s /data/local/tmp/km8keys.dex"
+        ).trim()
+        check(size == dex.size.toString()) { "the helper didn't copy to the TV ($size)" }
+        shell(
+            "setsid sh -c 'CLASSPATH=/data/local/tmp/km8keys.dex exec app_process / KeyServer $AGENT_PORT $token' " +
+                    "</dev/null >/dev/null 2>&1 &"
+        )
+        // The TV needs a few seconds to start it.
+        withContext(Dispatchers.IO) {
+            val until = System.currentTimeMillis() + 30_000
+            while (!dial()) {
+                check(System.currentTimeMillis() < until) { "the helper didn't start on the TV" }
+                Thread.sleep(500)
+            }
+        }
+    }
+
+    private fun dropAgent() {
+        try {
+            agent?.close()
+        } catch (e: Exception) {
+            // already closed
+        }
+        agent = null
+        agentIn = null
+    }
+
+    /** Sends one command line (and optional bytes) to the helper and returns its answer; one retry on a fresh link. */
+    private suspend fun ask(line: String, bytes: File? = null): String = agentLock.withLock {
+        for (attempt in 0..1) {
+            try {
+                ensureAgent()
+                return@withLock withContext(Dispatchers.IO) {
+                    val out = agent!!.getOutputStream()
+                    out.write((line + "\n").toByteArray())
+                    bytes?.inputStream()?.use { it.copyTo(out, 64 * 1024) }
+                    out.flush()
+                    agentIn!!.readLine() ?: throw java.io.EOFException("the helper closed")
+                }
+            } catch (e: Exception) {
+                dropAgent()
+                if (attempt == 1) throw e
+            }
+        }
+        error("unreachable")
+    }
+
     suspend fun key(code: Int) {
-        if (!sendToKeyServer(code.toString())) shell("input keyevent $code")
+        try {
+            ask(code.toString())
+        } catch (e: Exception) {
+            shell("input keyevent $code")
+        }
     }
 
     /** Types into whatever text box has focus on the TV. */
     suspend fun type(text: String) {
         if (text.isEmpty()) return
         val plain = text.all { it.code in 32..126 }
-        if (plain && sendToKeyServer("t:$text")) return
+        if (plain && runCatching { ask("t:$text") }.getOrNull() == "ok") return
         shell("input text " + shellQuote(text.replace(" ", "%s")))
     }
 
+    /** Copies a file into the TV's Download/KM8Remote folder under {@code name}. */
+    suspend fun upload(file: File, name: String) {
+        val answer = ask("f:$name:${file.length()}", file)
+        check(answer == "ok") { answer }
+    }
+
     companion object {
+        const val AGENT_PORT = 8766
+
         fun shellQuote(s: String) = "'" + s.replace("'", "'\\''") + "'"
 
         /**

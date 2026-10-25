@@ -28,9 +28,8 @@ class Send(private val context: Context, private val tv: Tv) {
         val local = File(context.cacheDir, name)
         context.contentResolver.openInputStream(uri)!!.use { input -> local.outputStream().use { input.copyTo(it) } }
         val remote = "/sdcard/Download/KM8Remote/$name"
-        tv.shell("mkdir -p /sdcard/Download/KM8Remote")
         try {
-            tv.push(local, remote)
+            tv.upload(local, name)
         } finally {
             local.delete()
         }
