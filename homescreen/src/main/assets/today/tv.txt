@@ -1,4 +1,4 @@
-# Live TV: name | language and what it shows | stream address. Nine free HD channels: Hindi news, movies and sport, then English, from
+# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, films and sport, then English news and films, from
 # the iptv-org India list (live-tv/refresh.sh), each from the broadcaster's own or its partner's server, and each
 # played when checked on 2026-10-26. Free streams come and go: recheck with live-tv/check.py.
 DD National HD | Hindi · Doordarshan, India's public channel | https://mumbai-edge.smartplaytv.in/DDNational/index.m3u8
@@ -10,3 +10,4 @@ DD India | English · Doordarshan's world channel | https://mumbai-edge.smartpla
 India Today | English · News | https://d1rc86nwwc9fag.cloudfront.net/vglive-sk-293160/master.m3u8
 CNN-News18 | English · News | https://n18syndication.akamaized.net/bpk-tv/CNN_News18_NW18_MOB/output01/master.m3u8
 CNBC-TV18 | English · Business news | https://n18syndication.akamaized.net/bpk-tv/CNBC_TV18_NW18_MOB/output01/index.m3u8
+MovieSphere | English · Hollywood films from Lionsgate | https://moviesphereuk-samsunguk.amagi.tv/playlist.m3u8
