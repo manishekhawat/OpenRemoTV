@@ -54,6 +54,12 @@ class Tv(private val context: Context) {
     val connected: Boolean get() = dadb != null
 
     fun disconnect() {
+        try {
+            keys?.close()
+        } catch (e: Exception) {
+            // already closed
+        }
+        keys = null
         dadb?.close()
         dadb = null
     }
@@ -85,13 +91,56 @@ class Tv(private val context: Context) {
 
     private fun open(): Dadb = Dadb.create(host, 5555, keyPair(), 15_000, 30_000).also { dadb = it }
 
+    /**
+     * The key server on the TV (assets/keyserver.dex, see keyserver/): one JVM started once per connection that
+     * injects each key the moment it arrives. "input keyevent" starts a new JVM per key, about six seconds on the
+     * KM8, so a few presses queued up for half a minute.
+     */
+    private var keys: dadb.AdbStream? = null
+    private val keysLock = Mutex()
+
+    private suspend fun keyStream(): dadb.AdbStream = keysLock.withLock {
+        keys ?: withContext(Dispatchers.IO) {
+            val d = lock.withLock { dadb ?: open() }
+            val dex = File(context.cacheDir, "keyserver.dex")
+            context.assets.open("keyserver.dex").use { input -> dex.outputStream().use { input.copyTo(it) } }
+            d.push(dex, "/data/local/tmp/km8keys.dex", 420, System.currentTimeMillis())
+            val stream = d.open("shell:CLASSPATH=/data/local/tmp/km8keys.dex exec app_process / KeyServer")
+            // Read its answers as they come so its output never backs up; the stream closing means it ended.
+            Thread {
+                try {
+                    while (!stream.source.exhausted()) stream.source.readUtf8Line()
+                } catch (e: Exception) {
+                    // closed
+                }
+                if (keys === stream) keys = null
+            }.apply { isDaemon = true }.start()
+            keys = stream
+            stream
+        }
+    }
+
+    private suspend fun sendToKeyServer(line: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val s = keyStream()
+            s.sink.writeUtf8(line + "\n")
+            s.sink.flush()
+            true
+        } catch (e: Exception) {
+            keys = null
+            false
+        }
+    }
+
     suspend fun key(code: Int) {
-        shell("input keyevent $code")
+        if (!sendToKeyServer(code.toString())) shell("input keyevent $code")
     }
 
     /** Types into whatever text box has focus on the TV. */
     suspend fun type(text: String) {
         if (text.isEmpty()) return
+        val plain = text.all { it.code in 32..126 }
+        if (plain && sendToKeyServer("t:$text")) return
         shell("input text " + shellQuote(text.replace(" ", "%s")))
     }
 
