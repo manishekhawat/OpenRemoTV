@@ -1,11 +1,11 @@
-# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, films, sport and music, then English sport, news and films, from
+# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, films and music, then English sport, news and films, from
 # the iptv-org India list (live-tv/refresh.sh), each from the broadcaster's own or its partner's server, and each
 # played when checked on 2026-10-26. Free streams come and go: recheck with live-tv/check.py.
 DD National HD | Hindi · Doordarshan, India's public channel | https://mumbai-edge.smartplaytv.in/DDNational/index.m3u8
 Aaj Tak HD | Hindi · News | https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8
 The Movie Club | Hindi · Movies | https://sis-global.prod.samsungtv.plus/v1/tvpprd/sc-mp2ar4ca425xo.m3u8
-Zee South Flix | Hindi · South Indian films in Hindi | https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c9-amgplt0173/playlist.m3u8
-DD Sports | Hindi · Sport from Doordarshan | https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/b17adfe543354fdd8d189b110617cddd/index.m3u8
+9X Jalwa | Hindi · Bollywood hits | https://wiselp.wiseplayout.com/9X_Jalwa/master.m3u8
+South Station | Hindi · South Indian films in Hindi | https://cc-yw7ztecy8do3q.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-yw7ztecy8do3q/SS_IN.m3u8
 B4U Music | Hindi · Bollywood songs | https://amg01408-amg01408c5-amgplt0747.playout.now3.amagi.tv/b4um001/playlist.m3u8
 Cricket Gold | English · Classic cricket matches | https://streams2.sofast.tv/ptnr-yupptv/title-cricketgold/v1/master/611d79b11b77e2f571934fd80ca1413453772ac7/b2048bb8-1686-4432-aa50-647245383e0c/manifest.m3u8
 India Today | English · News | https://d1rc86nwwc9fag.cloudfront.net/vglive-sk-293160/master.m3u8
