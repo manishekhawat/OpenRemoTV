@@ -1,3 +1,62 @@
 plugins {
-    id 'com.android.application' version '8.5.2' apply false
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.openremotv.home'
+    compileSdk 35
+
+    defaultConfig {
+        // Opt-in identity for firmware with a package-name HOME allowlist; see docs/devices/xiaomi-mitv-aetp0-dofus.md.
+        applicationId providers.gradleProperty('launcherApplicationId').getOrElse('com.openremotv.home')
+        minSdk 26
+        targetSdk 35
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
+
+    signingConfigs {
+        // OPENREMOTV_KEYSTORE and its passwords (see CONTRIBUTING.md); builds without them use the debug key.
+        release {
+            def store = System.getenv('OPENREMOTV_KEYSTORE')
+            if (store) {
+                storeFile file(store)
+                storePassword System.getenv('OPENREMOTV_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('OPENREMOTV_KEY_ALIAS')
+                keyPassword System.getenv('OPENREMOTV_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // R8 strips and optimises the code (AndroidX included): smaller APK, faster start on a slow TV CPU.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig System.getenv('OPENREMOTV_KEYSTORE') ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    packagingOptions {
+        resources {
+            // Kotlin metadata pulled in by AndroidX's dependencies. This launcher is plain Java and never reads it;
+            // leaving it out saves about 14 KB of every install.
+            excludes += ['kotlin/**', 'META-INF/*.version', 'META-INF/*.kotlin_module', 'DebugProbesKt.bin']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+    // The QR code on the Phone to TV page (PhoneDropActivity).
+    implementation 'com.google.zxing:core:3.5.3'
+    // Test only (never in the APK): plain JVM tests for the module card validators, src/test.
+    testImplementation 'junit:junit:4.13.2'
 }

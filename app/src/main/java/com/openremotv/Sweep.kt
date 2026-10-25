@@ -90,7 +90,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
     }
 
     /**
-     * Installs the bundled home screen (assets/manga-home.apk, cleanyourtv's launcher), puts one of the bundled
+     * Installs the bundled home screen (assets/openremotv-home.apk, cleanyourtv's launcher), puts one of the bundled
      * themes on it (assets/themes/<name>: "manga" for MangaHome, "india" for IndiaMinimalist) and makes it Home.
      */
     suspend fun installHome(theme: String, progress: (String) -> Unit): Boolean {
@@ -139,16 +139,16 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
                 "case \"\$o\" in *'Unsupported operation'*) false ;; esac; } || cp $tmp $THEME_DIR/$path 2>/dev/null; rm -f $tmp")
     }
 
-    /** Installs the bundled Manga Home (assets/manga-home.apk) and makes it Home. */
+    /** Installs the bundled Manga Home (assets/openremotv-home.apk) and makes it Home. */
     suspend fun installMangaHome(): Boolean {
-        val apk = File(context.cacheDir, "manga-home.apk")
-        context.assets.open("manga-home.apk").use { input -> apk.outputStream().use { input.copyTo(it) } }
+        val apk = File(context.cacheDir, "openremotv-home.apk")
+        context.assets.open("openremotv-home.apk").use { input -> apk.outputStream().use { input.copyTo(it) } }
         try {
-            tv.upload(apk, "tmp/manga-home.apk")
+            tv.upload(apk, "tmp/openremotv-home.apk")
         } finally {
             apk.delete()
         }
-        val out = tv.shell("pm install -r -g /data/local/tmp/manga-home.apk; rm -f /data/local/tmp/manga-home.apk")
+        val out = tv.shell("pm install -r -g /data/local/tmp/openremotv-home.apk; rm -f /data/local/tmp/openremotv-home.apk")
         check(out.contains("Success")) { out.trim() }
         return setHome("com.openremotv.home")
     }

@@ -12,5 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "tv-remote"
-include(":app")
+rootProject.name = "OpenRemoTV"
+// The phone app, and the TV home screen it installs (bundled into the app's assets at build time).
+include(":app", ":homescreen")

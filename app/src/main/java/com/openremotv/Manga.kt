@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -269,7 +270,8 @@ fun Mascot(modifier: Modifier = Modifier, happy: Boolean = true) {
 fun MangaPage(content: @Composable ColumnScope.() -> Unit) {
     Box(Modifier.fillMaxSize().background(Ink.paper)) {
         Screentone(Modifier.fillMaxSize())
-        Column(Modifier.fillMaxSize(), content = content)
+        // Android 15 draws apps edge to edge: keep the page clear of the status bar (the bottom bar pads itself).
+        Column(Modifier.fillMaxSize().statusBarsPadding(), content = content)
     }
 }
 

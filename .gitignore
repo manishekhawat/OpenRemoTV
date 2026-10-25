@@ -1,10 +1,7 @@
 # Builds
 .gradle/
+.kotlin/
 build/
-*/build/
-app/build/
-homescreen/app/build/
-keyserver/out/
 *.apk
 *.aab
 # Machine-specific
@@ -15,5 +12,6 @@ local.properties
 # Keys and secrets
 *.jks
 *.keystore
+keystore.properties
 adbkey
 adbkey.pub
