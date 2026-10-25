@@ -2,6 +2,11 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.3 (2026-10-25)
+
+### TV home screen
+- Screensaver sounds are all real, licence-free recordings now: rain (CC0), a brass temple bell, a ghanta (CC0), and a new bansuri flute (public domain).
+
 ## 0.1.2 (2026-10-25)
 
 ### TV home screen

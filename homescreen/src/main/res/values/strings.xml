@@ -172,7 +172,8 @@
     <string name="sound_rain">Rain</string>
     <string name="sound_bells">Temple bells</string>
     <string name="sound_both">Rain and temple bells</string>
-    <string name="sound_card_body">OK: off, rain, temple bells or both.\nPlays softly while the screensaver shows.</string>
+    <string name="sound_flute">Bansuri flute</string>
+    <string name="sound_card_body">OK: off, rain, temple bells, both, or flute.\nPlays softly while the screensaver shows.</string>
     <string name="radio_card_off">OK: All India Radio, FM Gold,\nbhajans and more.</string>
     <string name="radio_card_on">Keeps playing on Home.\nOK: change station or stop.</string>
     <string name="darshan_card_title">Temples, live</string>

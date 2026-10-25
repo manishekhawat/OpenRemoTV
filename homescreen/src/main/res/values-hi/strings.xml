@@ -162,7 +162,8 @@
     <string name="sound_rain">बारिश</string>
     <string name="sound_bells">मंदिर की घंटियाँ</string>
     <string name="sound_both">बारिश और मंदिर की घंटियाँ</string>
-    <string name="sound_card_body">OK: बंद, बारिश, घंटियाँ या दोनों।\nस्क्रीनसेवर के साथ धीमे बजती है।</string>
+    <string name="sound_flute">बाँसुरी</string>
+    <string name="sound_card_body">OK: बंद, बारिश, घंटियाँ, दोनों या बाँसुरी।\nस्क्रीनसेवर के साथ धीमे बजती है।</string>
     <string name="radio_card_off">OK: आकाशवाणी, FM Gold,\nभजन और बहुत कुछ।</string>
     <string name="radio_card_on">होम पर चलता रहता है।\nOK: स्टेशन बदलें या बंद करें।</string>
     <string name="darshan_card_title">मंदिर, लाइव</string>
