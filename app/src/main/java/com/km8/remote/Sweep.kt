@@ -115,7 +115,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         tv.shell("mkdir -p $THEME_DIR/wallpapers; rm -f $THEME_DIR/wallpapers/*.jpg $THEME_DIR/wallpapers/*.png " +
                 "$THEME_DIR/wallpapers/captions.txt $THEME_DIR/wallpapers/facts.txt; content delete --uri $THEME_URI/wallpapers 2>/dev/null")
         files.forEachIndexed { i, path ->
-            progress("Theme ${i + 1} / ${files.size}")
+            progress("Copying the theme to your TV… ${i + 1} of ${files.size} files")
             val local = File(context.cacheDir, "theme-" + path.replace('/', '-'))
             context.assets.open("$base/$path").use { input -> local.outputStream().use { input.copyTo(it) } }
             try {
