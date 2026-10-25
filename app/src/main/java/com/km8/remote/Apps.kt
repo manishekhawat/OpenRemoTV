@@ -60,7 +60,7 @@ class Apps(private val context: Context, private val tv: Tv) {
         val off = changes().filter { !it.second }.map { it.first }.distinct()
         for (pkg in off) tv.setAppEnabled(pkg, true)
         prefs.edit().remove("log").apply()
-        tv.shell("echo \"$(date) undo all\" >> /sdcard/RemoteSweepTV/changes.txt")
+        tv.shell("echo \"$(date) undo all\" >> /sdcard/RemoTV/changes.txt")
         return off.size
     }
 
@@ -87,7 +87,7 @@ class Apps(private val context: Context, private val tv: Tv) {
         val arr = JSONArray(prefs.getString("log", "[]"))
         arr.put(JSONArray().put(pkg).put(on))
         prefs.edit().putString("log", arr.toString()).apply()
-        tv.shell("mkdir -p /sdcard/RemoteSweepTV; echo \"$(date) ${if (on) "on " else "off"} $pkg\" >> /sdcard/RemoteSweepTV/changes.txt")
+        tv.shell("mkdir -p /sdcard/RemoTV; echo \"$(date) ${if (on) "on " else "off"} $pkg\" >> /sdcard/RemoTV/changes.txt")
     }
 
     companion object {

@@ -23,7 +23,7 @@ object ShareCard {
         file.outputStream().use { draw(tvName, swept, home).compress(Bitmap.CompressFormat.PNG, 100, it) }
         val uri = FileProvider.getUriForFile(context, context.packageName + ".files", file)
         val send = Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri)
-            .putExtra(Intent.EXTRA_TEXT, "I swept $swept apps off my TV with RemoteSweepTV!")
+            .putExtra(Intent.EXTRA_TEXT, "I swept $swept apps off my TV with RemoTV!")
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(Intent.createChooser(send, "Share your sweep").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
@@ -87,13 +87,13 @@ object ShareCard {
         text(if (swept == 1) "APP SWEPT AWAY" else "APPS SWEPT AWAY", 540f, 760f, 62f, ink, center = true)
         panel(RectF(70f, 930f, 1010f, 1180f), paper)
         text(tvName.take(30), 110f, 1020f, 50f, ink)
-        text("Home: $home".take(34), 110f, 1100f, 46f, 0xFF6B665C.toInt())
+        text("Home: $home".take(34), 110f, 1100f, 46f, ink)
         // sound effect
         c.save()
         c.rotate(-12f, 860f, 330f)
         text("SHAAA!", 860f, 350f, 96f, red, center = true)
         c.restore()
-        text("RemoteSweepTV · disabled, never deleted · undo any time", 540f, 1290f, 34f, ink, center = true)
+        text("RemoTV · disabled, never deleted · undo any time", 540f, 1290f, 34f, ink, center = true)
         return bmp
     }
 }

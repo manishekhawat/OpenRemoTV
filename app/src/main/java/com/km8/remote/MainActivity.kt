@@ -38,7 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * RemoteSweepTV: a phone app for Android TV, Google TV and Fire TV over Wi-Fi, TidyTV-style with a manga look. First
+ * RemoTV: a phone app for Android TV, Google TV and Fire TV over Wi-Fi, TidyTV-style with a manga look. First
  * Pick my TV and Connect; then five tabs: Remote (arrows, OK, back, home, volume, power, typing), Apps (open anything
  * on the TV), Send (YouTube links, photos, videos, files), Sweep (backup, the tested list for this TV, clean home
  * screen, done, share it, undo anytime; or single apps by hand) and Check (apps a TV update turned back on). Sharing a link or a file to this app from
@@ -147,7 +147,7 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
                 Tab.SWEEP -> if (manual) {
                     Column {
                         Text("← BACK TO SWEEP", style = Shout, modifier = Modifier.clickable { manual = false }.padding(16.dp))
-                        TidyScreen(apps, ::run, ::say)
+                        SweepByHandScreen(apps, ::run, ::say)
                     }
                 } else {
                     Column {
@@ -168,7 +168,7 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
     }
 }
 
-/** RemoteSweepTV's name and the TV in use, in one slim ink strip. */
+/** RemoTV's name and the TV in use, in one slim ink strip. */
 @Composable
 internal fun TvBar(connected: Boolean, model: String, host: String, onChange: () -> Unit) {
     Row(
@@ -179,9 +179,9 @@ internal fun TvBar(connected: Boolean, model: String, host: String, onChange: ()
             Mascot(Modifier.size(28.dp))
         }
         Spacer(Modifier.width(8.dp))
-        Text("REMOTESWEEPTV", style = Shout, fontSize = 15.sp, color = Ink.paper)
+        Text("REMOTV", style = Shout, fontSize = 15.sp, color = Ink.paper)
         if (connected) {
-            Text("  ·  $model · $host", fontSize = 12.sp, color = Ink.tone, maxLines = 1, modifier = Modifier.weight(1f))
+            Text("  ·  $model · $host", fontSize = 12.sp, color = Ink.paper, maxLines = 1, modifier = Modifier.weight(1f))
             Text("Change TV", color = Ink.paper, fontWeight = FontWeight.Bold, fontSize = 13.sp,
                 modifier = Modifier.clickable { onChange() }.padding(horizontal = 6.dp, vertical = 4.dp))
         } else {
@@ -375,7 +375,7 @@ internal fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (Str
         if (uri != null) run { say("Sending… ZOOM!"); say("Sent ${send.file(uri)} to the TV!") }
     }
     Column(Modifier.fillMaxSize().verticalScrollable().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Heading("Send to the TV", "Tip: in YouTube, Photos or Files, tap Share and pick RemoteSweepTV.")
+        Heading("Send to the TV", "Tip: in YouTube, Photos or Files, tap Share and pick RemoTV.")
         Panel(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(link, { link = it }, label = { Text("YouTube link") }, modifier = Modifier.fillMaxWidth())
@@ -387,12 +387,12 @@ internal fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (Str
         MangaButton("📷  SHOW A PHOTO", Modifier.fillMaxWidth()) { pick.launch("image/*") }
         MangaButton("🎬  PLAY A VIDEO", Modifier.fillMaxWidth()) { pick.launch("video/*") }
         MangaButton("📦  SEND ANY FILE", Modifier.fillMaxWidth()) { pick.launch("*/*") }
-        Text("Files land in the TV's Download/RemoteSweepTV folder.", color = Ink.muted, fontSize = 13.sp)
+        Text("Files land in the TV's Download/RemoTV folder.", color = Ink.muted, fontSize = 13.sp)
     }
 }
 
 @Composable
-private fun TidyScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
+private fun SweepByHandScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
     val list = remember { mutableStateListOf<TvApp>() }
     var showSystem by remember { mutableStateOf(true) }
     var confirmUndo by remember { mutableStateOf(false) }
@@ -411,7 +411,7 @@ private fun TidyScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (Stri
     LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
             Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Heading("Tidy up", "Off means disabled, never uninstalled. Apps the TV needs are locked.")
+                Heading("Sweep by hand", "Off means swept away (disabled, never uninstalled). Apps the TV needs are locked.")
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Show built-in apps", Modifier.weight(1f), fontWeight = FontWeight.Bold)
                     Switch(showSystem, { showSystem = it }, colors = inkSwitch())

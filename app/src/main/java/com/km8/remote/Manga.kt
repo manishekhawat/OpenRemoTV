@@ -59,7 +59,8 @@ object Ink {
     val ink = Color(0xFF141414)
     val tone = Color(0xFFD9D4C7)
     val red = Color(0xFFE0262B)
-    val muted = Color(0xFF6B665C)
+    /** Secondary text: black too (it was grey), for reading at arm's length. */
+    val muted = Color(0xFF141414)
 }
 
 val MangaColors = lightColorScheme(

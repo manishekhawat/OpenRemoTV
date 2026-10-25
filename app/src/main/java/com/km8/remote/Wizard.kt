@@ -65,7 +65,7 @@ internal fun PickScreen(onPicked: (TvKind) -> Unit) {
                 Column(Modifier.padding(14.dp)) {
                     Text(kind.title.uppercase(), style = Shout, fontSize = 20.sp,
                         color = if (open == kind) Ink.paper else Ink.ink)
-                    Text(kind.blurb, fontSize = 13.sp, color = if (open == kind) Ink.tone else Ink.muted)
+                    Text(kind.blurb, fontSize = 13.sp, color = if (open == kind) Ink.paper else Ink.ink)
                 }
             }
         }
@@ -179,7 +179,7 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                         Panel(Modifier.fillMaxWidth(), fill = Ink.ink, onClick = { choose(Lists.common(context)) }) {
                             Column(Modifier.padding(12.dp)) {
                                 Text("COMMON LIST", style = Shout, color = Ink.paper)
-                                Text("Apps most tested TVs turn off. Good for a TV nobody has tested.", color = Ink.tone, fontSize = 12.sp)
+                                Text("Apps most tested TVs turn off. Good for a TV nobody has tested.", color = Ink.paper, fontSize = 12.sp)
                             }
                         }
                     }
@@ -201,7 +201,7 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
             Step.SWEEP -> Page("3 · SWEEP", "Switched on = goes away. Apps families often keep start switched off; flip any you like.") {
                 Text(listName, color = Ink.muted, fontSize = 12.sp)
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (items.isEmpty()) item { SpeechBubble("Nothing from this list is on your TV. It's already tidy!") }
+                    if (items.isEmpty()) item { SpeechBubble("Nothing from this list is on your TV. It's already swept clean!") }
                     items(items, key = { it.pkg }) { item ->
                         Panel(Modifier.fillMaxWidth(), shadow = 3.dp) {
                             Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {

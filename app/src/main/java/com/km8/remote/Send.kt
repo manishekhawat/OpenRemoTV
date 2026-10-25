@@ -19,7 +19,7 @@ class Send(private val context: Context, private val tv: Tv) {
     }
 
     /**
-     * Copies a picked or shared file into the TV's Download/RemoteSweepTV folder and opens it there with whatever app
+     * Copies a picked or shared file into the TV's Download/RemoTV folder and opens it there with whatever app
      * the TV has for its type. Returns the name it got on the TV.
      */
     suspend fun file(uri: Uri): String {
@@ -27,7 +27,7 @@ class Send(private val context: Context, private val tv: Tv) {
         val type = context.contentResolver.getType(uri) ?: "*/*"
         val local = File(context.cacheDir, name)
         context.contentResolver.openInputStream(uri)!!.use { input -> local.outputStream().use { input.copyTo(it) } }
-        val remote = "/sdcard/Download/RemoteSweepTV/$name"
+        val remote = "/sdcard/Download/RemoTV/$name"
         try {
             tv.upload(local, name)
         } finally {
