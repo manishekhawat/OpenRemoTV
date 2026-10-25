@@ -118,9 +118,9 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 InkKey(Icons.AutoMirrored.Filled.VolumeDown, stringResource(R.string.key_volume_down), k, repeat = true) { key(25) }
                 InkKey(Icons.AutoMirrored.Filled.VolumeOff, stringResource(R.string.key_mute), k) { key(164, "SHIIN…") }
+                InkKey(Icons.AutoMirrored.Filled.VolumeUp, stringResource(R.string.key_volume_up), k, repeat = true) { key(24) }
                 // Ask the TV's Google Assistant or Gemini, speaking into the phone.
                 InkKey(Icons.Filled.AutoAwesome, stringResource(R.string.key_assistant), k, tint = Ink.red) { speak(true) }
-                InkKey(Icons.AutoMirrored.Filled.VolumeUp, stringResource(R.string.key_volume_up), k, repeat = true) { key(24) }
             }
             // Typing: one compact row (put the TV's cursor in a search box first).
             Row(verticalAlignment = Alignment.CenterVertically) {

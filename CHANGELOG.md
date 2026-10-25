@@ -2,6 +2,10 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.7 (2026-10-26)
+
+- The remote's assistant key sits after volume up.
+
 ## 0.1.6 (2026-10-26)
 
 ### Phone app
