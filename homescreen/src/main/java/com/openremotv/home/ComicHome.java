@@ -122,7 +122,7 @@ final class ComicHome extends FrameLayout {
         w.addView(weatherWord);
         weatherMore = plain(13, INK);
         weatherMore.setSingleLine(false);
-        weatherMore.setMaxLines(3);
+        weatherMore.setMaxLines(4);
         w.addView(weatherMore);
         weatherSfx = lettering(26, RED);
         weatherSfx.setRotation(-12f);
@@ -169,12 +169,12 @@ final class ComicHome extends FrameLayout {
         addView(buttons, bp);
         String[][] list = {
                 {"wifi", getContext().getString(R.string.btn_wifi)}, {"voice", getContext().getString(R.string.btn_voice)},
-                {"radio", getContext().getString(R.string.radio)}, {"games", getContext().getString(R.string.games)},
+                {"radio", getContext().getString(R.string.radio)}, {"tv", getContext().getString(R.string.tv)}, {"games", getContext().getString(R.string.games)},
                 {"today", getContext().getString(R.string.today)}, {"darshan", getContext().getString(R.string.darshan)},
                 {"recipe", getContext().getString(R.string.recipe)}, {"phone", getContext().getString(R.string.btn_phone)},
                 {"memory", getContext().getString(R.string.btn_memory)}, {"sleep", getContext().getString(R.string.sleep_title)},
                 {"settings", getContext().getString(R.string.btn_settings)}};
-        int[] icons = {R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_dice, R.drawable.ic_today,
+        int[] icons = {R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_tv, R.drawable.ic_dice, R.drawable.ic_today,
                 R.drawable.ic_temple, R.drawable.ic_recipe, R.drawable.ic_phone, R.drawable.ic_memory, R.drawable.ic_moon,
                 R.drawable.ic_settings};
         for (int i = 0; i < list.length; i++) {
@@ -419,6 +419,7 @@ final class ComicHome extends FrameLayout {
                 weatherWord.setText(Weather.condition(code).toUpperCase(java.util.Locale.getDefault()));
                 weatherSfx.setText(sfx(code, now.optDouble("temperature_2m")));
                 StringBuilder more = new StringBuilder();
+                if (!extras.weatherCity.isEmpty()) more.append(extras.weatherCity).append("\n");
                 more.append(ctx.getString(R.string.feels, Math.round(now.optDouble("apparent_temperature"))));
                 if (w.has("aqi")) more.append(" · ").append(ctx.getString(R.string.aqi_line, w.optLong("aqi"), Widgets.aqiWord(w.optLong("aqi"))));
                 JSONObject daily = w.optJSONObject("daily");

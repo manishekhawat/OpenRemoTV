@@ -118,6 +118,9 @@
     <string name="radio">Radio</string>
     <string name="radio_stop">Stop the radio</string>
     <string name="radio_playing">Playing</string>
+    <string name="tv">Live TV</string>
+    <string name="tv_tuning">tuning…</string>
+    <string name="tv_not_answering">%1$s is not answering right now</string>
     <string name="darshan">Live darshan</string>
     <string name="recipe">Recipe of the day</string>
     <string name="recipe_today">Today: %1$s</string>

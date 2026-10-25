@@ -57,6 +57,8 @@
         <activity android:name=".TodayActivity" android:exported="false" android:theme="@style/Home" />
         <activity android:name=".PhoneDropActivity" android:exported="false" android:theme="@style/Home" />
         <activity android:name=".GameActivity" android:exported="false" android:theme="@style/Home" />
+        <activity android:name=".LiveTvActivity" android:exported="false" android:theme="@style/Home"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout" />
 
         <!-- The phone app writes the theme through this where the shell can't reach Android/data.
              WRITE_SECURE_SETTINGS: the shell holds it, apps can't. -->

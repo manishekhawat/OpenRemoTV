@@ -75,6 +75,7 @@ public final class HomeActivity extends Activity implements IndiaHome.Host, Comi
             root.addView(comic);
         } else {
             india = new IndiaHome(this, theme, this);
+            india.cards.place = theme.weatherCity;
             root.addView(india);
         }
         if (theme.placeFromTv) GeoIp.refresh(this, this::recreate);
@@ -223,6 +224,7 @@ public final class HomeActivity extends Activity implements IndiaHome.Host, Comi
             case "wifi": openSettings(Settings.ACTION_WIFI_SETTINGS); break;
             case "voice": openVoice(); break;
             case "radio": popups.showRadio(anchor); break;
+            case "tv": popups.showTv(anchor); break;
             case "games": popups.showGames(anchor); break;
             case "memory": popups.freeMemory(anchor); break;
             case "darshan": popups.showDarshan(anchor); break;

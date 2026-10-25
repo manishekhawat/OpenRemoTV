@@ -1,0 +1,13 @@
+# Live TV: name | language and what it shows | stream address. Ten free HD channels (five Hindi, five English) from
+# the iptv-org India list (live-tv/refresh.sh), each from the broadcaster's own or its partner's server, and each
+# played when checked on 2026-10-26. Free streams come and go: recheck with live-tv/check.py.
+DD National HD | Hindi · Doordarshan, India's public channel | https://mumbai-edge.smartplaytv.in/DDNational/index.m3u8
+DD News HD | Hindi · News from Doordarshan | https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index.m3u8
+Aaj Tak HD | Hindi · News | https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8
+India TV | Hindi · News | https://pl-indiatvnews.akamaized.net/out/v1/db79179b608641ceaa5a4d0dd0dca8da/index.m3u8
+News18 India | Hindi · News | https://n18syndication.akamaized.net/bpk-tv/News18_India_NW18_MOB/output01/master.m3u8
+DD India | English · Doordarshan's world channel | https://mumbai-edge.smartplaytv.in/DDIndia/index.m3u8
+India Today | English · News | https://d1rc86nwwc9fag.cloudfront.net/vglive-sk-293160/master.m3u8
+CNN-News18 | English · News | https://n18syndication.akamaized.net/bpk-tv/CNN_News18_NW18_MOB/output01/master.m3u8
+CNBC-TV18 | English · Business news | https://n18syndication.akamaized.net/bpk-tv/CNBC_TV18_NW18_MOB/output01/index.m3u8
+News9 Live | English · News | https://amg01106-amg01106c3-amgplt0844.playout.now3.amagi.tv/ts-ap-s1-n1/playlist/amg01106-amg01106c3-amgplt0844/playlist.m3u8

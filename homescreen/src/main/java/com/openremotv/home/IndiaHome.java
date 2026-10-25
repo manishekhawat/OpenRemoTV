@@ -35,11 +35,11 @@ final class IndiaHome extends FrameLayout {
     }
 
     /** The round buttons, left to right, and their spoken names. */
-    static final String[] BUTTONS = {"wifi", "voice", "radio", "games", "memory", "darshan", "phone", "recipe", "sleep", "today", "settings"};
-    static final int[] NAMES = {R.string.btn_wifi, R.string.btn_voice, R.string.radio, R.string.games, R.string.btn_memory,
+    static final String[] BUTTONS = {"wifi", "voice", "radio", "tv", "games", "memory", "darshan", "phone", "recipe", "sleep", "today", "settings"};
+    static final int[] NAMES = {R.string.btn_wifi, R.string.btn_voice, R.string.radio, R.string.tv, R.string.games, R.string.btn_memory,
             R.string.darshan, R.string.btn_phone, R.string.recipe, R.string.sleep_title, R.string.today, R.string.btn_settings};
     static final int[] ICONS = {
-            R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_dice, R.drawable.ic_memory,
+            R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_tv, R.drawable.ic_dice, R.drawable.ic_memory,
             R.drawable.ic_temple, R.drawable.ic_phone, R.drawable.ic_recipe, R.drawable.ic_moon, R.drawable.ic_today,
             R.drawable.ic_settings,
     };

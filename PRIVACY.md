@@ -28,6 +28,7 @@ sits in between.
 | The TV's city, when the phone didn't set one | [ipwho.is](https://ipwho.is) | A request from the TV's internet address, at most once a day; the answer (city and its coordinates) stays on the TV |
 | News ticker | Google News RSS (`news.google.com`) | A request for the public headlines feed |
 | Radio | The stations' own stream servers (All India Radio and others in `today/radio.txt`) | A stream request, only when you play a station |
+| Live TV | The channels' own stream servers (listed in `today/tv.txt`) | A stream request, only while you watch a channel |
 | Live darshan and YouTube shortcuts | YouTube (`www.youtube.com`) | Opens YouTube on the TV, only when you choose it |
 
 Its permissions and why:

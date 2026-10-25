@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * The lists behind Home's round buttons: sleep timer, radio, live darshan, recipe of the day and games, plus Free
+ * The lists behind Home's round buttons: sleep timer, radio, live TV, live darshan, recipe of the day and games, plus Free
  * memory. Each opens in the middle of the screen in the page's style (glass, or paper on MangaHome).
  */
 final class ExtraPopups {
@@ -45,6 +45,18 @@ final class ExtraPopups {
         for (String[] st : Daily.read(a, "today/radio.txt", 3)) {
             boolean on = playing.startsWith(st[0]);
             p.row(R.drawable.ic_radio, st[0], on ? a.getString(R.string.radio_playing) : st[1], on, () -> Radio.play(a, st[0], st[2]));
+        }
+        p.show(anchor);
+    }
+
+    /** The live channels, Hindi first; OK plays one full screen. */
+    void showTv(View anchor) {
+        PopupList p = list(R.string.tv, 520);
+        List<String[]> channels = Daily.read(a, "today/tv.txt", 3);
+        for (int i = 0; i < channels.size(); i++) {
+            int n = i;
+            p.row(R.drawable.ic_tv, channels.get(i)[0], channels.get(i)[1], false,
+                    () -> a.open(new Intent(a, LiveTvActivity.class).putExtra(LiveTvActivity.EXTRA_CHANNEL, n)));
         }
         p.show(anchor);
     }

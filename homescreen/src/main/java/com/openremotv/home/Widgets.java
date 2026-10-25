@@ -35,6 +35,8 @@ final class Widgets {
     private final LinearLayout weatherCard;
     /** the Gita verse, taking the weather card's place every other minute. */
     private final LinearLayout weatherNowBox, verseBox;
+    /** the weather's town, shown beside the sky's word so it's clear whose weather it is. */
+    String place = "";
     private final TextView verseText, verseMeaning;
     private boolean verseShown;
     private final Runnable swapWeather = new Runnable() {
@@ -393,7 +395,8 @@ final class Widgets {
         JSONObject now = w.optJSONObject("current");
         if (now == null) return;
         weatherNow.setText(Math.round(now.optDouble("temperature_2m")) + "°");
-        weatherCondition.setText(Weather.condition(now.optInt("weather_code", -1)));
+        String sky = Weather.condition(now.optInt("weather_code", -1));
+        weatherCondition.setText(place.isEmpty() ? sky : sky + " · " + place);
         StringBuilder details = new StringBuilder();
         if (now.has("apparent_temperature")) details.append(context.getString(R.string.feels, Math.round(now.optDouble("apparent_temperature"))));
         if (now.has("relative_humidity_2m")) details.append(" · ").append(now.optInt("relative_humidity_2m")).append("%");

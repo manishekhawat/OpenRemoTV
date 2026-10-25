@@ -111,6 +111,9 @@
     <string name="radio">रेडियो</string>
     <string name="radio_stop">रेडियो बंद करें</string>
     <string name="radio_playing">चल रहा है</string>
+    <string name="tv">लाइव टीवी</string>
+    <string name="tv_tuning">लग रहा है…</string>
+    <string name="tv_not_answering">%1$s अभी नहीं चल रहा</string>
     <string name="darshan">लाइव दर्शन</string>
     <string name="recipe">आज की रेसिपी</string>
     <string name="recipe_today">आज: %1$s</string>
