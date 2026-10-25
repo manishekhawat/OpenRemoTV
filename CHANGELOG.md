@@ -2,6 +2,12 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.8 (2026-10-26)
+
+- The sparkle key makes the phone the TV's own microphone: pair once with the code the TV shows, then speak, and the
+  TV's voice search (Google Assistant or Gemini) hears you as if you held its remote. If the TV's remote service
+  doesn't answer, the phone's speech recogniser takes over as before.
+
 ## 0.1.7 (2026-10-26)
 
 - The remote's assistant key sits after volume up.

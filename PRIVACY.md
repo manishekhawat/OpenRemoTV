@@ -5,13 +5,17 @@ about you or your TV.
 
 ## The phone app
 
-- Talks only to your TV, on your own Wi-Fi: ADB (port 5555) and the app's helper on the TV (port 8766).
+- Talks only to your TV, on your own Wi-Fi: ADB (port 5555), the app's helper on the TV (port 8766), and, once you
+  pair with the code the TV shows, the TV's own remote service (ports 6466 and 6467).
 - To find your TV, it tries port 5555 on every address of your Wi-Fi network once, when you tap **Find my TV**.
 - Keeps, on your phone only: the TV's address, its ADB key, and backups of which apps were on and off.
 - **Where the TV is**, for its weather and Panchang, only if you set it: "Use my phone's location" reads the phone's
   last known position once (Android asks your permission first), and "Type a city" looks the name up with
   [Open-Meteo's geocoder](https://open-meteo.com/en/docs/geocoding-api), sending only what you typed. The place is
   kept on the phone and written into the theme on the TV.
+- **Your voice**, only while you talk to the TV: after you tap the sparkle key (Android asks for the microphone
+  first), the phone records for up to 15 seconds and streams the sound straight to your TV's voice search. Nothing is
+  saved on the phone or sent anywhere else by this app. The pairing key stays in the phone's Android keystore.
 
 ## The TV home screen (OpenRemoTV Home)
 

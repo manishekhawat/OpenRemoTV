@@ -72,6 +72,12 @@
     <string name="key_voice_type">Speak to type</string>
     <string name="voice_prompt_assistant">Ask the TV…</string>
     <string name="voice_prompt_type">Say what to type on the TV…</string>
+    <string name="voice_connecting">Waking the TV\'s voice search…</string>
+    <string name="voice_listening">Listening… speak now. Tap ✨ to finish.</string>
+    <string name="pair_title">PAIR WITH THE TV</string>
+    <string name="pair_text">Your TV now shows a six-letter code. Type it here, once: then the TV can hear your phone\'s mic.</string>
+    <string name="pair_code">Code on the TV</string>
+    <string name="pair_ok">PAIR</string>
     <string name="remote_type_hint">Type on the TV…</string>
     <string name="remote_go">GO</string>
 

@@ -70,6 +70,12 @@
     <string name="key_voice_type">बोलकर लिखें</string>
     <string name="voice_prompt_assistant">टीवी से पूछें…</string>
     <string name="voice_prompt_type">टीवी पर क्या लिखना है, बोलें…</string>
+    <string name="voice_connecting">टीवी की वॉइस सर्च खोल रहे हैं…</string>
+    <string name="voice_listening">सुन रहे हैं… अब बोलें। ख़त्म करने के लिए ✨ दबाएँ।</string>
+    <string name="pair_title">टीवी से जोड़ें</string>
+    <string name="pair_text">टीवी पर छह अक्षरों का कोड दिख रहा है। इसे एक बार यहाँ लिखें: फिर टीवी आपके फ़ोन का माइक सुन सकेगा।</string>
+    <string name="pair_code">टीवी पर दिख रहा कोड</string>
+    <string name="pair_ok">जोड़ें</string>
     <string name="remote_type_hint">टीवी पर लिखें…</string>
     <string name="remote_go">भेजें</string>
 
