@@ -1,0 +1,10 @@
+01.webp	Taj Mahal, Agra
+02.webp	Golden Temple, Amritsar
+03.webp	Victoria Memorial, Kolkata
+04.webp	Virupaksha Temple, Hampi
+05.webp	Gateway of India, Mumbai
+06.webp	Sun Temple, Konark
+07.webp	Gulmarg in winter, Kashmir
+08.webp	Dal Lake, Srinagar
+09.webp	Valley of Flowers, Uttarakhand
+10.webp	Kerala backwaters

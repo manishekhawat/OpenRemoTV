@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenRemoTV: debloat and remote your Android TV from your phone, no root</title>
+<meta name="description" content="OpenRemoTV is a free, open-source phone app that remotes, debloats and restyles Android TV, Google TV and Fire TV over Wi-Fi. No root, backup first, undo anytime.">
+<meta property="og:title" content="OpenRemoTV">
+<meta property="og:description" content="Remote, debloat and restyle Android TV from your phone. No root, undo anytime, open source.">
+<meta property="og:image" content="brand/social-preview.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="brand/social-preview.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OpenRemoTV",
+  "operatingSystem": "Android",
+  "applicationCategory": "UtilitiesApplication",
+  "softwareVersion": "0.1.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "description": "Remote, debloat and restyle Android TV, Google TV and Fire TV from your phone over Wi-Fi, without root."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I remove bloatware from Android TV without root?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Use ADB's disable-for-this-user command (pm disable-user), which turns an app off without uninstalling it. OpenRemoTV does this from your phone over Wi-Fi, one switch per app, starting from the list for TVs like yours."}},
+    {"@type": "Question", "name": "Is debloating my TV with OpenRemoTV safe?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Yes. Apps are only disabled, never uninstalled, a backup is taken first, and apps the TV needs to work are locked."}},
+    {"@type": "Question", "name": "How do I undo it?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Open Sweep and tap Undo anytime. Every app that was on in your first backup comes back, with the original home screen."}},
+    {"@type": "Question", "name": "Which TVs does OpenRemoTV work with?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Android TV and Google TV on Android 8 or newer, and Fire TV for debloating. It ships its own lists for the common TV families."}},
+    {"@type": "Question", "name": "Does OpenRemoTV collect data?",
+     "acceptedAnswer": {"@type": "Answer", "text": "No. There are no accounts, analytics or ads."}}
+  ]
+}
+</script>
+<style>
+  :root { --paper: #FBF8F1; --ink: #141414; --tone: #D9D4C7; --red: #E0262B; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #17150F; --ink: #F4F0E6; --tone: #2B2820; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+         background-image: radial-gradient(var(--tone) 1.6px, transparent 1.7px); background-size: 18px 16px; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  .panel { background: var(--paper); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); padding: 24px; margin: 28px 0; }
+  h1 { font: italic 900 clamp(40px, 9vw, 72px)/1 system-ui, sans-serif; margin: 0 0 8px; }
+  h2 { font: italic 900 28px/1.2 system-ui, sans-serif; margin: 0 0 12px; }
+  h3 { margin: 20px 0 4px; font-size: 18px; }
+  .lead { font-size: 20px; font-weight: 600; }
+  .sfx { color: var(--red); font: italic 900 22px system-ui, sans-serif; }
+  .button { display: inline-block; background: var(--ink); color: var(--paper); font: italic 900 20px system-ui, sans-serif;
+            padding: 14px 22px; text-decoration: none; box-shadow: 5px 5px 0 var(--red); margin: 8px 12px 8px 0; }
+  .shots { display: flex; gap: 12px; flex-wrap: wrap; }
+  .shots img { width: calc(33% - 8px); min-width: 160px; border: 3px solid var(--ink); }
+  .tv { width: 100%; border: 3px solid var(--ink); }
+  a { color: inherit; }
+  ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="panel">
+    <h1>OpenRemoTV</h1>
+    <p class="lead">Remote, debloat and restyle Android TV, Google TV and Fire TV from your phone. No root.</p>
+    <p class="sfx">Backup first · Undo anytime · Open source</p>
+    <a class="button" href="https://github.com/manishekhawat/OpenRemoTV/releases/latest">DOWNLOAD THE APK</a>
+    <a class="button" href="https://github.com/manishekhawat/OpenRemoTV">SOURCE CODE</a>
+  </div>
+
+  <div class="shots">
+    <img src="screenshots/phone-remote.png" alt="The remote on a phone">
+    <img src="screenshots/phone-sweep.png" alt="The Sweep steps">
+    <img src="screenshots/phone-pick.png" alt="Picking the kind of TV">
+  </div>
+
+  <div class="panel">
+    <h2>What it does</h2>
+    <ul>
+      <li><b>Remote</b>: arrows, OK, back, home, volume, power and typing, with hold-to-repeat keys.</li>
+      <li><b>Sweep</b>: turns off bloatware using lists for each TV family. Disabled, never uninstalled.</li>
+      <li><b>Undo anytime</b>: back to your very first backup in one tap.</li>
+      <li><b>Send</b>: YouTube links, photos, videos and files straight to the TV.</li>
+      <li><b>Home screens</b>: MangaHome, a whole comic page, and IndiaMinimalist, with photos of India and the Panchang.</li>
+      <li><b>English and Hindi</b>, with screen-reader support.</li>
+    </ul>
+    <img class="tv" src="screenshots/tv-mangahome.png" alt="The MangaHome home screen on a TV">
+  </div>
+
+  <div class="panel">
+    <h2>Questions</h2>
+    <h3>How do I remove bloatware from Android TV without root?</h3>
+    <p>Use ADB's "disable for this user" command, which turns an app off without uninstalling it. OpenRemoTV does it from your phone, one switch per app, starting from the list for TVs like yours.</p>
+    <h3>Is it safe?</h3>
+    <p>Apps are only disabled, never uninstalled. A backup comes first, and apps the TV needs are locked.</p>
+    <h3>How do I undo it?</h3>
+    <p>Open Sweep and tap Undo anytime.</p>
+    <h3>Which TVs work?</h3>
+    <p>Android TV and Google TV on Android 8 or newer, and Fire TV for sweeping.</p>
+    <h3>Does it collect data?</h3>
+    <p>No accounts, no analytics, no ads. <a href="https://github.com/manishekhawat/OpenRemoTV/blob/main/PRIVACY.md">Privacy</a></p>
+  </div>
+
+  <p>MIT licence.</p>
+</main>
+</body>
+</html>

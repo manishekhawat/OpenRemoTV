@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">OpenRemoTV Home</string>
+
+    <string name="good_morning">Good morning</string>
+    <string name="good_afternoon">Good afternoon</string>
+    <string name="good_evening">Good evening</string>
+    <string name="good_night">Good night</string>
+    <string name="rahu_kaal">Rahu kaal %1$s – %2$s</string>
+    <string name="sunset_at">Sunset %1$s</string>
+    <string name="sunrise_tomorrow">Sunrise tomorrow %1$s</string>
+    <string name="word_of_the_day">Hindi word of the day: %1$s</string>
+    <string name="tonight">Tonight: %1$s</string>
+    <string name="no_planets">No bright planets up tonight</string>
+    <string name="look_for">Look for %1$s after dark</string>
+    <string name="cannot_open">That app can\'t be opened</string>
+
+    <string name="all_apps">All apps</string>
+    <string name="today">Today</string>
+
+    <string name="sleep_title">Sleep timer</string>
+    <string name="sleep_off">Off</string>
+    <string name="sleep_minutes">%1$d minutes</string>
+    <string name="sleep_left">%1$d min left</string>
+    <string name="sleep_warning">The TV goes to sleep in 1 minute. Open Home and press the moon to cancel.</string>
+
+    <string name="radio">Radio</string>
+    <string name="radio_stop">Stop the radio</string>
+    <string name="radio_playing">Playing</string>
+    <string name="darshan">Live darshan</string>
+    <string name="recipe">Recipe of the day</string>
+    <string name="recipe_today">Today: %1$s</string>
+    <string name="games">Games</string>
+    <string name="game_memory">Memory</string>
+    <string name="game_memory_sub">Find the pairs</string>
+    <string name="game_tictactoe">Tic-tac-toe</string>
+    <string name="game_tictactoe_sub">Play against the TV</string>
+    <string name="memory_freed">Freed %1$d MB · %2$d MB of %3$d MB free</string>
+
+    <string name="quiz_question">Where is this?</string>
+    <string name="quiz_hint">The answer in a moment…</string>
+</resources>

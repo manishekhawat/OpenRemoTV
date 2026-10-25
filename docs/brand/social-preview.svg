@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <pattern id="tone" width="22" height="19" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="2.2" fill="#D9D4C7"/>
+      <circle cx="15" cy="13.5" r="2.2" fill="#D9D4C7"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="640" fill="#FBF8F1"/>
+  <rect width="1280" height="640" fill="url(#tone)"/>
+  <!-- panel -->
+  <rect x="62" y="62" width="1156" height="516" fill="#141414"/>
+  <rect x="50" y="50" width="1156" height="516" fill="#FBF8F1" stroke="#141414" stroke-width="8"/>
+  <!-- Remo -->
+  <g transform="translate(120,150) scale(3.2)">
+    <line x1="50" y1="20" x2="62" y2="4" stroke="#141414" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="63" cy="4" r="4" fill="#E0262B"/>
+    <path d="M14 55 L8 30 L24 36 L26 14 L40 28 L50 10 L60 28 L76 15 L77 36 L93 31 L86 55 Z" fill="#141414"/>
+    <circle cx="50" cy="58" r="34" fill="#FBF8F1" stroke="#141414" stroke-width="3.5"/>
+    <path d="M17.7 49.5 L31.3 39.3 L38.1 51.9 L48.3 36.9 L55.1 51.2 L65.3 37.6 L70.4 50.5 L82.3 47.8 L84 27.4 L16 27.4 Z" fill="#141414"/>
+    <ellipse cx="35.7" cy="62.1" rx="5.8" ry="8.8" fill="#141414"/>
+    <ellipse cx="64.3" cy="62.1" rx="5.8" ry="8.8" fill="#141414"/>
+    <circle cx="37.4" cy="58.7" r="2.7" fill="#FBF8F1"/><circle cx="66" cy="58.7" r="2.7" fill="#FBF8F1"/>
+    <ellipse cx="34" cy="74" rx="5" ry="2" fill="#E0262B" opacity="0.35"/><ellipse cx="62.6" cy="74" rx="5" ry="2" fill="#E0262B" opacity="0.35"/>
+    <path d="M44.6 75 Q50 82.5 55.4 75" fill="none" stroke="#141414" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+  <text x="470" y="250" font-family="Helvetica Neue, Arial, sans-serif" font-weight="900" font-style="italic" font-size="104" fill="#141414">OpenRemoTV</text>
+  <text x="474" y="330" font-family="Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="40" fill="#141414">Remote, debloat and restyle</text>
+  <text x="474" y="380" font-family="Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="40" fill="#141414">Android TV from your phone.</text>
+  <text x="474" y="460" font-family="Helvetica Neue, Arial, sans-serif" font-weight="900" font-style="italic" font-size="34" fill="#E0262B">No root · Undo anytime · Open source</text>
+  <text x="930" y="150" font-family="Helvetica Neue, Arial, sans-serif" font-weight="900" font-style="italic" font-size="46" fill="#E0262B" transform="rotate(-10 930 150)">SHAAA!</text>
+</svg>

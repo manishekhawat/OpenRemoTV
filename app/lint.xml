@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- /sdcard paths are on the TV, written through its shell, not on this phone. -->
+    <issue id="SdCardPath" severity="ignore" />
+    <!-- "1 / 7 files" style progress and a search hint; counts above one only. -->
+    <issue id="PluralsCandidate" severity="ignore" />
+    <!-- Remo's "hmm hmm" is on purpose. -->
+    <issue id="Typos" severity="ignore" />
+    <!-- aapt2 only reads the adaptive icon from mipmap-anydpi-v26. -->
+    <issue id="ObsoleteSdkInt" severity="ignore" />
+    <!-- Newer AndroidX needs compileSdk 36; updated with the next SDK step (see CHANGELOG). -->
+    <issue id="GradleDependency" severity="informational" />
+</lint>

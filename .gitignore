@@ -1,0 +1,17 @@
+# Builds
+.gradle/
+.kotlin/
+build/
+*.apk
+*.aab
+# Machine-specific
+local.properties
+.idea/
+*.iml
+.DS_Store
+# Keys and secrets
+*.jks
+*.keystore
+keystore.properties
+adbkey
+adbkey.pub

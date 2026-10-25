@@ -1,0 +1,85 @@
+{
+  "layout": "manga",
+  "dock_apps": [
+    "com.google.android.youtube.tv",
+    "in.startv.hotstar",
+    "com.sonyliv",
+    "com.graymatrix.did"
+  ],
+  "wallpaper_rotation_minutes": 1,
+  "wallpaper_order": "shuffle",
+  "wallpaper_dim": 0,
+  "wallpaper_months": {},
+  "captions": false,
+  "daily_card": false,
+  "news_ticker": true,
+  "screensaver": true,
+  "reduced_motion": true,
+  "weather_city": "Delhi",
+  "weather_latitude": 28.6139,
+  "weather_longitude": 77.209,
+  "festival_dates": [
+    {
+      "festival": "diwali",
+      "from": "2026-11-06",
+      "until": "2026-11-09"
+    },
+    {
+      "festival": "gurpurab",
+      "from": "2026-11-24",
+      "until": "2026-11-24",
+      "greeting": "Happy Gurpurab",
+      "accent_color": "#FFB300"
+    },
+    {
+      "festival": "christmas",
+      "from": "2026-12-24",
+      "until": "2026-12-25",
+      "greeting": "Merry Christmas",
+      "accent_color": "#E53935"
+    },
+    {
+      "festival": "newyear",
+      "from": "2026-12-31",
+      "until": "2027-01-01",
+      "greeting": "Happy New Year",
+      "accent_color": "#FFD54F"
+    },
+    {
+      "festival": "lohri",
+      "from": "2027-01-13",
+      "until": "2027-01-14",
+      "greeting": "Happy Lohri and Makar Sankranti",
+      "accent_color": "#FF7043"
+    },
+    {
+      "festival": "republicday",
+      "from": "2027-01-26",
+      "until": "2027-01-26",
+      "greeting": "Happy Republic Day",
+      "accent_color": "#FF9933"
+    },
+    {
+      "festival": "holi",
+      "from": "2027-03-21",
+      "until": "2027-03-22",
+      "greeting": "Happy Holi",
+      "accent_color": "#E040FB"
+    }
+  ],
+  "calendar_dates": [
+    {
+      "name": "Children's Day",
+      "date": "2026-11-14"
+    },
+    {
+      "name": "Independence Day",
+      "date": "2027-08-15"
+    },
+    {
+      "name": "Gandhi Jayanti",
+      "date": "2027-10-02"
+    }
+  ],
+  "family_dates": []
+}

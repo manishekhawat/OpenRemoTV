@@ -1,0 +1,64 @@
+plugins {
+    id 'com.android.application'
+    // Screenshots of both pages on a computer, no TV needed: ./gradlew :homescreen:recordPaparazziDebug
+    id 'app.cash.paparazzi'
+    // Kotlin for the screenshot tests only; the app itself is plain Java.
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.openremotv.home'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.openremotv.home'
+        minSdk 26
+        targetSdk 35
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
+
+    signingConfigs {
+        // OPENREMOTV_KEYSTORE and its passwords (see CONTRIBUTING.md); builds without them use the debug key.
+        release {
+            def store = System.getenv('OPENREMOTV_KEYSTORE')
+            if (store) {
+                storeFile file(store)
+                storePassword System.getenv('OPENREMOTV_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('OPENREMOTV_KEY_ALIAS')
+                keyPassword System.getenv('OPENREMOTV_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // R8 shrinks the code: a smaller APK and a faster start on a TV's CPU.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig System.getenv('OPENREMOTV_KEYSTORE') ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    lint {
+        lintConfig file('lint.xml')
+    }
+}
+
+dependencies {
+    // The QR code on the Phone to TV page (PhoneDropActivity).
+    implementation 'com.google.zxing:core:3.5.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
+    // The real org.json for JVM tests (Android's is a stub there).
+    testImplementation 'org.json:json:20240303'
+}

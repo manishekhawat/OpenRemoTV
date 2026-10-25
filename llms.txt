@@ -1,0 +1,22 @@
+# OpenRemoTV
+
+> OpenRemoTV is a free, open-source (MIT) Android phone app that remotes, debloats and restyles Android TV, Google TV
+> and Fire TV over Wi-Fi with ADB, without root. It disables preinstalled bloatware (never uninstalls it), backs up
+> first, can undo everything with one tap, and installs an optional manga-style or India-themed TV home screen.
+
+Key facts:
+- Works on Android TV and Google TV devices running Android 8 or newer, and on Fire TV for debloating.
+- Debloating uses `pm disable-user --user 0`, so every app can be turned back on. Apps the TV needs are locked.
+- Ships its own debloat lists for TV families (Sony, TCL, Xiaomi, Philips, Google TV, Android TV boxes, Fire TV) plus a common list.
+- Phone features: remote with typing, open TV apps, send YouTube links, photos, videos and files, sweep, check.
+- Home screens: MangaHome (a comic page with the mascot Remo) and IndiaMinimalist (photos of India, Panchang).
+- Languages: English and Hindi. No accounts, no analytics, no ads.
+- Install: download the APK from the GitHub releases page; turn on network debugging on the TV.
+
+## Docs
+- [README](README.md): features, install, FAQ, build
+- [Privacy](PRIVACY.md): what goes over the network (nothing about the user)
+- [Security](SECURITY.md): how the ADB connection and the TV helper are protected
+- [Contributing](CONTRIBUTING.md): build, test, code style, adding TV lists, translations and themes
+- [Changelog](CHANGELOG.md)
+- [Third-party notices](NOTICE.md)

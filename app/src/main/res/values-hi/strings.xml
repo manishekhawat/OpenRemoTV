@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tabs -->
+    <string name="tab_remote">रिमोट</string>
+    <string name="tab_apps">ऐप्स</string>
+    <string name="tab_send">भेजें</string>
+    <string name="tab_sweep">सफ़ाई</string>
+    <string name="tab_check">जाँच</string>
+
+    <!-- Common -->
+    <string name="cancel">रद्द करें</string>
+    <string name="close">बंद करें</string>
+    <string name="undo">वापस लें</string>
+    <string name="change_tv">टीवी बदलें</string>
+    <string name="my_tv">मेरा टीवी</string>
+    <string name="tv_no_answer">टीवी ने जवाब नहीं दिया: %1$s</string>
+    <string name="switch_failed">%1$s को बदल नहीं सके: %2$s</string>
+
+    <!-- Pick my TV -->
+    <string name="pick_hello">नमस्ते, मैं Remo हूँ! आज किस टीवी की सफ़ाई करें?</string>
+    <string name="pick_title">अपना टीवी चुनें</string>
+    <string name="pick_ready_title">टीवी तैयार करें</string>
+    <string name="pick_ready_button">तैयार है! कनेक्ट करें →</string>
+    <string name="kind_android_tv">Android TV</string>
+    <string name="kind_android_tv_blurb">ज़्यादातर स्मार्ट टीवी और बॉक्स (Sony, TCL, Mi Box, MECOOL…)</string>
+    <string name="kind_google_tv">Google TV</string>
+    <string name="kind_google_tv_blurb">Chromecast with Google TV और Google TV होम स्क्रीन वाले नए टीवी</string>
+    <string name="kind_fire_tv">Fire TV</string>
+    <string name="kind_fire_tv_blurb">Amazon Fire TV स्टिक और Fire TV वाले टीवी (सिर्फ़ सफ़ाई)</string>
+    <string name="step_atv_1">Settings › Device Preferences › About: \"Build\" पर 7 बार OK दबाएँ, जब तक डेवलपर बनने का संदेश न आए।</string>
+    <string name="step_atv_2">Settings › Device Preferences › Developer options: \"USB debugging\" चालू करें।</string>
+    <string name="step_atv_3">अगर \"Network debugging\" या \"ADB over network\" दिखे, तो उसे भी चालू करें।</string>
+    <string name="step_atv_4">टीवी का पता Settings › Network में देखें (जैसे 192.168.1.20)।</string>
+    <string name="step_gtv_1">Settings › System › About: \"Android TV OS build\" पर 7 बार OK दबाएँ।</string>
+    <string name="step_gtv_2">Settings › System › Developer options: \"USB debugging\" चालू करें।</string>
+    <string name="step_gtv_3">\"Wireless debugging\" दिखे तो उसे चालू करें।</string>
+    <string name="step_gtv_4">टीवी का पता Settings › Network &amp; Internet में देखें।</string>
+    <string name="step_fire_1">Settings › My Fire TV › About: डिवाइस के नाम पर 7 बार OK दबाएँ।</string>
+    <string name="step_fire_2">Settings › My Fire TV › Developer options: \"ADB debugging\" चालू करें।</string>
+    <string name="step_fire_3">पता Settings › My Fire TV › About › Network में देखें।</string>
+
+    <!-- Connect -->
+    <string name="connect_title">चलो कनेक्ट करें!</string>
+    <string name="connect_sub">फ़ोन और टीवी एक ही Wi-Fi पर होने चाहिए।</string>
+    <string name="connect_address">टीवी का पता</string>
+    <string name="connect_button">कनेक्ट!</string>
+    <string name="connect_find">मेरा टीवी ढूँढें</string>
+    <string name="connect_connecting">कनेक्ट हो रहा है… अगर टीवी \"Allow USB debugging?\" पूछे, तो \"Always allow\" चुनकर OK दबाएँ।</string>
+    <string name="connect_failed">%1$s तक नहीं पहुँच सके। क्या टीवी चालू है, उसी Wi-Fi पर है, और नेटवर्क डीबगिंग चालू है?</string>
+    <string name="connect_searching">आपके Wi-Fi पर ढूँढ रहे हैं…</string>
+    <string name="connect_none">कोई टीवी नहीं मिला। क्या टीवी चालू है और नेटवर्क डीबगिंग चालू है?</string>
+    <string name="connect_found">मिल गया!</string>
+    <string name="connect_back">← दूसरी तरह का टीवी चुनें</string>
+
+    <!-- Remote -->
+    <string name="key_power">पावर</string>
+    <string name="key_home">होम</string>
+    <string name="key_back">पीछे</string>
+    <string name="key_play">चलाएँ या रोकें</string>
+    <string name="key_up">ऊपर</string>
+    <string name="key_down">नीचे</string>
+    <string name="key_left">बाएँ</string>
+    <string name="key_right">दाएँ</string>
+    <string name="key_ok">OK</string>
+    <string name="key_volume_down">आवाज़ कम</string>
+    <string name="key_mute">म्यूट</string>
+    <string name="key_volume_up">आवाज़ ज़्यादा</string>
+    <string name="key_delete">मिटाएँ</string>
+    <string name="remote_type_hint">टीवी पर लिखें…</string>
+    <string name="remote_go">भेजें</string>
+
+    <!-- Apps, by hand, check -->
+    <string name="apps_title">टीवी पर खोलें</string>
+    <string name="apps_fetching">टीवी के ऐप्स ला रहे हैं…</string>
+    <string name="by_hand_link">एक-एक ऐप चालू या बंद करें →</string>
+    <string name="back_to_sweep">← सफ़ाई पर वापस</string>
+    <string name="by_hand_title">ख़ुद सफ़ाई करें</string>
+    <string name="by_hand_sub">बंद यानी हटाया गया (डिसेबल, कभी अनइंस्टॉल नहीं)। टीवी के ज़रूरी ऐप्स लॉक हैं।</string>
+    <string name="by_hand_show_system">पहले से लगे ऐप्स दिखाएँ</string>
+    <string name="by_hand_locked">टीवी के लिए ज़रूरी</string>
+    <string name="undo_all">सब वापस लें</string>
+    <string name="undo_all_title">सब वापस लें?</string>
+    <string name="undo_all_text">इस फ़ोन से बंद किए गए सभी ऐप्स फिर से चालू हो जाएँगे।</string>
+    <plurals name="undo_done">
+        <item quantity="one">%1$d ऐप फिर से चालू किया</item>
+        <item quantity="other">%1$d ऐप्स फिर से चालू किए</item>
+    </plurals>
+    <string name="check_title">मेरा टीवी जाँचें</string>
+    <string name="check_sub">टीवी अपडेट कभी-कभी हटाए गए ऐप्स फिर चालू कर देते हैं। Remo उन्हें ढूँढ लेगा।</string>
+    <string name="check_checking">जाँच रहे हैं… हम्म…</string>
+    <string name="check_clear">सब ठीक है! जो बंद किया था, वह अब भी बंद है।</string>
+    <plurals name="check_back">
+        <item quantity="one">अरे! %1$d ऐप फिर से चालू हो गया:</item>
+        <item quantity="other">अरे! %1$d ऐप्स फिर से चालू हो गए:</item>
+    </plurals>
+    <string name="check_off">बंद</string>
+    <string name="check_all_off">सबको बंद करें!</string>
+    <string name="check_all_off_done">सब फिर से बंद। काम पूरा!</string>
+    <string name="check_again">फिर से जाँचें</string>
+
+    <!-- Send -->
+    <string name="send_title">टीवी पर भेजें</string>
+    <string name="send_tip">सुझाव: YouTube, Photos या Files में Share दबाएँ और OpenRemoTV चुनें।</string>
+    <string name="send_link">YouTube लिंक</string>
+    <string name="send_play">टीवी पर चलाएँ!</string>
+    <string name="send_photo">📷  फ़ोटो दिखाएँ</string>
+    <string name="send_video">🎬  वीडियो चलाएँ</string>
+    <string name="send_file">📦  कोई भी फ़ाइल भेजें</string>
+    <string name="send_where">फ़ाइलें टीवी के Download/OpenRemoTV फ़ोल्डर में जाती हैं।</string>
+    <string name="send_sending">भेज रहे हैं… ज़ूम!</string>
+    <string name="send_sent">%1$s टीवी पर भेज दिया!</string>
+    <string name="send_playing">टीवी पर चल रहा है!</string>
+    <string name="send_not_youtube">यह YouTube लिंक नहीं है</string>
+    <string name="send_unknown">हम्म, यह YouTube लिंक, फ़ोटो या फ़ाइल नहीं है</string>
+    <string name="send_failed">भेज नहीं सके: %1$s</string>
+
+    <!-- Sweep -->
+    <string name="sweep_title">सफ़ाई</string>
+    <string name="sweep_looking">आपका टीवी देख रहे हैं…</string>
+    <string name="sweep_ready">%1$s (Android %2$s) जुड़ गया है। फ़ालतू ऐप्स की सफ़ाई करें?</string>
+    <string name="step_backup">बैकअप</string>
+    <string name="step_sweep">सफ़ाई</string>
+    <string name="step_home">होम</string>
+    <string name="step_done">पूरा</string>
+    <string name="step_share">शेयर</string>
+    <string name="sweep_start">सफ़ाई शुरू करें!</string>
+    <string name="sweep_change_theme">🎨  होम स्क्रीन थीम बदलें</string>
+    <string name="undo_anytime">↩  कभी भी वापस लें</string>
+    <string name="sweep_promise">ऐप्स सिर्फ़ बंद होते हैं, कभी मिटते नहीं। आपका पहला बैकअप हमेशा रखा जाता है।</string>
+    <string name="restore_title">सब पहले जैसा करें?</string>
+    <string name="restore_text">हर ऐप फिर चालू होगा और पुरानी होम स्क्रीन लौट आएगी, जैसा पहले बैकअप में था।</string>
+    <string name="restore">पहले जैसा करें</string>
+    <string name="restoring">पहले जैसा कर रहे हैं…</string>
+    <plurals name="restored">
+        <item quantity="one">हो गया! %1$d ऐप फिर चालू।</item>
+        <item quantity="other">हो गया! %1$d ऐप्स फिर चालू।</item>
+    </plurals>
+    <string name="backup_title">1 · बैकअप</string>
+    <string name="backup_sub">पहले Remo आपके ऐप्स, सेटिंग्स और होम स्क्रीन का बैकअप लेता है।</string>
+    <string name="backing_up">बैकअप ले रहे हैं…</string>
+    <string name="saving">सेव कर रहे हैं…</string>
+    <plurals name="backed_up">
+        <item quantity="one">%1$d ऐप का बैकअप फ़ोन और टीवी पर हो गया।</item>
+        <item quantity="other">%1$d ऐप्स का बैकअप फ़ोन और टीवी पर हो गया।</item>
+    </plurals>
+    <string name="list_title">2 · कौन-सी सूची?</string>
+    <string name="list_sub">ये सूचियाँ आपके जैसे टीवी के लिए हैं। सबसे मिलती-जुलती या आम सूची चुनें।</string>
+    <plurals name="list_apps">
+        <item quantity="one">%1$s · सूची में %2$d ऐप</item>
+        <item quantity="other">%1$s · सूची में %2$d ऐप्स</item>
+    </plurals>
+    <string name="list_common">आम सूची</string>
+    <string name="list_common_sub">हर Android TV और Google TV में आने वाले फ़ालतू ऐप्स। किसी भी टीवी के लिए।</string>
+    <string name="list_search">सभी %1$d सूचियों में खोजें</string>
+    <string name="sweep_reading">टीवी पर क्या है, पढ़ रहे हैं…</string>
+    <string name="choose_title">3 · सफ़ाई</string>
+    <string name="choose_sub">चालू = हटेगा। परिवार जिन ऐप्स को अक्सर रखते हैं, वे बंद से शुरू होते हैं; जो चाहें बदलें।</string>
+    <string name="choose_nothing">इस सूची का कोई ऐप आपके टीवी पर नहीं है। टीवी पहले से साफ़ है!</string>
+    <plurals name="choose_go">
+        <item quantity="one">%1$d ऐप हटाएँ! शाााा!</item>
+        <item quantity="other">%1$d ऐप्स हटाएँ! शाााा!</item>
+    </plurals>
+    <string name="sweeping_title">सफ़ाई हो रही है…</string>
+    <string name="sweeping_sub">एक बार में एक ऐप, हर एक पहले जाँचा और लिखा जाता है।</string>
+    <string name="sweeping_start">चलो शुरू करें!</string>
+    <string name="sweeping_progress">%1$d / %2$d: %3$s</string>
+    <string name="home_title">4 · साफ़ होम स्क्रीन</string>
+    <string name="home_sub">ज़रूरी नहीं। नई होम स्क्रीन तभी रहती है जब वह सच में Home बन जाए।</string>
+    <string name="home_theme_title">होम स्क्रीन थीम</string>
+    <string name="home_theme_sub">टीवी की होम स्क्रीन का रूप चुनें। यह तभी रहता है जब सच में Home बन जाए।</string>
+    <string name="home_manga_blurb">काली स्याही वाले मांगा पन्ने, कॉमिक-पैनल कार्ड और Remo, साफ़ टाइल होम स्क्रीन पर।</string>
+    <string name="home_india_blurb">भारत के स्मारक और नज़ारे, पंचांग, त्योहार और काँच जैसे कार्ड।</string>
+    <string name="home_keep">मेरी होम स्क्रीन रखें</string>
+    <string name="home_keep_sub">जैसी है वैसी रहने दें।</string>
+    <string name="home_unchanged">नहीं बदली</string>
+    <string name="home_putting_on">%1$s आपके टीवी पर लगा रहे हैं…</string>
+    <string name="home_installing">होम स्क्रीन इंस्टॉल कर रहे हैं…</string>
+    <string name="home_theming">थीम लगा रहे हैं…</string>
+    <string name="home_copying">%1$s टीवी पर कॉपी हो रहा है… %3$d में से %2$d फ़ाइलें</string>
+    <string name="home_is_on">%1$s आपके टीवी पर लग गया!</string>
+    <string name="home_kept_old">टीवी ने पुरानी होम स्क्रीन ही रखी; कुछ नहीं बदला।</string>
+    <string name="done_title">5 · पूरा!</string>
+    <plurals name="done_text">
+        <item quantity="one">काम पूरा! %1$d ऐप हटाया गया। होम स्क्रीन: %2$s।</item>
+        <item quantity="other">काम पूरा! %1$d ऐप्स हटाए गए। होम स्क्रीन: %2$s।</item>
+    </plurals>
+    <string name="share_it">शेयर करें!</string>
+    <string name="share_title">अपनी सफ़ाई शेयर करें</string>
+    <plurals name="share_text">
+        <item quantity="one">मैंने OpenRemoTV से अपने टीवी से %1$d ऐप हटाया!</item>
+        <item quantity="other">मैंने OpenRemoTV से अपने टीवी से %1$d ऐप्स हटाए!</item>
+    </plurals>
+    <string name="back_to_start">शुरुआत पर वापस</string>
+
+    <!-- About -->
+    <string name="about_open">OpenRemoTV के बारे में</string>
+    <string name="about_title">जानकारी</string>
+    <string name="about_version">संस्करण %1$s</string>
+    <string name="about_what">Android TV, Google TV और Fire TV के लिए ओपन-सोर्स रिमोट और सफ़ाई ऐप। न रूट, न अकाउंट, न ट्रैकिंग।</string>
+    <string name="about_source">GITHUB पर सोर्स कोड</string>
+    <string name="about_privacy">प्राइवेसी</string>
+    <string name="about_licence_title">लाइसेंस</string>
+    <string name="about_licence">OpenRemoTV, MIT लाइसेंस के तहत मुफ़्त सॉफ़्टवेयर है।</string>
+    <string name="about_credits_title">आभार</string>
+    <string name="about_credit_font">Outfit फ़ॉन्ट, Outfit Project Authors का (SIL Open Font License 1.1)।</string>
+    <string name="about_credit_libraries">mobile.dev का dadb, Google के AndroidX और Jetpack Compose, JetBrains का Kotlin, QR कोड के लिए ZXing (Apache 2.0)।</string>
+    <string name="about_photos_title">IndiaMinimalist की तस्वीरें</string>
+    <string name="about_photos_note">Wikimedia Commons से, हर एक अपने लाइसेंस के तहत, टीवी के लिए छोटी की गईं:</string>
+</resources>

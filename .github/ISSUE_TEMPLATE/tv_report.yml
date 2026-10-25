@@ -1,0 +1,22 @@
+name: My TV
+description: Report how the sweep went on your TV, or ask for a list for it
+labels: [tv-list]
+body:
+  - type: input
+    id: tv
+    attributes:
+      label: TV model, Android version and firmware
+    validations:
+      required: true
+  - type: input
+    id: list
+    attributes:
+      label: Which list did you use?
+      placeholder: "The common list / Sony BRAVIA …"
+  - type: textarea
+    id: result
+    attributes:
+      label: What happened?
+      description: Anything that broke or should have stayed on, and anything still left to sweep.
+    validations:
+      required: true

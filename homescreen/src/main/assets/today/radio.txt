@@ -1,0 +1,9 @@
+# Radio stations: name | what it plays | stream address. Only streams that played when checked on 2026-10-25;
+# All India Radio's from its own live page (akashvani.gov.in/radio/live.php). Recheck with live-tv/radiocheck.sh.
+100.1 AIR FM Gold | Old Hindi songs, news and talk, Delhi | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi03/air003_Auto.m3u8
+102.6 AIR FM Rainbow | Music in Hindi and English, Delhi | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air002_Auto.m3u8
+92.7 BIG FM | Bollywood hits | https://stream.zeno.fm/dbstwo3dvhhtv
+98.3 Radio Mirchi | Today's Hindi hits | https://eu8.fastcast4u.com/proxy/clyedupq/stream
+AIR News 24x7 | All India Radio news | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi01/air001_Auto.m3u8
+Raagam | Indian classical music | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airbang04/air036_Auto.m3u8
+Akashvani Aaradhana | Bhajans and devotional music | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi05/air005_Auto.m3u8

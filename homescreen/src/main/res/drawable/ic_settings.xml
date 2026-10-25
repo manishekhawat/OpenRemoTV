@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings: a gear with eight teeth. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M22.37,10.33 L22.37,13.67 L19.98,13.89 L18.98,16.30 L20.51,18.15 L18.15,20.51 L16.30,18.98 L13.89,19.98 L13.67,22.37 L10.33,22.37 L10.11,19.98 L7.70,18.98 L5.85,20.51 L3.49,18.15 L5.02,16.30 L4.02,13.89 L1.63,13.67 L1.63,10.33 L4.02,10.11 L5.02,7.70 L3.49,5.85 L5.85,3.49 L7.70,5.02 L10.11,4.02 L10.33,1.63 L13.67,1.63 L13.89,4.02 L16.30,5.02 L18.15,3.49 L20.51,5.85 L18.98,7.70 L19.98,10.11 Z M12,8.6a3.4,3.4 0,1 0,0.01 0Z" />
+</vector>

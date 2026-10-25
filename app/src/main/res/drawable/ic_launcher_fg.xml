@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Remo's face in ink: spiky hair, big shining eyes, red antenna tip. -->
+    <path android:fillColor="#FF141414" android:pathData="M56,26L60,18" android:strokeColor="#FF141414" android:strokeWidth="3" />
+    <path android:fillColor="#FFE0262B" android:pathData="M60,15a3,3 0 1 1 0,6a3,3 0 1 1 0,-6z" />
+    <path android:fillColor="#FF141414" android:pathData="M32,58L28,40L38,44L39,30L48,40L54,26L60,40L70,31L70,44L80,41L76,58z" />
+    <path android:fillColor="#FFFBF8F1" android:strokeColor="#FF141414" android:strokeWidth="3"
+        android:pathData="M54,42a20,20 0 1 1 0,40a20,20 0 1 1 0,-40z" />
+    <path android:fillColor="#FF141414" android:pathData="M34,56L40,47L44,54L52,45L56,53L64,46L68,54L74,52L74,44L34,44z" />
+    <path android:fillColor="#FF141414" android:pathData="M45,57a3.5,5 0 1 1 0,10a3.5,5 0 1 1 0,-10z" />
+    <path android:fillColor="#FF141414" android:pathData="M63,57a3.5,5 0 1 1 0,10a3.5,5 0 1 1 0,-10z" />
+    <path android:fillColor="#FFFBF8F1" android:pathData="M46,58a1.4,1.4 0 1 1 0,2.8a1.4,1.4 0 1 1 0,-2.8z" />
+    <path android:fillColor="#FFFBF8F1" android:pathData="M64,58a1.4,1.4 0 1 1 0,2.8a1.4,1.4 0 1 1 0,-2.8z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FF141414" android:strokeWidth="2.5"
+        android:pathData="M50,72q4,4 8,0" />
+</vector>
