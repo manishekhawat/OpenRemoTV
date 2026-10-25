@@ -85,14 +85,4 @@ public class HomeLogicTest {
         List<String> lines = Files.readAllLines(new File("src/main/assets/today/radio.txt").toPath());
         assertTrue(lines.stream().anyMatch(l -> l.split("\\|").length >= 3));
     }
-
-    /** Live TV plays the playlist's sharpest picture, not the 180p the TV's player would start on. */
-    @Test public void liveTvPicksTheSharpestStream() {
-        String master = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=200000,RESOLUTION=320x180\nlow/index.m3u8\n"
-                + "#EXT-X-STREAM-INF:BANDWIDTH=2500000,RESOLUTION=1920x1080\nhd/index.m3u8\n"
-                + "#EXT-X-STREAM-INF:BANDWIDTH=750000,RESOLUTION=640x360\nmid/index.m3u8\n";
-        assertEquals("https://tv.example/live/hd/index.m3u8",
-                LiveTvActivity.pickSharpest("https://tv.example/live/master.m3u8", master));
-        assertEquals("https://tv.example/a.m3u8", LiveTvActivity.pickSharpest("https://tv.example/a.m3u8", "#EXTM3U\n#EXTINF:6,\nseg1.ts\n"));
-    }
 }

@@ -13,6 +13,7 @@ each under its own licence.
 | dadb (ADB client) | dependency | mobile.dev | Apache 2.0 |
 | AndroidX, Jetpack Compose, Material components | dependency | Google / The Android Open Source Project | Apache 2.0 |
 | ZXing core (the Phone to TV QR code) | dependency | ZXing authors | Apache 2.0 |
+| AndroidX Media3 ExoPlayer (Live TV) | dependency | The Android Open Source Project | Apache 2.0 |
 | Kotlin standard library and coroutines | dependency | JetBrains | Apache 2.0 |
 
 The six MangaHome wallpapers (drawn by `app/src/test/java/com/openremotv/MangaWallpapers.kt`) and the mascot Remo

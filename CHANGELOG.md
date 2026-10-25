@@ -6,7 +6,7 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
 
 ### TV home screen
 - Live TV: a new TV button beside the radio lists nine free HD channels (Hindi news, movies and sport, and English news), and plays each at its
-  sharpest picture (Aaj Tak HD in 1080p, not the 180p the TV's player starts on), full screen. Up and down change
+  sharpest picture, full screen, with its own player (the TV's built-in one crashes on some channels). Up and down change
   channel; Back returns Home.
 - The weather says whose weather it is: the town now shows on both MangaHome and IndiaMinimalist.
 - Memory and Tic-tac-toe are drawn as a comic page on MangaHome.

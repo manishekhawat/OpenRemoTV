@@ -3,26 +3,29 @@ package com.openremotv.home;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
+
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.ExoPlayer;
 
 import java.util.List;
 
 /**
  * A live channel, full screen, from the TV list on Home (assets/today/tv.txt). Up and down (or channel up and down)
- * change channel; Back returns Home. The streams are HLS, which the TV's own MediaPlayer plays. Its player starts
- * on a playlist's first picture size and is slow to move up, and many channels list 180p first, so the sharpest
- * size is picked from the playlist here and played directly.
+ * change channel; Back returns Home. The streams are HLS, played by ExoPlayer rather than the TV's own MediaPlayer:
+ * the KM8's MediaPlayer crashes on some channels (its TS parser) and starts every channel on its lowest picture.
+ * ExoPlayer is told to play the sharpest picture the TV can decode.
  */
 public class LiveTvActivity extends Activity {
 
@@ -30,7 +33,7 @@ public class LiveTvActivity extends Activity {
 
     private List<String[]> channels;
     private int current;
-    private VideoView video;
+    private ExoPlayer player;
     private TextView caption;
     private float density;
 
@@ -42,11 +45,15 @@ public class LiveTvActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         density = getResources().getDisplayMetrics().density;
         channels = Daily.read(this, "today/tv.txt", 3);
+        if (channels.isEmpty()) {
+            finish();
+            return;
+        }
         current = Math.max(0, Math.min(channels.size() - 1, getIntent().getIntExtra(EXTRA_CHANNEL, 0)));
 
         FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(Color.BLACK);
-        video = new VideoView(this);
+        SurfaceView video = new SurfaceView(this);
         root.addView(video, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
         caption = new TextView(this);
@@ -64,78 +71,43 @@ public class LiveTvActivity extends Activity {
         root.addView(caption, cp);
         setContentView(root);
 
-        video.setOnPreparedListener(mp -> hideCaptionSoon());
-        video.setOnInfoListener((mp, what, extra) -> {
-            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) showCaption(getString(R.string.tv_tuning));
-            else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) hideCaptionSoon();
-            return false;
+        player = new ExoPlayer.Builder(this).build();
+        player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon()
+                .setForceHighestSupportedBitrate(true).build());
+        player.setVideoSurfaceView(video);
+        player.addListener(new Player.Listener() {
+            @Override public void onPlaybackStateChanged(int s) {
+                if (s == Player.STATE_BUFFERING) showCaption(name() + "  ·  " + getString(R.string.tv_tuning));
+                else if (s == Player.STATE_READY) hideCaptionSoon();
+            }
+
+            @Override public void onPlayerError(PlaybackException e) {
+                if (e.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                    player.seekToDefaultPosition();   // fell behind the live edge: jump back to live
+                    player.prepare();
+                    return;
+                }
+                Toast.makeText(LiveTvActivity.this, getString(R.string.tv_not_answering, channels.get(current)[0]),
+                        Toast.LENGTH_LONG).show();
+            }
         });
-        video.setOnErrorListener((mp, what, extra) -> {
-            Toast.makeText(this, getString(R.string.tv_not_answering, channels.get(current)[0]), Toast.LENGTH_LONG).show();
-            return true;
-        });
-        if (channels.isEmpty()) finish();
-        else tune();
+        tune();
+    }
+
+    private String name() {
+        return (current + 1) + "  " + channels.get(current)[0];
     }
 
     private void tune() {
-        String[] ch = channels.get(current);
-        showCaption((current + 1) + "  " + ch[0] + "  ·  " + getString(R.string.tv_tuning));
-        video.stopPlayback();
-        int tuning = ++tunes;
-        new Thread(() -> {
-            String url = sharpest(ch[2]);
-            runOnUiThread(() -> {
-                if (tuning != tunes || isFinishing()) return;   // changed channel meanwhile
-                video.setVideoURI(Uri.parse(url));
-                video.start();
-            });
-        }, "live-tv-tune").start();
-    }
-
-    private int tunes;
-
-    /** The highest-bandwidth stream in an HLS master playlist, or the address itself when it isn't one. */
-    static String sharpest(String master) {
-        try {
-            java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(master).openConnection();
-            c.setConnectTimeout(6000);
-            c.setReadTimeout(6000);
-            String body;
-            try (java.io.InputStream in = c.getInputStream()) {
-                java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-                byte[] b = new byte[8192];
-                int n;
-                while ((n = in.read(b)) > 0 && out.size() < 256 * 1024) out.write(b, 0, n);
-                body = out.toString("UTF-8");
-            } finally {
-                c.disconnect();
-            }
-            return pickSharpest(c.getURL().toString(), body);
-        } catch (Exception e) {
-            return master;   // the player can still try the master playlist itself
-        }
-    }
-
-    static String pickSharpest(String base, String playlist) {
-        String[] lines = playlist.split("\\r?\\n");
-        long best = -1;
-        String pick = null;
-        for (int i = 0; i + 1 < lines.length; i++) {
-            if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue;
-            java.util.regex.Matcher m = java.util.regex.Pattern.compile("BANDWIDTH=(\\d+)").matcher(lines[i]);
-            long bw = m.find() ? Long.parseLong(m.group(1)) : 0;
-            String uri = lines[i + 1].trim();
-            if (bw > best && !uri.isEmpty() && !uri.startsWith("#")) {
-                best = bw;
-                pick = java.net.URI.create(base).resolve(uri).toString();
-            }
-        }
-        return pick == null ? base : pick;
+        showCaption(name() + "  ·  " + getString(R.string.tv_tuning));
+        player.setMediaItem(MediaItem.fromUri(channels.get(current)[2]));
+        player.prepare();
+        player.play();
     }
 
     private void showCaption(String text) {
         caption.removeCallbacks(hide);
+        caption.animate().cancel();
         caption.setText(text);
         caption.setAlpha(1f);
     }
@@ -143,8 +115,7 @@ public class LiveTvActivity extends Activity {
     private final Runnable hide = () -> caption.animate().alpha(0f).setDuration(400).start();
 
     private void hideCaptionSoon() {
-        caption.setText((current + 1) + "  " + channels.get(current)[0]);
-        caption.removeCallbacks(hide);
+        showCaption(name());
         caption.postDelayed(hide, 3_000);
     }
 
@@ -152,14 +123,13 @@ public class LiveTvActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         int step = keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_CHANNEL_UP ? 1
                 : keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_CHANNEL_DOWN ? -1 : 0;
-        if (step != 0 && !channels.isEmpty()) {
+        if (step != 0 && player != null) {
             current = (current + step + channels.size()) % channels.size();
             tune();
             return true;
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
             hideCaptionSoon();
-            caption.setAlpha(1f);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -168,7 +138,10 @@ public class LiveTvActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        video.stopPlayback();
+        if (player != null) {
+            player.release();
+            player = null;
+        }
         finish();   // live TV doesn't wait in the background
     }
 

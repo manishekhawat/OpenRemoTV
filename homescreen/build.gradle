@@ -57,6 +57,10 @@ android {
 dependencies {
     // The QR code on the Phone to TV page (PhoneDropActivity).
     implementation 'com.google.zxing:core:3.5.3'
+    // Live TV's player. The TV's own MediaPlayer crashes on some channels' streams (its TS parser), so Live TV uses
+    // ExoPlayer's, which plays them all.
+    implementation 'androidx.media3:media3-exoplayer:1.4.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.4.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
     // The real org.json for JVM tests (Android's is a stub there).
