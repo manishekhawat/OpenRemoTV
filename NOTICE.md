@@ -7,6 +7,7 @@ each under its own licence.
 | --- | --- | --- | --- |
 | Outfit font | `homescreen/src/main/assets/fonts/` | The Outfit Project Authors | SIL Open Font License 1.1, see [OFL.txt](homescreen/src/main/assets/fonts/OFL.txt) |
 | 10 IndiaMinimalist wallpapers | `app/src/main/assets/themes/india/wallpapers/` | Wikimedia Commons photographers, named per photo | CC BY-SA 3.0/4.0 and CC BY 4.0, see [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md) |
+| Rain sound for the screensaver (a 45-second loop) | `homescreen/src/main/res/raw/rain.ogg` | Ylmir ([OpenGameArt](https://opengameart.org/content/rain-loopable)) | CC0 1.0 |
 | dadb (ADB client) | dependency | mobile.dev | Apache 2.0 |
 | AndroidX, Jetpack Compose, Material components | dependency | Google / The Android Open Source Project | Apache 2.0 |
 | ZXing core (the Phone to TV QR code) | dependency | ZXing authors | Apache 2.0 |

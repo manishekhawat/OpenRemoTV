@@ -8,13 +8,11 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 
 /**
  * The frosted glass that follows the remote on IndiaMinimalist: a pane with a soft sheen, a bright top edge, a crisp
- * white rim and a faint glow, gliding from button to button and tile to tile with a little overshoot. There is no
- * live blur behind it (a 2 GB TV can't afford one): the frost is the sheen and the rim. With reduced motion it
- * jumps instead of gliding.
+ * white rim and a faint glow, gliding from button to button and tile to tile. There is no live blur behind it (a
+ * 2 GB TV can't afford one): the frost is the sheen and the rim.
  */
 final class GlassHighlight extends View {
     private final float d;
@@ -60,7 +58,7 @@ final class GlassHighlight extends View {
             return;
         }
         boolean first = !shown;
-        place(cornerDp, first || reducedMotion);
+        place(cornerDp, first);
         shown = true;
         if (first) animate().alpha(1f).setDuration(reducedMotion ? 0 : 150).start();
     }
@@ -80,24 +78,20 @@ final class GlassHighlight extends View {
         View v = target;
         ViewGroup parent = (ViewGroup) getParent();
         if (v == null || parent == null || v.getWidth() == 0) return;
-        int[] at = new int[2], base = new int[2];
-        v.getLocationInWindow(at);
-        parent.getLocationInWindow(base);
-        // The view's own box, before its scale animation, grown to the size it is heading for, plus a margin.
-        float grow = (targetScale - 1f) / 2f, pad = 4 * d;
-        float sx = v.getScaleX(), sy = v.getScaleY();
-        float w0 = v.getWidth(), h0 = v.getHeight();
-        // getLocationInWindow includes the current scale (about the centre); undo it to find the unscaled box.
-        float left = at[0] - base[0] + w0 * (sx - 1f) / 2f;
-        float top = at[1] - base[1] + h0 * (sy - 1f) / 2f;
-        float w = w0 * (1 + 2 * grow) + 2 * pad, h = h0 * (1 + 2 * grow) + 2 * pad;
-        float x = left - w0 * grow - pad, y = top - h0 * grow - pad;
-        boolean resize = getLayoutParams().width != Math.round(w) || getLayoutParams().height != Math.round(h);
-        radius = cornerDp < 0 ? -1 : cornerDp * d + pad;
-        if (resize) {
-            ViewGroup.LayoutParams lp = getLayoutParams();
-            lp.width = Math.round(w);
-            lp.height = Math.round(h);
+        // The view's layout box in the page's coordinates (scrolling included, its zoom not), then grown to the
+        // size its zoom is heading for, plus a small margin all round.
+        android.graphics.Rect box = new android.graphics.Rect();
+        v.getDrawingRect(box);
+        parent.offsetDescendantRectToMyCoords(v, box);
+        float pad = 3 * d;
+        float gw = box.width() * (targetScale - 1f) / 2f, gh = box.height() * (targetScale - 1f) / 2f;
+        float x = box.left - gw - pad, y = box.top - gh - pad;
+        int w = Math.round(box.width() + 2 * gw + 2 * pad), h = Math.round(box.height() + 2 * gh + 2 * pad);
+        radius = cornerDp < 0 ? -1 : (cornerDp * targetScale + 3) * d;
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        if (lp.width != w || lp.height != h) {
+            lp.width = w;
+            lp.height = h;
             setLayoutParams(lp);
         }
         animate().cancel();
@@ -105,8 +99,10 @@ final class GlassHighlight extends View {
             setTranslationX(x);
             setTranslationY(y);
         } else {
-            animate().translationX(x).translationY(y).setDuration(260)
-                    .setInterpolator(new OvershootInterpolator(0.8f)).start();
+            // A glide, quick at first and settling softly, the same with or without reduced motion: it is how the
+            // remote's position is shown, and a jump loses the eye.
+            animate().translationX(x).translationY(y).setDuration(220)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator(1.8f)).start();
         }
         invalidate();
     }

@@ -8,26 +8,32 @@ import android.media.AudioTrack;
 import java.util.Random;
 
 /**
- * Soft background sound for the screensaver, made on the fly rather than shipped as recordings: rain is filtered
- * noise that swells and fades with scattered drops, and the temple bell is a struck bell's partials, each dying away
- * at its own rate, rung every half minute or so. One mono 22 kHz stream on its own thread; a fraction of a
- * percent of the CPU. The choice (off, rain, bells, both) is kept in the "ambient" preferences, set on the
+ * Soft background sound for the screensaver. Rain is a real recording (res/raw/rain.ogg, a 45-second loop by
+ * Ylmir, CC0) played on repeat; the temple bell is made on the fly, a struck bronze bell's partials each dying away
+ * at its own rate, rung every half minute or so, on one mono stream on its own thread. The choice (off, rain, bells, both) is kept in the "ambient" preferences, set on the
  * Today page.
  */
 final class AmbientSound {
 
     static final String[] MODES = {"off", "rain", "bells", "both"};
-    private static final int RATE = 22050;
-    /** Partials of a small temple bell as multiples of its strike note, with their loudness and ring time (s). */
+    private static final int RATE = 32000;
+    /**
+     * Partials of a bronze temple bell (ghanta) as multiples of its strike note, with loudness and ring time (s):
+     * the hum and fundamental ring longest, the bright upper partials of the clapper's strike die quickly. Each is
+     * played as a pair a fraction of a hertz apart, which gives a real bell's slow shimmer.
+     */
     private static final double[][] BELL = {
-            {0.5, 0.35, 9}, {1.0, 0.6, 6}, {1.19, 0.25, 4.5}, {1.51, 0.3, 3.5}, {2.0, 0.22, 3},
-            {2.52, 0.16, 2.2}, {2.67, 0.12, 2}, {3.01, 0.1, 1.6}, {4.17, 0.07, 1.1}};
+            {0.5, 0.30, 11}, {1.0, 0.55, 8}, {1.2, 0.30, 5}, {1.5, 0.22, 4}, {2.0, 0.30, 3.5},
+            {2.51, 0.18, 2.4}, {3.0, 0.14, 1.8}, {4.07, 0.12, 1.2}, {5.24, 0.08, 0.7}, {6.8, 0.06, 0.4}};
 
+    private final android.content.Context context;
     private final String mode;
     private volatile boolean running;
     private Thread thread;
+    private android.media.MediaPlayer rainPlayer;
 
-    AmbientSound(String mode) {
+    AmbientSound(android.content.Context context, String mode) {
+        this.context = context.getApplicationContext();
         this.mode = mode;
     }
 
@@ -51,13 +57,45 @@ final class AmbientSound {
     void start() {
         if (running || "off".equals(mode)) return;
         running = true;
+        if ("rain".equals(mode) || "both".equals(mode)) startRain();
+        if (!"bells".equals(mode) && !"both".equals(mode)) return;
         thread = new Thread(this::play, "ambient-sound");
         thread.setPriority(Thread.MIN_PRIORITY + 1);
         thread.start();
     }
 
+    /** The rain recording on repeat, fading in over three seconds. */
+    private void startRain() {
+        try {
+            android.media.MediaPlayer p = android.media.MediaPlayer.create(context, R.raw.rain);
+            if (p == null) return;
+            p.setLooping(true);
+            p.setVolume(0f, 0f);
+            p.start();
+            rainPlayer = p;
+            android.os.Handler h = new android.os.Handler(android.os.Looper.getMainLooper());
+            for (int i = 1; i <= 10; i++) {
+                float v = 0.55f * i / 10f;
+                h.postDelayed(() -> {
+                    if (rainPlayer == p) p.setVolume(v, v);
+                }, i * 300L);
+            }
+        } catch (RuntimeException ignored) {
+            // no sound is better than a crash in the screensaver
+        }
+    }
+
     void stop() {
         running = false;
+        if (rainPlayer != null) {
+            try {
+                rainPlayer.stop();
+            } catch (RuntimeException ignored) {
+                // already stopped
+            }
+            rainPlayer.release();
+            rainPlayer = null;
+        }
         if (thread != null) thread.interrupt();
         thread = null;
     }
@@ -77,12 +115,13 @@ final class AmbientSound {
             running = false;
             return;
         }
-        boolean rain = "rain".equals(mode) || "both".equals(mode);
+        boolean rain = false;   // rain plays from its recording (startRain)
         boolean bells = "bells".equals(mode) || "both".equals(mode);
         Random random = new Random();
         short[] block = new short[1024];
         double low = 0, high = 0, prev = 0, swell = 0.6, swellTarget = 0.6, drop = 0;
-        double[] phase = new double[BELL.length];
+        double[] phase = new double[BELL.length], twin = new double[BELL.length];
+        double clickLow = 0;
         double strikeAge = 1e9, strikeNote = 560;
         long nextStrike = bells ? RATE * 3L : Long.MAX_VALUE;
         long sample = 0;
@@ -106,18 +145,25 @@ final class AmbientSound {
                     if (bells) {
                         if (sample >= nextStrike) {
                             strikeAge = 0;
-                            strikeNote = 520 + random.nextInt(80);
+                            strikeNote = 420 + random.nextInt(60);
                             // now and then a second ring a moment later, as a hand bell is shaken
                             nextStrike = sample + (random.nextInt(4) == 0 ? RATE * 7 / 10 : RATE * (18L + random.nextInt(20)));
                         }
-                        if (strikeAge < RATE * 10.0) {
+                        if (strikeAge < RATE * 12.0) {
                             double t = strikeAge / RATE;
                             double ring = 0;
                             for (int p = 0; p < BELL.length; p++) {
-                                phase[p] += 2 * Math.PI * strikeNote * BELL[p][0] / RATE;
-                                ring += BELL[p][1] * Math.exp(-t / BELL[p][2] * 2.2) * Math.sin(phase[p]);
+                                double f = strikeNote * BELL[p][0];
+                                phase[p] += 2 * Math.PI * f / RATE;
+                                // the pair's twin, slightly sharp: the two beat slowly against each other
+                                twin[p] += 2 * Math.PI * (f + 0.4 + 0.25 * p) / RATE;
+                                double env = BELL[p][1] * Math.exp(-t / BELL[p][2] * 2.0);
+                                ring += env * (Math.sin(phase[p]) + 0.7 * Math.sin(twin[p]));
                             }
-                            out += ring * 0.35 * Math.min(1, strikeAge / 40.0);
+                            // the clapper's strike: a short metallic click before the ring takes over
+                            double click = strikeAge < RATE * 0.03 ? random.nextGaussian() * Math.exp(-strikeAge / (RATE * 0.004)) : 0;
+                            clickLow += 0.35 * (click - clickLow);
+                            out += ring * 0.28 * Math.min(1, strikeAge / 30.0) + (click - clickLow) * 0.5;
                             strikeAge++;
                         }
                     }

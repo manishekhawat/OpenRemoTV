@@ -63,6 +63,7 @@ final class IndiaHome extends FrameLayout {
     IndiaHome(Context context, Theme theme, Host host) {
         super(context);
         L10n.init(context);
+        setClipChildren(false);
         this.theme = theme;
         this.host = host;
         d = getResources().getDisplayMetrics().density;
@@ -107,6 +108,8 @@ final class IndiaHome extends FrameLayout {
         // The round buttons, top right.
         buttons = new LinearLayout(context);
         buttons.setOrientation(LinearLayout.HORIZONTAL);
+        buttons.setClipChildren(false);
+        buttons.setClipToPadding(false);
         LayoutParams bp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(48), Gravity.TOP | Gravity.END);
         bp.rightMargin = dp(56);
         bp.topMargin = dp(20);
@@ -115,8 +118,7 @@ final class IndiaHome extends FrameLayout {
             String which = BUTTONS[i];
             ImageView b = new ImageView(context);
             b.setImageResource(ICONS[i]);
-            b.setImageTintList(new android.content.res.ColorStateList(
-                    new int[][]{{android.R.attr.state_focused}, {}}, new int[]{0xFF141414, 0xFFFFFFFF}));
+            b.setImageTintList(android.content.res.ColorStateList.valueOf(0xFFFFFFFF));
             b.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             b.setPadding(dp(11), dp(11), dp(11), dp(11));
             b.setBackground(roundButton());
@@ -157,6 +159,7 @@ final class IndiaHome extends FrameLayout {
         dock = new LinearLayout(context);
         dock.setOrientation(LinearLayout.HORIZONTAL);
         dock.setClipChildren(false);
+        dock.setClipToPadding(false);   // a zoomed first or last tile reaches into the padding
         dock.setPadding(dp(20), dp(13), dp(20), dp(13));
         GradientDrawable dockGlass = new GradientDrawable();
         dockGlass.setColor(0x1FFFFFFF);
@@ -168,6 +171,7 @@ final class IndiaHome extends FrameLayout {
         grid = new GridLayout(context);
         grid.setColumnCount(DOCK_SIZE);
         grid.setClipChildren(false);
+        grid.setClipToPadding(false);
         grid.setAlpha(0f);
         LinearLayout.LayoutParams gp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         gp.topMargin = dp(26);
@@ -190,7 +194,7 @@ final class IndiaHome extends FrameLayout {
         StateListDrawable s = new StateListDrawable();
         GradientDrawable on = new GradientDrawable();
         on.setShape(GradientDrawable.OVAL);
-        on.setColor(0xFFFFFFFF);
+        on.setColor(0x4DFFFFFF);
         GradientDrawable off = new GradientDrawable();
         off.setShape(GradientDrawable.OVAL);
         off.setColor(0x33FFFFFF);

@@ -370,7 +370,7 @@ public class TodayActivity extends Activity {
     private void preview(String mode) {
         page.removeCallbacks(stopPreview);
         stopPreview.run();
-        previewSound = new AmbientSound(mode);
+        previewSound = new AmbientSound(this, mode);
         previewSound.start();
         page.postDelayed(stopPreview, 8000);
     }

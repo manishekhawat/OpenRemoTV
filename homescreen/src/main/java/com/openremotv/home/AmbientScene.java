@@ -143,7 +143,7 @@ final class AmbientScene {
         handler.removeCallbacks(next);
         next.run();
         String mode = AmbientSound.mode(context);
-        sound = new AmbientSound(mode);
+        sound = new AmbientSound(context, mode);
         sound.start();
     }
 

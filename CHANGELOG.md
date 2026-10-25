@@ -2,6 +2,13 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.2 (2026-10-25)
+
+### TV home screen
+- The frosted glass lines up exactly with the app tiles and round buttons, and nothing at the row ends is cut off.
+- The glass glides from item to item instead of jumping.
+- The screensaver's rain is a real recording (CC0), and the temple bell has a clapper strike and a bronze shimmer.
+
 ## 0.1.1 (2026-10-25)
 
 ### TV home screen
