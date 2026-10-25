@@ -2,6 +2,13 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.10 (2026-10-26)
+
+### TV home screen
+- Live TV's channels, all in 1080p now: DD National HD, Aaj Tak HD, The Movie Club, 9X Jalwa, South Station and
+  B4U Music in Hindi; Cricket Gold, History TV18 HD, CNN-News18 and MovieSphere in English.
+- Three more radio stations: Mirchi Top 20, Mirchi Bollywood Dance and 80s80s Rock.
+
 ## 0.1.9 (2026-10-26)
 
 ### TV home screen
@@ -11,7 +18,6 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
 - The weather says whose weather it is: the town now shows on both MangaHome and IndiaMinimalist.
 - Memory and Tic-tac-toe are drawn as a comic page on MangaHome.
 - The air quality comes last in the weather box, after the temperatures.
-- Three more radio stations: Mirchi Top 20, Mirchi Bollywood Dance and 80s80s Rock.
 
 ### Phone app
 - The sparkle key is back on the phone's own speech recogniser, which hands your question to the TV's search. The
