@@ -20,7 +20,9 @@ import java.util.List;
 
 /**
  * A live channel, full screen, from the TV list on Home (assets/today/tv.txt). Up and down (or channel up and down)
- * change channel; Back returns Home. The streams are HLS, which the TV's own MediaPlayer plays.
+ * change channel; Back returns Home. The streams are HLS, which the TV's own MediaPlayer plays. Its player starts
+ * on a playlist's first picture size and is slow to move up, and many channels list 180p first, so the sharpest
+ * size is picked from the playlist here and played directly.
  */
 public class LiveTvActivity extends Activity {
 
@@ -80,8 +82,56 @@ public class LiveTvActivity extends Activity {
         String[] ch = channels.get(current);
         showCaption((current + 1) + "  " + ch[0] + "  ·  " + getString(R.string.tv_tuning));
         video.stopPlayback();
-        video.setVideoURI(Uri.parse(ch[2]));
-        video.start();
+        int tuning = ++tunes;
+        new Thread(() -> {
+            String url = sharpest(ch[2]);
+            runOnUiThread(() -> {
+                if (tuning != tunes || isFinishing()) return;   // changed channel meanwhile
+                video.setVideoURI(Uri.parse(url));
+                video.start();
+            });
+        }, "live-tv-tune").start();
+    }
+
+    private int tunes;
+
+    /** The highest-bandwidth stream in an HLS master playlist, or the address itself when it isn't one. */
+    static String sharpest(String master) {
+        try {
+            java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(master).openConnection();
+            c.setConnectTimeout(6000);
+            c.setReadTimeout(6000);
+            String body;
+            try (java.io.InputStream in = c.getInputStream()) {
+                java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+                byte[] b = new byte[8192];
+                int n;
+                while ((n = in.read(b)) > 0 && out.size() < 256 * 1024) out.write(b, 0, n);
+                body = out.toString("UTF-8");
+            } finally {
+                c.disconnect();
+            }
+            return pickSharpest(c.getURL().toString(), body);
+        } catch (Exception e) {
+            return master;   // the player can still try the master playlist itself
+        }
+    }
+
+    static String pickSharpest(String base, String playlist) {
+        String[] lines = playlist.split("\\r?\\n");
+        long best = -1;
+        String pick = null;
+        for (int i = 0; i + 1 < lines.length; i++) {
+            if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue;
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("BANDWIDTH=(\\d+)").matcher(lines[i]);
+            long bw = m.find() ? Long.parseLong(m.group(1)) : 0;
+            String uri = lines[i + 1].trim();
+            if (bw > best && !uri.isEmpty() && !uri.startsWith("#")) {
+                best = bw;
+                pick = java.net.URI.create(base).resolve(uri).toString();
+            }
+        }
+        return pick == null ? base : pick;
     }
 
     private void showCaption(String text) {
