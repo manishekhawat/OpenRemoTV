@@ -85,9 +85,12 @@ class Tv(private val context: Context) {
     private var agentIn: java.io.BufferedReader? = null
     private val agentLock = Mutex()
 
+    /** This phone's secret, plus the helper's size: a helper from another app version won't answer to it. */
     private val token: String
-        get() = prefs.getString("token", null) ?: java.util.UUID.randomUUID().toString().replace("-", "")
-            .also { prefs.edit().putString("token", it).apply() }
+        get() = (prefs.getString("token", null) ?: java.util.UUID.randomUUID().toString().replace("-", "")
+            .also { prefs.edit().putString("token", it).apply() }) + "-" + helperSize
+
+    private val helperSize: Int by lazy { context.assets.open("keyserver.dex").use { it.readBytes().size } }
 
     private fun dial(): Boolean {
         return try {
