@@ -238,12 +238,18 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
 
             Step.HOME -> Page("4 · CLEAN HOME SCREEN", "Optional. A new home screen only stays if it really takes over Home.") {
                 Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    HomeChoice("MANGA HOME", "The clean, tile-based home screen this app comes with (cleanyourtv's launcher).") {
+                    HomeChoice("MANGAHOME", "Ink-black manga pages, comic-panel cards and Remo, on the clean tile home screen.") {
                         run {
-                            busy = "Installing Manga Home…"
-                            val ok = sweeper.installMangaHome()
+                            val ok = sweeper.installHome("manga") { busy = it }
                             busy = ""
-                            if (ok) { homeName = "Manga Home"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
+                            if (ok) { homeName = "MangaHome"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
+                        }
+                    }
+                    HomeChoice("INDIAMINIMALIST", "Monuments of India and the world, the Panchang, festivals and glass cards.") {
+                        run {
+                            val ok = sweeper.installHome("india") { busy = it }
+                            busy = ""
+                            if (ok) { homeName = "IndiaMinimalist"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
                     HomeChoice("PROJECTIVY LAUNCHER", "A popular free launcher. Its Play Store page opens on the TV: press Install with the remote, then come back here.") {

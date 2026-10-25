@@ -1,0 +1,20 @@
+01.jpg	Taj Mahal, Agra
+02.jpg	Golden Temple, Amritsar
+03.jpg	Victoria Memorial, Kolkata
+04.jpg	Virupaksha Temple, Hampi
+05.jpg	Agra Fort, Agra
+06.jpg	Gateway of India, Mumbai
+07.jpg	Sun Temple, Konark
+08.jpg	Eiffel Tower, Paris
+09.jpg	Colosseum, Rome
+10.jpg	Angkor Wat, Cambodia
+11.jpg	Machu Picchu, Peru
+12.jpg	Great Wall, Badaling
+13.jpg	Abu Simbel, Egypt
+14.jpg	Gulmarg in winter, Kashmir
+15.jpg	Snow on the Rohtang range, Manali
+16.jpg	Tulip Garden, Srinagar
+17.jpg	Dal Lake, Srinagar
+18.jpg	Tea hills of Munnar, Kerala
+19.jpg	Valley of Flowers, Uttarakhand
+20.jpg	Kerala backwaters

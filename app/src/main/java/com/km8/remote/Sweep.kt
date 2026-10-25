@@ -89,6 +89,56 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         return false
     }
 
+    /**
+     * Installs the bundled home screen (assets/manga-home.apk, cleanyourtv's launcher), puts one of the bundled
+     * themes on it (assets/themes/<name>: "manga" for MangaHome, "india" for IndiaMinimalist) and makes it Home.
+     */
+    suspend fun installHome(theme: String, progress: (String) -> Unit): Boolean {
+        progress("Installing the home screen…")
+        if (!installMangaHome()) return false
+        progress("Putting on the theme…")
+        applyTheme(theme, progress)
+        return true
+    }
+
+    /** Copies a bundled theme into the home screen's theme folder the way cleanyourtv's tools/theme.sh does, then restarts it. */
+    suspend fun applyTheme(theme: String, progress: (String) -> Unit) {
+        val base = "themes/$theme"
+        val files = mutableListOf<String>()
+        fun walk(dir: String) {
+            for (name in context.assets.list(dir).orEmpty()) {
+                val path = "$dir/$name"
+                if (context.assets.list(path).isNullOrEmpty()) files += path.removePrefix("$base/") else walk(path)
+            }
+        }
+        walk(base)
+        tv.shell("mkdir -p $THEME_DIR/wallpapers; rm -f $THEME_DIR/wallpapers/*.jpg $THEME_DIR/wallpapers/*.png " +
+                "$THEME_DIR/wallpapers/captions.txt $THEME_DIR/wallpapers/facts.txt; content delete --uri $THEME_URI/wallpapers 2>/dev/null")
+        files.forEachIndexed { i, path ->
+            progress("Theme ${i + 1} / ${files.size}")
+            val local = File(context.cacheDir, "theme-" + path.replace('/', '-'))
+            context.assets.open("$base/$path").use { input -> local.outputStream().use { input.copyTo(it) } }
+            try {
+                put(local, path)
+            } finally {
+                local.delete()
+            }
+        }
+        val revision = File(context.cacheDir, "theme_revision").apply { writeText(java.util.UUID.randomUUID().toString().replace("-", "")) }
+        put(revision, "theme_revision")
+        revision.delete()
+        tv.shell(RESTART)
+    }
+
+    /** One theme file into place: through the launcher's provider where `content write` works, else a plain copy. */
+    private suspend fun put(local: File, path: String) {
+        val staged = "rst-" + path.replace('/', '-')
+        tv.upload(local, "tmp/$staged")
+        val tmp = "/data/local/tmp/$staged"
+        tv.shell("rm -f $THEME_DIR/$path 2>/dev/null; { o=\$(content write --uri $THEME_URI/$path < $tmp 2>&1) && " +
+                "case \"\$o\" in *'Unsupported operation'*) false ;; esac; } || cp $tmp $THEME_DIR/$path 2>/dev/null; rm -f $tmp")
+    }
+
     /** Installs the bundled Manga Home (assets/manga-home.apk) and makes it Home. */
     suspend fun installMangaHome(): Boolean {
         val apk = File(context.cacheDir, "manga-home.apk")
@@ -134,6 +184,12 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
 
     companion object {
         const val PROJECTIVY = "com.spocky.projengmenu"
+        private const val THEME_DIR = "/sdcard/Android/data/com.gathin.tvhome/files"
+        private const val THEME_URI = "content://com.gathin.tvhome.theme"
+        /** cleanyourtv's theme.sh restart: back through the Home intent, with its accessibility helpers put back. */
+        private const val RESTART = "a=\$(settings get secure enabled_accessibility_services); am force-stop com.gathin.tvhome; " +
+            "am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null; case \"\$a\" in *com.gathin.tvhome*) " +
+            "sleep 1; settings put secure enabled_accessibility_services \"\$a\"; settings put secure accessibility_enabled 1 ;; esac"
 
         fun packages(out: String) =
             out.lines().map { it.trim() }.filter { it.startsWith("package:") }.map { it.removePrefix("package:") }
