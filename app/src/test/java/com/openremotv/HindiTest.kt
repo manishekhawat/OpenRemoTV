@@ -25,7 +25,7 @@ class HindiTest {
         paparazzi.snapshot {
             MangaTheme {
                 MangaPage {
-                    Box(Modifier.weight(1f).fillMaxWidth()) { RemoteScreen(tv) {} }
+                    Box(Modifier.weight(1f).fillMaxWidth()) { WithResults { RemoteScreen(tv) {} } }
                     TvBar(true, "KM8", "192.168.1.50", onChange = {})
                     MangaTabs(Tab.REMOTE) {}
                 }

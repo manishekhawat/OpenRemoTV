@@ -68,6 +68,10 @@
     <string name="key_mute">Mute</string>
     <string name="key_volume_up">Volume up</string>
     <string name="key_delete">Delete</string>
+    <string name="key_assistant">Ask Google Assistant or Gemini on the TV</string>
+    <string name="key_voice_type">Speak to type</string>
+    <string name="voice_prompt_assistant">Ask the TV…</string>
+    <string name="voice_prompt_type">Say what to type on the TV…</string>
     <string name="remote_type_hint">Type on the TV…</string>
     <string name="remote_go">GO</string>
 

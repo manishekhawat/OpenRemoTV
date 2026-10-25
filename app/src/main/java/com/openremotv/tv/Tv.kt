@@ -198,6 +198,31 @@ class Tv(private val context: Context) {
         shell("input text " + shellQuote(text.replace(" ", "%s")))
     }
 
+    /**
+     * Submits what was typed, as a keyboard's Enter would. With the TV's on-screen keyboard showing, Enter would press
+     * whichever key it has selected (an extra "a"), so the keyboard is closed first and Enter then reaches the search box.
+     */
+    suspend fun submit() {
+        val keyboardShown = shell("dumpsys input_method | grep -c 'mInputShown=true'").trim().let { it.isNotEmpty() && it != "0" }
+        if (keyboardShown) {
+            key(4)
+            kotlinx.coroutines.delay(250)
+        }
+        key(66)
+    }
+
+    /**
+     * Asks the TV's assistant (Google Assistant, or Gemini on newer Google TV) a question spoken on the phone: the
+     * TV's search opens with the words already in. Falls back to the assistant key when the TV has no such search.
+     */
+    suspend fun askAssistant(question: String) {
+        val out = shell("am start -a android.search.action.GLOBAL_SEARCH --es query " + shellQuote(question) + " 2>&1")
+        if (out.contains("Error") || out.contains("unable", ignoreCase = true)) key(KEY_ASSIST)
+    }
+
+    /** Opens the TV's own assistant, listening through the TV remote's mic. */
+    suspend fun assistant() = key(KEY_ASSIST)
+
     /** Turns an app on, or off for this user, through the helper (instant), else through pm (seconds). */
     suspend fun setAppEnabled(pkg: String, on: Boolean) {
         val answer = runCatching { ask("e:$pkg:${if (on) 1 else 0}") }.getOrNull()
@@ -216,6 +241,8 @@ class Tv(private val context: Context) {
 
     companion object {
         const val AGENT_PORT = 8766
+        /** KEYCODE_VOICE_ASSIST: the remote's assistant button. */
+        const val KEY_ASSIST = 231
         private const val HELPER = "/data/local/tmp/openremotv-helper"
 
         /** The answer to the helper's challenge: HMAC-SHA256 of its nonce with the phone's secret, in hex. */

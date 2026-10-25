@@ -2,6 +2,13 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.6 (2026-10-26)
+
+### Phone app
+- Speak to type: the mic beside the text box turns your words into text for the TV.
+- Ask the TV: the sparkle key on the remote takes a spoken question to the TV's Google Assistant or Gemini.
+- Typing then GO no longer adds an "a": the TV's on-screen keyboard is closed before Enter is sent.
+
 ## 0.1.5 (2026-10-25)
 
 - Picking a theme no longer fails with "INSTALL_FAILED_VERSION_DOWNGRADE" when the TV has a newer test build of the

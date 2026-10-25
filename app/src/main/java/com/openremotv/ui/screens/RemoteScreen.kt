@@ -19,11 +19,13 @@ import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.automirrored.filled.VolumeDown
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material3.OutlinedTextField
@@ -55,6 +57,29 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
     var text by remember { mutableStateOf("") }
     var sfx by remember { mutableStateOf("") }
     var sfxKey by remember { mutableIntStateOf(0) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    // The phone's own speech recogniser (Google's): no microphone permission needed in this app.
+    var forAssistant by remember { mutableStateOf(false) }
+    val listen = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val words = result.data?.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+            ?: return@rememberLauncherForActivityResult
+        if (forAssistant) run { tv.askAssistant(words) } else text = words
+    }
+    fun speak(assistant: Boolean) {
+        forAssistant = assistant
+        val i = android.content.Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, context.getString(
+                if (assistant) R.string.voice_prompt_assistant else R.string.voice_prompt_type))
+        try {
+            listen.launch(i)
+        } catch (e: android.content.ActivityNotFoundException) {
+            // No speech recogniser on this phone: the TV's assistant listens through its own remote instead.
+            if (assistant) run { tv.assistant() }
+        }
+    }
     fun key(code: Int, word: String = "PON!") {
         sfx = word
         sfxKey++
@@ -93,12 +118,17 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 InkKey(Icons.AutoMirrored.Filled.VolumeDown, stringResource(R.string.key_volume_down), k, repeat = true) { key(25) }
                 InkKey(Icons.AutoMirrored.Filled.VolumeOff, stringResource(R.string.key_mute), k) { key(164, "SHIIN…") }
+                // Ask the TV's Google Assistant or Gemini, speaking into the phone.
+                InkKey(Icons.Filled.AutoAwesome, stringResource(R.string.key_assistant), k, tint = Ink.red) { speak(true) }
                 InkKey(Icons.AutoMirrored.Filled.VolumeUp, stringResource(R.string.key_volume_up), k, repeat = true) { key(24) }
             }
             // Typing: one compact row (put the TV's cursor in a search box first).
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(text, { text = it }, singleLine = true,
                     placeholder = { Text(stringResource(R.string.remote_type_hint)) }, modifier = Modifier.weight(1f))
+                Spacer(Modifier.width(8.dp))
+                // Speak instead of typing: the words land in the box, ready to send.
+                InkKey(Icons.Filled.Mic, stringResource(R.string.key_voice_type), 48.dp) { speak(false) }
                 Spacer(Modifier.width(8.dp))
                 InkKey(Icons.AutoMirrored.Filled.Backspace, stringResource(R.string.key_delete), 48.dp, repeat = true) { key(67) }
                 Spacer(Modifier.width(8.dp))
@@ -107,7 +137,7 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
                     text = ""
                     sfx = "KAKI!"
                     sfxKey++
-                    run { tv.type(t); tv.key(66) }
+                    run { tv.type(t); tv.submit() }
                 }
             }
         }

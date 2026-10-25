@@ -47,7 +47,7 @@ class ScreensTest {
 
     @Test fun remote() {
         val tv = Tv(paparazzi.context)
-        page(Tab.REMOTE) { RemoteScreen(tv) {} }
+        page(Tab.REMOTE) { WithResults { RemoteScreen(tv) {} } }
     }
 
     @Test fun connect() {

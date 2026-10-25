@@ -66,6 +66,10 @@
     <string name="key_mute">म्यूट</string>
     <string name="key_volume_up">आवाज़ ज़्यादा</string>
     <string name="key_delete">मिटाएँ</string>
+    <string name="key_assistant">टीवी पर Google Assistant या Gemini से पूछें</string>
+    <string name="key_voice_type">बोलकर लिखें</string>
+    <string name="voice_prompt_assistant">टीवी से पूछें…</string>
+    <string name="voice_prompt_type">टीवी पर क्या लिखना है, बोलें…</string>
     <string name="remote_type_hint">टीवी पर लिखें…</string>
     <string name="remote_go">भेजें</string>
 
