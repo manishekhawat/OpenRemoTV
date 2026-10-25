@@ -1,5 +1,7 @@
 package com.openremotv.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.openremotv.R
 import com.openremotv.sweep.HomeTheme
+import com.openremotv.sweep.Place
 import com.openremotv.sweep.Lists
 import com.openremotv.sweep.ShareCard
 import com.openremotv.sweep.SweepItem
@@ -238,6 +242,7 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                 stringResource(if (homeOnly) R.string.home_theme_sub else R.string.home_sub),
             ) {
                 Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PlacePanel(run, say)
                     HomeChoice(HomeTheme.MANGA.title.uppercase(), stringResource(R.string.home_manga_blurb)) { putOn(HomeTheme.MANGA) }
                     HomeChoice(HomeTheme.INDIA.title.uppercase(), stringResource(R.string.home_india_blurb)) { putOn(HomeTheme.INDIA) }
                     HomeChoice(stringResource(if (homeOnly) R.string.cancel else R.string.home_keep), stringResource(R.string.home_keep_sub)) {
@@ -292,3 +297,49 @@ private fun Steps(names: List<String>) {
         }
     }
 }
+
+/**
+ * Where the TV is, for its weather and Panchang: the phone's location, a typed city, or left for the TV to find
+ * from its internet address. Saved on the phone and written into the theme when one is put on.
+ */
+@Composable
+private fun PlacePanel(run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
+    val context = LocalContext.current
+    var place by remember { mutableStateOf(Place.saved(context)) }
+    var city by remember { mutableStateOf("") }
+    fun set(p: Place?) {
+        Place.save(context, p)
+        place = p
+    }
+    val ask = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (!granted) {
+            say(context.getString(R.string.place_denied))
+        } else run {
+            val p = Place.fromPhone(context)
+            if (p == null) say(context.getString(R.string.place_unknown)) else { set(p); say(context.getString(R.string.place_set, p.city)) }
+        }
+    }
+    Panel(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.place_title), style = Shout, fontSize = 16.sp)
+            Text(place?.let { stringResource(R.string.place_current, it.city) } ?: stringResource(R.string.place_auto), fontSize = 14.sp)
+            MangaButton(stringResource(R.string.place_use_phone), Modifier.fillMaxWidth()) {
+                ask.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                OutlinedTextField(city, { city = it }, singleLine = true, label = { Text(stringResource(R.string.place_city)) },
+                    modifier = Modifier.weight(1f))
+                Spacer(Modifier.width(8.dp))
+                MangaButton(stringResource(R.string.place_find)) {
+                    if (city.isBlank()) return@MangaButton
+                    run {
+                        val p = Place.search(city)
+                        if (p == null) say(context.getString(R.string.place_not_found, city)) else { set(p); say(context.getString(R.string.place_set, p.city)) }
+                    }
+                }
+            }
+            if (place != null) TextButtonLine(stringResource(R.string.place_let_tv), onClick = { set(null) })
+        }
+    }
+}
+

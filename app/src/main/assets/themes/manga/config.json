@@ -15,9 +15,7 @@
   "news_ticker": true,
   "screensaver": true,
   "reduced_motion": true,
-  "weather_city": "Delhi",
-  "weather_latitude": 28.6139,
-  "weather_longitude": 77.209,
+  "weather_city": "auto",
   "festival_dates": [
     {
       "festival": "diwali",

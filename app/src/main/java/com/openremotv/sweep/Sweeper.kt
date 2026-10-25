@@ -126,7 +126,13 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         files.forEachIndexed { i, path ->
             progress(context.getString(R.string.home_copying, theme.title, i + 1, files.size))
             val local = File(context.cacheDir, "theme-" + path.replace('/', '-'))
-            context.assets.open("$base/$path").use { input -> local.outputStream().use { input.copyTo(it) } }
+            if (path == "config.json") {
+                // The place for the weather and Panchang: the one set on this phone, or "auto" for the TV to find.
+                val config = context.assets.open("$base/$path").bufferedReader().readText()
+                local.writeText(Place.applyTo(config, Place.saved(context)))
+            } else {
+                context.assets.open("$base/$path").use { input -> local.outputStream().use { input.copyTo(it) } }
+            }
             try {
                 put(local, path)
             } finally {

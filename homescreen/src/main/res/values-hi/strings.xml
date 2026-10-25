@@ -145,6 +145,8 @@
 
     <string name="today_head">आज!</string>
     <string name="card_panchang">पंचांग</string>
+    <string name="no_place">टीवी की जगह ढूँढ रहे हैं…</string>
+    <string name="no_place_body">फ़ोन पर OpenRemoTV में शहर चुनें,\nया टीवी को इंटरनेट से जोड़ें।</string>
     <string name="card_coming">आगे क्या है</string>
     <string name="nothing_coming">कैलेंडर में अभी कुछ नहीं</string>
     <string name="card_sky">रात का आकाश</string>

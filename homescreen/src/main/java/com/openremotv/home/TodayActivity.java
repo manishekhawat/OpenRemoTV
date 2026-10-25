@@ -111,12 +111,14 @@ public class TodayActivity extends Activity {
         page.addView(date, dp);
 
         boolean place = extras != null && extras.weatherEnabled();
-        double lat = place ? extras.weatherLatitude : 28.6139, lon = place ? extras.weatherLongitude : 77.209;
+        double lat = place ? extras.weatherLatitude : 0, lon = place ? extras.weatherLongitude : 0;
         DateFormat time = android.text.format.DateFormat.getTimeFormat(this);
 
         newRow();
-        Panchang.Day p = Panchang.of(today, lat, lon, zone);
-        card(1, up(R.string.card_panchang), p.title(),
+        Panchang.Day p = place ? Panchang.of(today, lat, lon, zone) : null;
+        // The Panchang and the sky depend on where the TV is: without a place, say so instead of guessing.
+        if (p == null) card(1, up(R.string.card_panchang), getString(R.string.no_place), getString(R.string.no_place_body), null);
+        else card(1, up(R.string.card_panchang), p.title(),
                 (p.tithiEnds > System.currentTimeMillis()
                         ? getString(R.string.tithi_until, time.format(new Date(p.tithiEnds)))
                         : getString(R.string.tithi_from, nextTithi(p), time.format(new Date(p.tithiEnds)))) + "\n"
@@ -140,7 +142,7 @@ public class TodayActivity extends Activity {
             if (planets.length() > 0) planets.append('\n');
             planets.append(planet.describe());
         }
-        card(1, up(R.string.card_sky), sky.phaseName() + " · " + Math.round(sky.illumination * 100) + "%",
+        if (place) card(1, up(R.string.card_sky), sky.phaseName() + " · " + Math.round(sky.illumination * 100) + "%",
                 (planets.length() == 0 ? getString(R.string.no_planets_up) : planets) + "\n"
                         + getString(sky.at.toLocalTime().getHour() == 21 && sky.at.getMinute() == 0 ? R.string.seen_at_nine : R.string.up_now),
                 null);

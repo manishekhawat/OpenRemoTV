@@ -175,6 +175,17 @@
     <string name="home_keep">KEEP MY HOME SCREEN</string>
     <string name="home_keep_sub">Leave it as it is.</string>
     <string name="home_unchanged">Unchanged</string>
+    <string name="place_title">WEATHER AND PANCHANG FOR</string>
+    <string name="place_current">%1$s (set on this phone)</string>
+    <string name="place_auto">Wherever the TV is: it finds its city from its internet connection.</string>
+    <string name="place_use_phone">📍  USE MY PHONE\'S LOCATION</string>
+    <string name="place_city">Or type a city</string>
+    <string name="place_find">SET</string>
+    <string name="place_let_tv">Let the TV find it instead</string>
+    <string name="place_set">Weather and Panchang now for %1$s. Pick a theme to send it to the TV.</string>
+    <string name="place_not_found">Couldn\'t find "%1$s". Try a bigger city nearby.</string>
+    <string name="place_unknown">The phone doesn\'t know where it is yet. Type a city instead.</string>
+    <string name="place_denied">No problem: type a city, or let the TV find it.</string>
     <string name="home_putting_on">Putting %1$s on your TV…</string>
     <string name="home_installing">Installing the home screen…</string>
     <string name="home_theming">Putting on the theme…</string>

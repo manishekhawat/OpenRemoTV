@@ -155,6 +155,8 @@
     <!-- Today page -->
     <string name="today_head">TODAY!</string>
     <string name="card_panchang">Panchang</string>
+    <string name="no_place">Finding where the TV is…</string>
+    <string name="no_place_body">Set the city in OpenRemoTV on your phone,\nor connect the TV to the internet.</string>
     <string name="card_coming">Coming up</string>
     <string name="nothing_coming">Nothing in the calendar yet</string>
     <string name="card_sky">Night sky</string>

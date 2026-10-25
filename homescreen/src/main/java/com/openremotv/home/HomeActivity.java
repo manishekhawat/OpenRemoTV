@@ -77,6 +77,7 @@ public final class HomeActivity extends Activity implements IndiaHome.Host, Comi
             india = new IndiaHome(this, theme, this);
             root.addView(india);
         }
+        if (theme.placeFromTv) GeoIp.refresh(this, this::recreate);
         if (theme.weatherEnabled()) {
             weather = new Weather(this, theme);
             weather.setListener(raw -> {

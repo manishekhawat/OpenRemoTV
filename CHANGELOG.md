@@ -2,6 +2,12 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.4 (2026-10-25)
+
+- The weather, Panchang, sun times and night sky follow where the TV is, not a fixed Delhi: set it from the phone's
+  location or a typed city when you pick a theme, or let the TV find its city from its internet address.
+- The Today page says when the TV's place isn't known yet, instead of guessing.
+
 ## 0.1.3 (2026-10-25)
 
 ### TV home screen

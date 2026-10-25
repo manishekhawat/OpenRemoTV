@@ -173,6 +173,17 @@
     <string name="home_keep">मेरी होम स्क्रीन रखें</string>
     <string name="home_keep_sub">जैसी है वैसी रहने दें।</string>
     <string name="home_unchanged">नहीं बदली</string>
+    <string name="place_title">मौसम और पंचांग किस जगह का</string>
+    <string name="place_current">%1$s (इस फ़ोन से चुना)</string>
+    <string name="place_auto">जहाँ टीवी है: वह अपने इंटरनेट कनेक्शन से शहर ढूँढ लेता है।</string>
+    <string name="place_use_phone">📍  मेरे फ़ोन की जगह लें</string>
+    <string name="place_city">या शहर लिखें</string>
+    <string name="place_find">चुनें</string>
+    <string name="place_let_tv">टीवी को ख़ुद ढूँढने दें</string>
+    <string name="place_set">अब मौसम और पंचांग %1$s का। टीवी पर भेजने के लिए थीम चुनें।</string>
+    <string name="place_not_found">"%1$s" नहीं मिला। पास का कोई बड़ा शहर लिखें।</string>
+    <string name="place_unknown">फ़ोन को अभी अपनी जगह नहीं पता। शहर लिखें।</string>
+    <string name="place_denied">कोई बात नहीं: शहर लिखें या टीवी को ढूँढने दें।</string>
     <string name="home_putting_on">%1$s आपके टीवी पर लगा रहे हैं…</string>
     <string name="home_installing">होम स्क्रीन इंस्टॉल कर रहे हैं…</string>
     <string name="home_theming">थीम लगा रहे हैं…</string>

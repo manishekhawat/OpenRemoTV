@@ -32,7 +32,7 @@ import java.util.Set;
  *   "wallpaper_rotation_minutes": 1, "wallpaper_order": "shuffle" | "name", "wallpaper_dim": 35,
  *   "wallpaper_months": {"07.webp": [12, 1, 2]},
  *   "captions": true, "daily_card": true, "news_ticker": true, "screensaver": true, "reduced_motion": true,
- *   "weather_city": "Delhi", "weather_latitude": 28.6139, "weather_longitude": 77.209,
+ *   "weather_city": "Mumbai", "weather_latitude": 19.07, "weather_longitude": 72.88,   (or "auto": the TV finds it)
  *   "festival_dates": [{"festival": "diwali", "from": "2026-11-08", "until": "2026-11-09", "greeting": "…"}],
  *   "calendar_dates": [{"name": "Republic Day", "date": "2027-01-26"}],
  *   "family_dates": [{"name": "Maa's birthday", "date": "03-14"}]
@@ -112,8 +112,29 @@ final class Theme {
         } catch (Exception ignored) {
             // never written
         }
-        return new Theme(o == null ? new JSONObject() : o, dir, revision);
+        if (o == null) o = new JSONObject();
+        // No place from the phone: the city the TV found from its internet address (GeoIp), when it has one.
+        String city = o.optString("weather_city", "").trim();
+        boolean fromTv = city.isEmpty() || "auto".equalsIgnoreCase(city) || Double.isNaN(o.optDouble("weather_latitude", Double.NaN));
+        if (fromTv) {
+            Object[] geo = GeoIp.cached(context);
+            try {
+                if (geo != null) {
+                    o.put("weather_city", geo[0]).put("weather_latitude", geo[1]).put("weather_longitude", geo[2]);
+                } else {
+                    o.remove("weather_city");
+                }
+            } catch (org.json.JSONException ignored) {
+                // keeps the theme without a place
+            }
+        }
+        Theme t = new Theme(o, dir, revision);
+        t.placeFromTv = fromTv;
+        return t;
     }
+
+    /** True when the theme has no place of its own and the TV looks one up (see {@link GeoIp}). */
+    boolean placeFromTv;
 
     Theme(JSONObject o, File dir, String revision) {
         folder = dir;
