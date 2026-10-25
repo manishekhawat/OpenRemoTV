@@ -8,7 +8,7 @@ The first open-source release.
 
 ### Phone app
 - Remote with hold-to-repeat keys, Apps, Send (YouTube links, photos, videos, files), Sweep and Check.
-- Sweep: backup first, 260 tested TV lists or the common list, a switch per app, optional clean home screen, share
+- Sweep: backup first, OpenRemoTV's own lists for each TV family or the common list, a switch per app, optional clean home screen, share
   card, and Undo anytime back to the first backup.
 - Change the TV's home screen theme straight from the Sweep tab.
 - English and Hindi; screen-reader labels, roles and spoken progress; About screen with every credit.

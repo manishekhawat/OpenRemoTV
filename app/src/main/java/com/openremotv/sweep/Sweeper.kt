@@ -20,7 +20,7 @@ data class SweepItem(val pkg: String, val sweep: Boolean) {
 }
 
 /**
- * The sweep, the TidyTV way: back up first (always), offer the tested list's apps that are on this TV with a switch
+ * The sweep: back up first (always), offer the list's apps that are on this TV with a switch
  * each, turn them off one at a time (logged before each change), swap the home screen only if the new one really
  * takes Home, and put everything back with one tap. The first backup of each TV is kept forever as "original":
  * Undo goes back to it, however many sweeps came after.

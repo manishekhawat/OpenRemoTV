@@ -144,14 +144,14 @@
         <item quantity="other">%1$d ऐप्स का बैकअप फ़ोन और टीवी पर हो गया।</item>
     </plurals>
     <string name="list_title">2 · कौन-सी सूची?</string>
-    <string name="list_sub">ये जाँचे गए टीवी आपके जैसे लगते हैं। सबसे मिलता-जुलता या आम सूची चुनें।</string>
+    <string name="list_sub">ये सूचियाँ आपके जैसे टीवी के लिए हैं। सबसे मिलती-जुलती या आम सूची चुनें।</string>
     <plurals name="list_apps">
         <item quantity="one">%1$s · सूची में %2$d ऐप</item>
         <item quantity="other">%1$s · सूची में %2$d ऐप्स</item>
     </plurals>
     <string name="list_common">आम सूची</string>
-    <string name="list_common_sub">वे ऐप्स जिन्हें ज़्यादातर जाँचे गए टीवी बंद करते हैं। नए टीवी के लिए अच्छी।</string>
-    <string name="list_search">सभी %1$d जाँचे गए टीवी में खोजें</string>
+    <string name="list_common_sub">हर Android TV और Google TV में आने वाले फ़ालतू ऐप्स। किसी भी टीवी के लिए।</string>
+    <string name="list_search">सभी %1$d सूचियों में खोजें</string>
     <string name="sweep_reading">टीवी पर क्या है, पढ़ रहे हैं…</string>
     <string name="choose_title">3 · सफ़ाई</string>
     <string name="choose_sub">चालू = हटेगा। परिवार जिन ऐप्स को अक्सर रखते हैं, वे बंद से शुरू होते हैं; जो चाहें बदलें।</string>
@@ -202,10 +202,8 @@
     <string name="about_licence_title">लाइसेंस</string>
     <string name="about_licence">OpenRemoTV, MIT लाइसेंस के तहत मुफ़्त सॉफ़्टवेयर है।</string>
     <string name="about_credits_title">आभार</string>
-    <string name="about_credit_lists">जाँचे गए टीवी की सूचियाँ cleanyourtv और उसके योगदानकर्ताओं से हैं (MIT)।</string>
     <string name="about_credit_font">Outfit फ़ॉन्ट, Outfit Project Authors का (SIL Open Font License 1.1)।</string>
     <string name="about_credit_libraries">mobile.dev का dadb, Google के AndroidX और Jetpack Compose, JetBrains का Kotlin, QR कोड के लिए ZXing (Apache 2.0)।</string>
-    <string name="about_credit_tidytv">सफ़ाई का तरीका TidyTV से प्रेरित है (MIT)।</string>
     <string name="about_photos_title">IndiaMinimalist की तस्वीरें</string>
     <string name="about_photos_note">Wikimedia Commons से, हर एक अपने लाइसेंस के तहत, टीवी के लिए छोटी की गईं:</string>
 </resources>

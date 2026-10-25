@@ -30,13 +30,13 @@
   "@type": "FAQPage",
   "mainEntity": [
     {"@type": "Question", "name": "How do I remove bloatware from Android TV without root?",
-     "acceptedAnswer": {"@type": "Answer", "text": "Use ADB's disable-for-this-user command (pm disable-user), which turns an app off without uninstalling it. OpenRemoTV does this from your phone over Wi-Fi, one switch per app, starting from a list tested on a TV like yours."}},
+     "acceptedAnswer": {"@type": "Answer", "text": "Use ADB's disable-for-this-user command (pm disable-user), which turns an app off without uninstalling it. OpenRemoTV does this from your phone over Wi-Fi, one switch per app, starting from the list for TVs like yours."}},
     {"@type": "Question", "name": "Is debloating my TV with OpenRemoTV safe?",
      "acceptedAnswer": {"@type": "Answer", "text": "Yes. Apps are only disabled, never uninstalled, a backup is taken first, and apps the TV needs to work are locked."}},
     {"@type": "Question", "name": "How do I undo it?",
      "acceptedAnswer": {"@type": "Answer", "text": "Open Sweep and tap Undo anytime. Every app that was on in your first backup comes back, with the original home screen."}},
     {"@type": "Question", "name": "Which TVs does OpenRemoTV work with?",
-     "acceptedAnswer": {"@type": "Answer", "text": "Android TV and Google TV on Android 8 or newer, and Fire TV for debloating. It ships tested lists for 260 TV models."}},
+     "acceptedAnswer": {"@type": "Answer", "text": "Android TV and Google TV on Android 8 or newer, and Fire TV for debloating. It ships its own lists for the common TV families."}},
     {"@type": "Question", "name": "Does OpenRemoTV collect data?",
      "acceptedAnswer": {"@type": "Answer", "text": "No. There are no accounts, analytics or ads."}}
   ]
@@ -84,7 +84,7 @@
     <h2>What it does</h2>
     <ul>
       <li><b>Remote</b>: arrows, OK, back, home, volume, power and typing, with hold-to-repeat keys.</li>
-      <li><b>Sweep</b>: turns off bloatware using lists tested on 260 TVs. Disabled, never uninstalled.</li>
+      <li><b>Sweep</b>: turns off bloatware using lists for each TV family. Disabled, never uninstalled.</li>
       <li><b>Undo anytime</b>: back to your very first backup in one tap.</li>
       <li><b>Send</b>: YouTube links, photos, videos and files straight to the TV.</li>
       <li><b>Home screens</b>: MangaHome, a whole comic page, and IndiaMinimalist, with photos of India and the Panchang.</li>
@@ -96,7 +96,7 @@
   <div class="panel">
     <h2>Questions</h2>
     <h3>How do I remove bloatware from Android TV without root?</h3>
-    <p>Use ADB's "disable for this user" command, which turns an app off without uninstalling it. OpenRemoTV does it from your phone, one switch per app, starting from a list tested on a TV like yours.</p>
+    <p>Use ADB's "disable for this user" command, which turns an app off without uninstalling it. OpenRemoTV does it from your phone, one switch per app, starting from the list for TVs like yours.</p>
     <h3>Is it safe?</h3>
     <p>Apps are only disabled, never uninstalled. A backup comes first, and apps the TV needs are locked.</p>
     <h3>How do I undo it?</h3>
@@ -107,7 +107,7 @@
     <p>No accounts, no analytics, no ads. <a href="https://github.com/manishekhawat/OpenRemoTV/blob/main/PRIVACY.md">Privacy</a></p>
   </div>
 
-  <p>MIT licence. Sweep flow inspired by <a href="https://github.com/jolan94/tidytv">TidyTV</a>.</p>
+  <p>MIT licence.</p>
 </main>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Contributing to OpenRemoTV
 
-Thank you for helping. Bug reports, tested TV lists, translations, themes and code are all welcome.
+Thank you for helping. Bug reports, TV lists, translations, themes and code are all welcome.
 
 ## Ground rules
 
@@ -46,8 +46,8 @@ in the pull request.
 
 ## Adding things
 
-- **A tested TV list:** it comes from [cleanyourtv](https://github.com/Gathin23/cleanyourtv)'s `examples/`. Add it
-  there, then run `python3 tools/make-lists.py <path to cleanyourtv>` to refresh `assets/lists.json`.
+- **A TV list:** add or extend an entry in `app/src/main/assets/lists.json` (`id`, `tv`, `os`, `brand`,
+  `packages`). Only packages you have turned off on that TV yourself, with Undo checked afterwards.
 - **A translation:** copy `app/src/main/res/values/strings.xml` to `values-<language>/strings.xml` and translate
   the text, keeping every `%1$s` and `%1$d`.
 - **A theme:** add `app/src/main/assets/themes/<name>/` with a `config.json` (see the two existing themes),

@@ -4,7 +4,7 @@ import com.openremotv.tv.Tv
 import android.content.Context
 import org.json.JSONArray
 
-/** One tested TV from cleanyourtv's examples/ (assets/lists.json, made by tools/make-lists.py). */
+/** One OpenRemoTV sweep list, for a family of TVs (assets/lists.json). */
 data class TvList(val id: String, val tv: String, val os: String, val brand: String, val packages: List<String>)
 
 /** What the TV says it is, from getprop. */
@@ -13,9 +13,9 @@ data class TvInfo(val model: String, val brand: String, val maker: String, val d
 }
 
 /**
- * The lists of apps to sweep, and finding the right one for a TV: every tested TV's list is scored against the
- * TV's model, brand, maker and device names; the best few are offered, with a "common list" (what at least eight
- * tested TVs turn off) for a TV nobody has tested yet.
+ * The lists of apps to sweep, and finding the right one for a TV: each family's list is scored against the TV's
+ * model, brand, maker and device names; the best few are offered, with the common list for any other TV. Apps the
+ * TV needs are locked whatever a list says, and apps that aren't on the TV are skipped.
  */
 object Lists {
 
@@ -43,26 +43,23 @@ object Lists {
     private fun words(s: String) = s.lowercase().split(Regex("[^a-z0-9]+")).filter { it.length >= 2 }.toSet()
     private fun squash(s: String) = s.lowercase().replace(Regex("[^a-z0-9]"), "")
 
-    /** The tested lists that look like this TV, best first (at most five). */
+    /** The family lists that look like this TV, best first (at most five); never the common list. */
     fun matches(context: Context, info: TvInfo): List<TvList> {
         val model = squash(info.model)
         val mine = words("${info.model} ${info.brand} ${info.maker} ${info.device}") - setOf("android", "tv", "box")
-        return all(context).map { list ->
+        return all(context).filter { it.id != COMMON }.map { list ->
             val theirs = words("${list.id} ${list.tv} ${list.brand}")
             var score = (mine intersect theirs).size
             if (model.length >= 3 && (squash(list.id).contains(model) || squash(list.tv).contains(model))) score += 10
             if (info.brand.isNotBlank() && list.brand.equals(info.brand, ignoreCase = true)) score += 2
             list to score
-        }.filter { it.second >= 2 }.sortedByDescending { it.second }.take(5).map { it.first }
+        }.filter { it.second >= 1 }.sortedByDescending { it.second }.take(5).map { it.first }
     }
 
-    /** For a TV nobody has tested: what at least eight tested TVs turn off. */
-    fun common(context: Context): TvList {
-        val counts = HashMap<String, Int>()
-        all(context).forEach { l -> l.packages.forEach { counts[it] = (counts[it] ?: 0) + 1 } }
-        val pkgs = counts.filter { it.value >= 8 }.keys.sortedByDescending { counts[it] }
-        return TvList("common", "Common list (apps most tested TVs turn off)", "", "", pkgs)
-    }
+    /** For any other TV: the extras every Android TV and Google TV ships. */
+    fun common(context: Context): TvList = all(context).first { it.id == COMMON }
+
+    private const val COMMON = "common"
 
     /**
      * Apps a family often wants kept: streaming, the assistant, casting, the updater and Wi-Fi setup, and the stock

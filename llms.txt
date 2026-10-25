@@ -7,7 +7,7 @@
 Key facts:
 - Works on Android TV and Google TV devices running Android 8 or newer, and on Fire TV for debloating.
 - Debloating uses `pm disable-user --user 0`, so every app can be turned back on. Apps the TV needs are locked.
-- Ships tested debloat lists for 260 TV models (from the cleanyourtv project) plus a common list.
+- Ships its own debloat lists for TV families (Sony, TCL, Xiaomi, Philips, Google TV, Android TV boxes, Fire TV) plus a common list.
 - Phone features: remote with typing, open TV apps, send YouTube links, photos, videos and files, sweep, check.
 - Home screens: MangaHome (a comic page with the mascot Remo) and IndiaMinimalist (photos of India, Panchang).
 - Languages: English and Hindi. No accounts, no analytics, no ads.

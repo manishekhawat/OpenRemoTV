@@ -3,7 +3,7 @@ OpenRemoTV is a phone remote and debloater for Android TV, Google TV and Fire TV
 <b>Remote</b>: arrows, OK, back, home, play, volume, mute, power and typing on the TV, with hold-to-repeat keys.
 <b>Apps</b>: open anything on the TV.
 <b>Send</b>: play YouTube links, show photos, play videos, or drop any file on the TV. Share to OpenRemoTV from any app.
-<b>Sweep</b>: back up first, then turn off bloatware from a list tested on 260 TVs, or the common list. Apps are disabled, never uninstalled, and the ones the TV needs are locked.
+<b>Sweep</b>: back up first, then turn off bloatware from the list for your TV's family, or the common list. Apps are disabled, never uninstalled, and the ones the TV needs are locked.
 <b>Undo anytime</b>: back to your first backup with one tap.
 <b>Check</b>: find apps a TV update switched back on.
 <b>Home screens</b>: MangaHome, a whole comic page with Remo the mascot, or IndiaMinimalist, with photos of India, the Panchang and festivals.

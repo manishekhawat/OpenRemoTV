@@ -19,7 +19,7 @@ screen.
 - **Apps.** Every app on the TV; tap one to open it on the TV.
 - **Send.** A YouTube link plays on the TV; a photo, video or any file opens there. Share from YouTube, Photos or
   Files straight to OpenRemoTV.
-- **Sweep (debloat).** Backup → pick a tested list for your TV (260 TVs) or the common list → choose apps → sweep →
+- **Sweep (debloat).** Backup → pick the list for your TV's family (Sony, TCL, Xiaomi, Philips, Google TV, boxes, Fire TV) or the common list → choose apps → sweep →
   optional clean home screen → done → share it. **Undo anytime** goes back to your very first backup.
 - **Check.** Finds apps a TV update switched back on, and turns them off again.
 - **Two home screens.** **MangaHome**, a whole comic page with Remo the mascot, and **IndiaMinimalist**, with monuments
@@ -40,7 +40,7 @@ screen.
 
 Use ADB's "disable for this user" command (`pm disable-user`), which turns an app off without uninstalling it. Root
 isn't needed, and every app can be turned back on. OpenRemoTV does this for you from your phone, one switch per
-app, starting from a list tested on a TV like yours.
+app, starting from the list for TVs like yours.
 
 ### Is it safe?
 
@@ -55,8 +55,9 @@ original home screen and animation speeds. **Sweep by hand** has an **Undo every
 
 ### Which TVs work?
 
-Any TV or box running Android TV or Google TV on Android 8 or newer, and Fire TV for sweeping. The tested lists
-cover 260 models from TCL, Sony, Xiaomi, Philips, Hisense, Skyworth, Amazon Fire TV, Google, OnePlus, NVIDIA Shield and more.
+Any TV or box running Android TV or Google TV on Android 8 or newer, and Fire TV for sweeping. OpenRemoTV's lists
+cover Sony, TCL, Xiaomi, Philips, Google TV, Android TV boxes and Fire TV, and a common list fits any other TV.
+Apps the TV needs are locked whatever a list says.
 
 ### Does it collect any data?
 
@@ -87,7 +88,6 @@ key; see [CONTRIBUTING.md](CONTRIBUTING.md) for tests, screenshots and signing.
 | `app/src/main/assets/themes/` | The **MangaHome** and **IndiaMinimalist** themes: settings, wallpapers, captions and facts |
 | `homescreen/` | **OpenRemoTV Home**, the TV home screen the themes run on (plain Java, one activity, two pages) |
 | `keyserver/` | The small helper the app starts on the TV for instant keys, files and app switches |
-| `tools/make-lists.py` | Rebuilds `assets/lists.json` from cleanyourtv's tested TV lists |
 | `docs/` | Screenshots and the project website |
 
 ## How it works
@@ -104,7 +104,6 @@ Bug reports, TV lists, translations and themes are welcome. Start with [CONTRIBU
 
 ## Licence and credits
 
-OpenRemoTV is released under the [MIT licence](LICENSE). The tested TV lists come from the
-[cleanyourtv](https://github.com/Gathin23/cleanyourtv) project and its contributors (MIT). The Sweep flow was inspired by [TidyTV](https://github.com/jolan94/tidytv). The IndiaMinimalist
+OpenRemoTV is released under the [MIT licence](LICENSE). The IndiaMinimalist
 photos are from Wikimedia Commons under their own Creative Commons licences, credited in
 [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md). See [NOTICE.md](NOTICE.md) for everything else.
