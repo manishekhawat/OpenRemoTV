@@ -5,7 +5,7 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
 ## 0.1.9 (2026-10-26)
 
 ### TV home screen
-- Live TV: a new TV button beside the radio lists ten free HD channels (Hindi news, films, sport and music; English news and films), and plays each at its
+- Live TV: a new TV button beside the radio lists ten free HD channels (Hindi news, films, sport and music; English sport, news and films), and plays each at its
   sharpest picture, full screen, with its own player (the TV's built-in one crashes on some channels). Up and down change
   channel; Back returns Home.
 - The weather says whose weather it is: the town now shows on both MangaHome and IndiaMinimalist.
