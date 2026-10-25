@@ -128,7 +128,9 @@ class Tv(private val context: Context) {
         val dex = context.assets.open("keyserver.dex").use { it.readBytes() }
         val b64 = android.util.Base64.encodeToString(dex, android.util.Base64.NO_WRAP)
         // A helper left from an older version (another token) would hold the port.
-        shell("pkill -f KeyServer; rm -f $HELPER.b64 /data/local/tmp/km8keys.*")
+        // Its own line, and a pattern that doesn't match itself: "pkill -f KeyServer" also killed the shell running it.
+        shell("pkill -f '[K]eyServer'")
+        shell("rm -f $HELPER.b64 $HELPER.key /data/local/tmp/km8keys.*")
         b64.chunked(2000).forEach { shell("echo -n $it >> $HELPER.b64") }
         val size = shell("base64 -d $HELPER.b64 > $HELPER.dex && rm $HELPER.b64 && stat -c %s $HELPER.dex").trim()
         check(size == dex.size.toString()) { "the helper didn't copy to the TV ($size)" }
