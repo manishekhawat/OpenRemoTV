@@ -10,7 +10,7 @@ screen.
   <img src="docs/screenshots/phone-sweep.png" alt="The Sweep screen, with Backup, Sweep, Home, Done and Share steps" width="200">
   <img src="docs/screenshots/phone-pick.png" alt="Picking the kind of TV" width="200">
 </p>
-<img src="docs/screenshots/tv-mangahome.png" alt="The MangaHome home screen on a TV: comic panels for the clock, weather, today and apps" width="620">
+<img src="docs/screenshots/tv-mangahome.png" alt="The MangaHome home screen on a TV: comic panels for the clock, the weather, today and the apps, with round buttons for Wi-Fi, voice, radio, live TV and more" width="620">
 
 ## What it does
 
