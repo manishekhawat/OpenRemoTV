@@ -23,7 +23,7 @@ object ShareCard {
         file.outputStream().use { draw(tvName, swept, home).compress(Bitmap.CompressFormat.PNG, 100, it) }
         val uri = FileProvider.getUriForFile(context, context.packageName + ".files", file)
         val send = Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri)
-            .putExtra(Intent.EXTRA_TEXT, "I swept $swept apps off my TV with KM8 Remote!")
+            .putExtra(Intent.EXTRA_TEXT, "I swept $swept apps off my TV with RemoteSweepTV!")
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(Intent.createChooser(send, "Share your sweep").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
@@ -93,7 +93,7 @@ object ShareCard {
         c.rotate(-12f, 860f, 330f)
         text("SHAAA!", 860f, 350f, 96f, red, center = true)
         c.restore()
-        text("KM8 Remote · disabled, never deleted · undo any time", 540f, 1290f, 34f, ink, center = true)
+        text("RemoteSweepTV · disabled, never deleted · undo any time", 540f, 1290f, 34f, ink, center = true)
         return bmp
     }
 }

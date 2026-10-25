@@ -20,6 +20,7 @@ class ScreensTest {
         MangaTheme {
             MangaPage {
                 Box(Modifier.weight(1f).fillMaxWidth()) { body() }
+                TvBar(true, "KM8", "192.168.1.50") {}
                 MangaTabs(tab) {}
             }
         }

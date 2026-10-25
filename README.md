@@ -1,4 +1,4 @@
-# KM8 Remote
+# RemoteSweepTV
 
 A phone app for Android TV, Google TV and Fire TV, inspired by [TidyTV](https://github.com/jolan94/tidytv) (MIT),
 with a manga look and an original mascot, Remo. It talks to the TV over Wi-Fi with ADB (port 5555), using
@@ -15,9 +15,9 @@ and **Undo anytime** (back to the original backup). Rebuild the lists with `pyth
 - **Remote:** arrows, OK, back, home, play/pause, volume, mute, power, and typing into the TV.
 - **Apps:** everything on the TV's home screen; tap to open it on the TV.
 - **Send:** a YouTube link plays in YouTube on the TV; a photo or video opens on the TV; any file lands in the TV's
-  Download/KM8Remote folder. Share from YouTube, Photos or Files to "KM8 Remote" to send in one tap.
+  Download/RemoteSweepTV folder. Share from YouTube, Photos or Files to "RemoteSweepTV" to send in one tap.
 - **Tidy:** turn apps off and on (disabled, never uninstalled); apps the TV needs are locked. "Undo everything"
-  turns back on all that this phone turned off. Each change is logged on the TV in /sdcard/KM8Remote/changes.txt.
+  turns back on all that this phone turned off. Each change is logged on the TV in /sdcard/RemoteSweepTV/changes.txt.
 - **Check:** finds apps a TV update switched back on (from the 2026-10-24 cleanup and this app's own changes).
 
 ## Build and install

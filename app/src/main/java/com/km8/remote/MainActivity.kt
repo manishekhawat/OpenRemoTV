@@ -38,7 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * KM8 Remote: a phone app for Android TV, Google TV and Fire TV over Wi-Fi, TidyTV-style with a manga look. First
+ * RemoteSweepTV: a phone app for Android TV, Google TV and Fire TV over Wi-Fi, TidyTV-style with a manga look. First
  * Pick my TV and Connect; then five tabs: Remote (arrows, OK, back, home, volume, power, typing), Apps (open anything
  * on the TV), Send (YouTube links, photos, videos, files), Sweep (backup, the tested list for this TV, clean home
  * screen, done, share it, undo anytime; or single apps by hand) and Check (apps a TV update turned back on). Sharing a link or a file to this app from
@@ -136,20 +136,6 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
     }
 
     MangaPage {
-        // Title strip, like a chapter heading.
-        Row(
-            Modifier.fillMaxWidth().background(Ink.ink).statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Mascot(Modifier.size(44.dp))
-            Spacer(Modifier.width(10.dp))
-            Column(Modifier.weight(1f)) {
-                Text("KM8 REMOTE", style = Shout, fontSize = 22.sp, color = Ink.paper)
-                if (connected) Text("$model · ${tv.host}", fontSize = 12.sp, color = Ink.tone)
-            }
-            if (connected) Text("Change TV", color = Ink.paper, fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable { tv.disconnect(); connected = false }.padding(8.dp))
-        }
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (!connected) {
                 if (kind == null) PickScreen { k -> kind = k; prefs.edit().putString("kind", k.name).apply() }
@@ -176,7 +162,31 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
                 SpeechBubble(it, Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 8.dp))
             }
         }
+        // A slim bar at the bottom, just above the tabs: who is connected, and a way to switch TVs.
+        TvBar(connected, model, tv.host) { tv.disconnect(); connected = false }
         if (connected) MangaTabs(tab) { tab = it }
+    }
+}
+
+/** RemoteSweepTV's name and the TV in use, in one slim ink strip. */
+@Composable
+internal fun TvBar(connected: Boolean, model: String, host: String, onChange: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().background(Ink.ink).padding(horizontal = 12.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(30.dp).background(Ink.paper, CircleShape), contentAlignment = Alignment.Center) {
+            Mascot(Modifier.size(28.dp))
+        }
+        Spacer(Modifier.width(8.dp))
+        Text("REMOTESWEEPTV", style = Shout, fontSize = 15.sp, color = Ink.paper)
+        if (connected) {
+            Text("  ·  $model · $host", fontSize = 12.sp, color = Ink.tone, maxLines = 1, modifier = Modifier.weight(1f))
+            Text("Change TV", color = Ink.paper, fontWeight = FontWeight.Bold, fontSize = 13.sp,
+                modifier = Modifier.clickable { onChange() }.padding(horizontal = 6.dp, vertical = 4.dp))
+        } else {
+            Spacer(Modifier.weight(1f))
+        }
     }
 }
 
@@ -184,8 +194,8 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
 @Composable
 internal fun MangaTabs(current: Tab, onPick: (Tab) -> Unit) {
     Row(
-        Modifier.fillMaxWidth().background(Ink.paper).border(3.dp, Ink.ink).navigationBarsPadding()
-            .padding(horizontal = 6.dp, vertical = 8.dp),
+        Modifier.fillMaxWidth().background(Ink.paper).navigationBarsPadding()
+            .padding(horizontal = 6.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         Tab.entries.forEach { t ->
@@ -194,7 +204,7 @@ internal fun MangaTabs(current: Tab, onPick: (Tab) -> Unit) {
                 Modifier.weight(1f).padding(horizontal = 3.dp)
                     .background(if (on) Ink.ink else Ink.paper, RoundedCornerShape(8.dp))
                     .border(2.dp, Ink.ink, RoundedCornerShape(8.dp))
-                    .clickable { onPick(t) }.padding(vertical = 6.dp),
+                    .clickable { onPick(t) }.padding(vertical = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon(t.icon, null, tint = if (on) Ink.paper else Ink.ink)
@@ -278,52 +288,48 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
         run { tv.key(code) }
     }
 
-    Column(
-        Modifier.fillMaxSize().verticalScrollable().padding(horizontal = 20.dp, vertical = 14.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            InkKey(Icons.Filled.PowerSettingsNew, "Power", tint = Ink.red) { key(26, "BAN!") }
-            InkKey(Icons.Filled.Home, "Home") { key(3, "TADA!") }
-            InkKey(Icons.AutoMirrored.Filled.ArrowBack, "Back") { key(4, "SHU!") }
-            InkKey(Icons.Filled.PlayArrow, "Play/pause") { key(85) }
-        }
-        // The D-pad inside a burst of speed lines.
-        Box(Modifier.size(290.dp), contentAlignment = Alignment.Center) {
-            Canvas(Modifier.matchParentSize()) { speedLines(count = 56) }
-            Box(Modifier.size(266.dp)) {
-                Box(Modifier.align(Alignment.TopCenter)) { InkKey(Icons.Filled.KeyboardArrowUp, "Up", 74.dp) { key(19) } }
-                Box(Modifier.align(Alignment.BottomCenter)) { InkKey(Icons.Filled.KeyboardArrowDown, "Down", 74.dp) { key(20) } }
-                Box(Modifier.align(Alignment.CenterStart)) { InkKey(Icons.Filled.KeyboardArrowLeft, "Left", 74.dp) { key(21) } }
-                Box(Modifier.align(Alignment.CenterEnd)) { InkKey(Icons.Filled.KeyboardArrowRight, "Right", 74.dp) { key(22) } }
-                Panel(Modifier.size(92.dp).align(Alignment.Center), CircleShape, Ink.ink, onClick = { key(23, "DON!") }) {
-                    Text("OK", style = Shout, fontSize = 30.sp, color = Ink.paper, modifier = Modifier.align(Alignment.Center))
-                }
+    // Everything sized from the room there is, so the whole remote fits on one screen without scrolling.
+    BoxWithConstraints(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 10.dp)) {
+        val k = (maxHeight / 10).coerceIn(44.dp, 60.dp)
+        val pad = (maxHeight - k * 2 - 64.dp - 36.dp).coerceAtMost(maxWidth * 0.86f).coerceIn(180.dp, 300.dp)
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                InkKey(Icons.Filled.PowerSettingsNew, "Power", k, tint = Ink.red) { key(26, "BAN!") }
+                InkKey(Icons.Filled.Home, "Home", k) { key(3, "TADA!") }
+                InkKey(Icons.AutoMirrored.Filled.ArrowBack, "Back", k) { key(4, "SHU!") }
+                InkKey(Icons.Filled.PlayArrow, "Play/pause", k) { key(85) }
             }
-            SoundEffect(sfx, sfxKey, Modifier.align(Alignment.TopEnd))
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            InkKey(Icons.AutoMirrored.Filled.VolumeDown, "Volume down") { key(25) }
-            InkKey(Icons.AutoMirrored.Filled.VolumeOff, "Mute") { key(164, "SHIIN…") }
-            InkKey(Icons.AutoMirrored.Filled.VolumeUp, "Volume up") { key(24) }
-        }
-        Panel(Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(10.dp)) {
-                Text("TYPE ON THE TV", style = Shout, fontSize = 13.sp)
-                Text("Put the TV's cursor in a search box first.", color = Ink.muted, fontSize = 12.sp)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(text, { text = it }, singleLine = true, modifier = Modifier.weight(1f))
-                    Spacer(Modifier.width(8.dp))
-                    InkKey(Icons.Filled.Backspace, "Delete", 48.dp) { key(67) }
-                    Spacer(Modifier.width(8.dp))
-                    MangaButton("GO", loud = true) { val t = text; text = ""; sfx = "KAKI!"; sfxKey++; run { tv.type(t); tv.key(66) } }
+            // The D-pad inside a burst of speed lines.
+            Box(Modifier.size(pad), contentAlignment = Alignment.Center) {
+                Canvas(Modifier.matchParentSize()) { speedLines(count = 56) }
+                val arrow = pad * 0.28f
+                Box(Modifier.align(Alignment.TopCenter)) { InkKey(Icons.Filled.KeyboardArrowUp, "Up", arrow) { key(19) } }
+                Box(Modifier.align(Alignment.BottomCenter)) { InkKey(Icons.Filled.KeyboardArrowDown, "Down", arrow) { key(20) } }
+                Box(Modifier.align(Alignment.CenterStart)) { InkKey(Icons.Filled.KeyboardArrowLeft, "Left", arrow) { key(21) } }
+                Box(Modifier.align(Alignment.CenterEnd)) { InkKey(Icons.Filled.KeyboardArrowRight, "Right", arrow) { key(22) } }
+                Panel(Modifier.size(pad * 0.36f).align(Alignment.Center), CircleShape, Ink.ink, onClick = { key(23, "DON!") }) {
+                    Text("OK", style = Shout, fontSize = 26.sp, color = Ink.paper, modifier = Modifier.align(Alignment.Center))
                 }
+                SoundEffect(sfx, sfxKey, Modifier.align(Alignment.TopEnd))
             }
-        }
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Mascot(Modifier.size(84.dp))
-            SpeechBubble("Remo here! Point, press, enjoy. Ganbatte!", Modifier.weight(1f))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                InkKey(Icons.AutoMirrored.Filled.VolumeDown, "Volume down", k) { key(25) }
+                InkKey(Icons.AutoMirrored.Filled.VolumeOff, "Mute", k) { key(164, "SHIIN…") }
+                InkKey(Icons.AutoMirrored.Filled.VolumeUp, "Volume up", k) { key(24) }
+            }
+            // Typing: one compact row (put the TV's cursor in a search box first).
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                OutlinedTextField(text, { text = it }, singleLine = true, placeholder = { Text("Type on the TV…") },
+                    modifier = Modifier.weight(1f))
+                Spacer(Modifier.width(8.dp))
+                InkKey(Icons.Filled.Backspace, "Delete", 46.dp) { key(67) }
+                Spacer(Modifier.width(8.dp))
+                MangaButton("GO", loud = true) { val t = text; text = ""; sfx = "KAKI!"; sfxKey++; run { tv.type(t); tv.key(66) } }
+            }
         }
     }
 }
@@ -337,24 +343,28 @@ private fun Modifier.verticalScrollable(): Modifier =
 internal fun AppsScreen(apps: Apps, run: (suspend () -> Unit) -> Unit) {
     val list = remember { mutableStateListOf<TvApp>() }
     LaunchedEffect(Unit) { run { list.clear(); list.addAll(apps.list().filter { it.launch != null && it.enabled }) } }
-    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        item { Spacer(Modifier.height(12.dp)); Heading("Open on the TV") }
-        if (list.isEmpty()) item { SpeechBubble("Fetching the TV's apps…") }
-        items(list, key = { it.pkg }) { app ->
-            Panel(Modifier.fillMaxWidth(), onClick = { run { apps.open(app) } }) {
-                Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(40.dp).background(Ink.ink, CircleShape), contentAlignment = Alignment.Center) {
-                        Text(app.name.take(1).uppercase(), style = Shout, color = Ink.paper, fontSize = 20.sp)
+    // Two columns of compact panels: a dozen apps fit on one screen.
+    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+        androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
+        Modifier.fillMaxSize().padding(horizontal = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(vertical = 14.dp),
+    ) {
+        item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(2) }) { Heading("Open on the TV") }
+        if (list.isEmpty()) item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(2) }) { SpeechBubble("Fetching the TV's apps…") }
+        items(list.size) { i ->
+            val app = list[i]
+            Panel(Modifier.fillMaxWidth().height(64.dp), shadow = 4.dp, onClick = { run { apps.open(app) } }) {
+                Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(32.dp).background(Ink.ink, CircleShape), contentAlignment = Alignment.Center) {
+                        Text(app.name.take(1).uppercase(), style = Shout, color = Ink.paper, fontSize = 16.sp)
                     }
-                    Spacer(Modifier.width(12.dp))
-                    Column {
-                        Text(app.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        Text(app.pkg, fontSize = 11.sp, color = Ink.muted)
-                    }
+                    Spacer(Modifier.width(8.dp))
+                    Text(app.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 2)
                 }
             }
         }
-        item { Spacer(Modifier.height(16.dp)) }
     }
 }
 
@@ -365,7 +375,7 @@ internal fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (Str
         if (uri != null) run { say("Sending… ZOOM!"); say("Sent ${send.file(uri)} to the TV!") }
     }
     Column(Modifier.fillMaxSize().verticalScrollable().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Heading("Send to the TV", "Tip: in YouTube, Photos or Files, tap Share and pick KM8 Remote.")
+        Heading("Send to the TV", "Tip: in YouTube, Photos or Files, tap Share and pick RemoteSweepTV.")
         Panel(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(link, { link = it }, label = { Text("YouTube link") }, modifier = Modifier.fillMaxWidth())
@@ -377,7 +387,7 @@ internal fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (Str
         MangaButton("📷  SHOW A PHOTO", Modifier.fillMaxWidth()) { pick.launch("image/*") }
         MangaButton("🎬  PLAY A VIDEO", Modifier.fillMaxWidth()) { pick.launch("video/*") }
         MangaButton("📦  SEND ANY FILE", Modifier.fillMaxWidth()) { pick.launch("*/*") }
-        Text("Files land in the TV's Download/KM8Remote folder.", color = Ink.muted, fontSize = 13.sp)
+        Text("Files land in the TV's Download/RemoteSweepTV folder.", color = Ink.muted, fontSize = 13.sp)
     }
 }
 

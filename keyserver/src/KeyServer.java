@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  * The first line from the phone must be the token. Then, one command per line:
  *   "23"               press key 23
  *   "t:hello"          type text
- *   "f:<name>:<size>"  followed by exactly <size> bytes: saved as /sdcard/Download/KM8Remote/<name>,
+ *   "f:<name>:<size>"  followed by exactly <size> bytes: saved as /sdcard/Download/RemoteSweepTV/<name>,
  *                      or /data/local/tmp/<name> for "tmp/<name>"
  *   "e:<package>:1|0"  turn an app on, or off for this user (what "pm enable" and "pm disable-user" do)
  * Each command answers one line: "ok", "untypeable" or "error ...". It quits after 15 minutes with no phone.
@@ -82,7 +82,7 @@ public final class KeyServer {
                     String name = new File(asked).getName();
                     long size = Long.parseLong(line.substring(at + 1));
                     // "tmp/x.apk" goes to /data/local/tmp, where pm install can read it; the rest to Downloads.
-                    File dir = new File(asked.startsWith("tmp/") ? "/data/local/tmp" : "/sdcard/Download/KM8Remote");
+                    File dir = new File(asked.startsWith("tmp/") ? "/data/local/tmp" : "/sdcard/Download/RemoteSweepTV");
                     dir.mkdirs();
                     try (FileOutputStream f = new FileOutputStream(new File(dir, name))) {
                         byte[] buffer = new byte[64 * 1024];

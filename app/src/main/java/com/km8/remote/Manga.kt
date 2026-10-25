@@ -162,18 +162,22 @@ fun SpeechBubble(text: String, modifier: Modifier = Modifier) {
     Box(modifier.padding(bottom = 14.dp)) {
         Canvas(Modifier.matchParentSize()) {
             val r = 22.dp.toPx()
+            val line = 3.dp.toPx()
+            val x1 = size.width * 0.16f
+            val x2 = size.width * 0.26f
+            val tip = Offset(size.width * 0.10f, size.height + 14.dp.toPx())
+            // The bubble, then the tail drawn over its bottom edge so the two read as one outline.
+            drawRoundRect(Ink.paper, cornerRadius = CornerRadius(r))
+            drawRoundRect(Ink.ink, cornerRadius = CornerRadius(r), style = Stroke(line))
             val tail = Path().apply {
-                moveTo(size.width * 0.18f, size.height - 2)
-                lineTo(size.width * 0.12f, size.height + 14.dp.toPx())
-                lineTo(size.width * 0.28f, size.height - 2)
+                moveTo(x1, size.height - line)
+                lineTo(tip.x, tip.y)
+                lineTo(x2, size.height - line)
                 close()
             }
-            drawRoundRect(Ink.paper, cornerRadius = CornerRadius(r))
             drawPath(tail, Ink.paper)
-            drawRoundRect(Ink.ink, cornerRadius = CornerRadius(r), style = Stroke(3.dp.toPx()))
-            drawPath(tail, Ink.ink, style = Stroke(3.dp.toPx()))
-            drawRect(Ink.paper, Offset(size.width * 0.18f + 3.dp.toPx(), size.height - 6.dp.toPx()),
-                Size(size.width * 0.1f - 6.dp.toPx(), 6.dp.toPx()))
+            drawLine(Ink.ink, Offset(x1, size.height - line / 2), tip, line, StrokeCap.Round)
+            drawLine(Ink.ink, Offset(x2, size.height - line / 2), tip, line, StrokeCap.Round)
         }
         Text(text, color = Ink.ink, fontWeight = FontWeight.Bold, fontSize = 15.sp,
             modifier = Modifier.padding(horizontal = 22.dp, vertical = 14.dp))

@@ -144,9 +144,9 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                 }
                 SpeechBubble(info?.let { "${it.title} (Android ${it.android}) is connected. Ready to sweep away the clutter?" }
                     ?: "Looking at your TV…")
-                Steps(listOf("Backup", "Sweep", "Clean home", "Done", "Share it"))
+                Steps(listOf("Backup", "Sweep", "Home", "Done", "Share"))
                 MangaButton("START THE SWEEP!", Modifier.fillMaxWidth(), loud = true) { step = Step.BACKUP }
-                MangaButton("↩  UNDO ANYTIME: RESTORE EVERYTHING", Modifier.fillMaxWidth()) { confirmUndo = true }
+                MangaButton("↩  UNDO ANYTIME", Modifier.fillMaxWidth()) { confirmUndo = true }
                 Text("Apps are turned off, never deleted. Your first backup is kept forever.", color = Ink.muted, fontSize = 13.sp)
             }
 
@@ -308,7 +308,8 @@ private fun Steps(names: List<String>) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("${i + 1}", style = Shout, color = Ink.red, fontSize = 18.sp)
-                Text(n.uppercase(), style = Shout, fontSize = 9.sp, maxLines = 1)
+                Text(n.uppercase(), style = Shout, fontSize = 8.sp, maxLines = 2,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center, lineHeight = 9.sp)
             }
         }
     }

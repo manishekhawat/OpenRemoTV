@@ -23,6 +23,7 @@ class WizardTest {
             MangaTheme {
                 MangaPage {
                     Box(Modifier.weight(1f).fillMaxWidth()) { SweepScreen(tv, Apps(paparazzi.context, tv), {}, {}) }
+                    TvBar(true, "KM8", "192.168.1.50") {}
                     MangaTabs(Tab.SWEEP) {}
                 }
             }

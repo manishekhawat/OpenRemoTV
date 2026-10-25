@@ -78,7 +78,7 @@ class Tv(private val context: Context) {
      * The helper on the TV (assets/keyserver.dex, source in keyserver/): started once in the background by the adb
      * shell, then reached over its own TCP port (8766) with a token only this phone knows. Keys land in a few
      * milliseconds, where "input keyevent" started a JVM per key (six seconds on the KM8), and files stream
-     * straight into Download/KM8Remote, where ADB's own push left empty files. Nothing stays open inside adb:
+     * straight into Download/RemoteSweepTV, where ADB's own push left empty files. Nothing stays open inside adb:
      * long-lived adb shell streams left adbd threads spinning.
      */
     private var agent: java.net.Socket? = null
@@ -195,7 +195,7 @@ class Tv(private val context: Context) {
         check(out.contains("new state")) { out.trim().ifEmpty { "the TV refused" } }
     }
 
-    /** Copies a file into the TV's Download/KM8Remote folder under {@code name}. */
+    /** Copies a file into the TV's Download/RemoteSweepTV folder under {@code name}. */
     suspend fun upload(file: File, name: String) {
         val answer = ask("f:$name:${file.length()}", file)
         check(answer == "ok") { answer }
