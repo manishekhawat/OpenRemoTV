@@ -76,13 +76,13 @@
   "date_below_clock": true,
   "readable_text": true,
   "dock_title": false,
-  "widgets": true,
+  "widgets": false,
   "app_library": true,
   "tile_menu": true,
-  "today_line": true,
+  "today_line": false,
   "today_page": true,
   "sleep_timer": true,
-  "daily_card": true,
+  "daily_card": false,
   "calendar_dates": [
     {
       "name": "Children's Day",
@@ -106,5 +106,6 @@
   "games_pill": true,
   "more_pills": true,
   "reduced_motion": true,
-  "manga_style": true
+  "manga_style": true,
+  "manga_layout": true
 }
