@@ -102,22 +102,22 @@
   "ambient_screensaver": true,
   "home_idle_clock_minutes": 10,
   "wallpaper_months": {
-    "07.jpg": [
+    "07.webp": [
       12,
       1,
       2
     ],
-    "08.jpg": [
+    "08.webp": [
       3,
       4,
       5
     ],
-    "09.jpg": [
+    "09.webp": [
       7,
       8,
       9
     ],
-    "10.jpg": [
+    "10.webp": [
       6,
       7,
       8,

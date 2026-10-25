@@ -22,18 +22,6 @@
     <string name="cant_open">Не вдалося відкрити %1$s</string>
     <string name="date_format">EEEE, d MMMM</string>
     <string name="date_format_home">EEEE\nd MMMM</string>
-    <string name="shamsi_month_farvardin">фарвардина</string>
-    <string name="shamsi_month_ordibehesht">ордібехешта</string>
-    <string name="shamsi_month_khordad">хордада</string>
-    <string name="shamsi_month_tir">тіра</string>
-    <string name="shamsi_month_mordad">мордада</string>
-    <string name="shamsi_month_shahrivar">шахрівара</string>
-    <string name="shamsi_month_mehr">мехра</string>
-    <string name="shamsi_month_aban">абана</string>
-    <string name="shamsi_month_azar">азара</string>
-    <string name="shamsi_month_dey">дея</string>
-    <string name="shamsi_month_bahman">бахмана</string>
-    <string name="shamsi_month_esfand">есфанда</string>
     <string name="stats_cpu">CPU %1$d%%</string>
     <string name="stats_memory">Пам’ять %1$d / %2$d МБ</string>
     <string name="stats_storage">Сховище: %1$s вільно</string>
@@ -121,29 +109,6 @@
     <string name="greeting_with_name">%1$s, %2$s</string>
 
     <!-- Race-weekend panel (RaceWeekend). -->
-    <string name="race_kicker">Етап %1$d · %2$s · %3$s</string>
-    <string name="race_kicker_no_place">Етап %1$d · %2$s</string>
-    <string name="race_next">%1$s через %2$s</string>
-    <string name="race_lights_out">Старт гонки через %1$s</string>
-    <string name="race_live">%1$s · у прямому ефірі</string>
-    <string name="race_finished">Клітчастий прапор</string>
-    <string name="race_practice_1">Вільний заїзд 1</string>
-    <string name="race_practice_2">Вільний заїзд 2</string>
-    <string name="race_practice_3">Вільний заїзд 3</string>
-    <string name="race_sprint_qualifying">Кваліфікація спринту</string>
-    <string name="race_sprint">Спринт</string>
-    <string name="race_qualifying">Кваліфікація</string>
-    <string name="race_race">Гонка</string>
-    <string name="race_practice_1_short">ВЗ1</string>
-    <string name="race_practice_2_short">ВЗ2</string>
-    <string name="race_practice_3_short">ВЗ3</string>
-    <string name="race_sprint_qualifying_short">СК</string>
-    <string name="race_sprint_short">СПРИНТ</string>
-    <string name="race_qualifying_short">КВАЛ.</string>
-    <string name="race_race_short">ГОНКА</string>
-    <string name="race_countdown_minutes">%1$d хв</string>
-    <string name="race_countdown_hours">%1$d год %2$d хв</string>
-    <string name="race_countdown_days">%1$d дн %2$d год</string>
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Востаннє відкрито %1$s</string>

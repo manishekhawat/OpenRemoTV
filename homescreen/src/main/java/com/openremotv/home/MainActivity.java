@@ -132,7 +132,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private AppAdapter adapter;
     private RecyclerView grid;
-    private FrameLayout root;
+    FrameLayout root;
     private WallpaperPlayer wallpaperPlayer;
     /** Theme keys added for this TV (voice pill, weather, recent order, festival dates). */
     private Extras extras;
@@ -142,7 +142,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private Widgets widgets;
     private Ticker ticker;
     /** manga_layout: the comic page that stands in for the usual Home, or null. */
-    private ComicHome comicHome;
+    ComicHome comicHome;
+    /** The added buttons' pop-ups (sleep, radio, memory, darshan, recipe, games). */
+    private final ExtraPopups popups = new ExtraPopups(this);
     private long recentSeen;
     private GlassView glass;
     private View ambient;
@@ -188,18 +190,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private int wifiIcon;
     /** The pills have been filled in once; later resumes refresh them after the first frame. */
     private boolean pillsShown;
-    private TextView shamsiDate;
-    /** lunar_date: the lunisolar date under the date line, and the time zone it is computed for. */
-    private TextView lunarDate;
-    private boolean lunar;
-    private int lunarOffset;
     private TextView stats;
-    private List<RaceWeekend.Race> raceCalendar;
-    private View racePanel;
-    private TextView raceKicker, raceHeadline, raceSessions;
     /** config.xml show_stats, overridable by a theme. Off: the line is gone and nothing is read. */
     private boolean showStats;
-    private boolean shamsi;
     /** greeting_name: said after the greeting, which is shown in capitals. */
     private String greetingName = "";
     /** Optional time-of-day backdrop (config.xml, sky_intensity); 0 keeps it hidden. */
@@ -221,14 +214,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static int lastFocused = 0;
     /** App of the last focused tile, so focus follows it when the app list changes. */
     private static String lastFocusedKey;
-    private float density;
+    float density;
     /** Module cards (res/values/config.xml, module_cards): discovered on resume, shown only after the owner's Show. */
     private boolean moduleCards;
     /** config settings_key_keycodes / settings_key_panel, so the Settings button works on Home without HomeKeyService. */
     private int[] settingsKeycodes = new int[0];
     private boolean settingsKeyPanel;
     /** Calmer motion for weak GPUs (config.xml, reduced_motion): stiff spring, short fades, no replay. */
-    private boolean reducedMotion;
+    boolean reducedMotion;
     /** config.xml dock_row: the first row is a separate dock (band, parked low, top shelf) rather than plain grid. */
     private boolean dockRow;
     /** config single_row: every app in the dock's row, scrolling sideways, no grid below. */
@@ -369,7 +362,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         @Override
         public void run() {
             updateGreeting();
-            updateRace();
             // The pill follows the network callbacks and each return to Home; only the diya's flame follows the
             // signal level, so only it needs this minute's binder calls (about 7 ms on the UI thread).
             if (festive) updateWifiLabel();
@@ -484,27 +476,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             });
         }
         btnWifi = findViewById(R.id.btnWifi);
-        shamsiDate = findViewById(R.id.shamsiDate);
         stats = findViewById(R.id.stats);
-        raceCalendar = cfg.raceCalendar;
-        racePanel = findViewById(R.id.racePanel);
-        raceKicker = findViewById(R.id.raceKicker);
-        raceHeadline = findViewById(R.id.raceHeadline);
-        raceSessions = findViewById(R.id.raceSessions);
         showStats = cfg.showStats;
-        shamsi = cfg.shamsiDate;
-        lunarDate = findViewById(R.id.lunarDate);
-        lunar = cfg.lunarDate;
-        lunarOffset = Lunar.offsetFor(cfg.lunarUtcOffset, Locale.getDefault());
-        if (lunar) lunarDate.setVisibility(View.VISIBLE);
         greetingName = cfg.greetingName;
-        if (shamsi) {
-            shamsiDate.setVisibility(View.VISIBLE);
-            TextView date = findViewById(R.id.date);
-            date.setTextSize(11f);
-            lunarDate.setTextSize(11f);
-            date.setPadding(0, (int) (4 * density), 0, 0);
-        }
         vpnApp = cfg.vpnApp;
         moduleCards = cfg.moduleCards;
         hiddenApps = new HashSet<>(cfg.hiddenApps);
@@ -747,25 +721,25 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (extras.gamesPill) {
             btnSurprise.setVisibility(View.VISIBLE);
             btnSurprise.setContentDescription(getString(R.string.games));
-            btnSurprise.setOnClickListener(v -> showGames());
+            btnSurprise.setOnClickListener(v -> popups.showGames());
         }
         View btnRadio = findViewById(R.id.btnRadio);
         if (extras.radioPill) {
             btnRadio.setVisibility(View.VISIBLE);
-            btnRadio.setOnClickListener(v -> showRadio());
+            btnRadio.setOnClickListener(v -> popups.showRadio());
         }
         int[] more = {R.id.btnMemory, R.id.btnDarshan, R.id.btnPhone, R.id.btnRecipe};
         if (extras.morePills) {
             for (int id : more) findViewById(id).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnMemory).setOnClickListener(v -> freeMemory());
-            findViewById(R.id.btnDarshan).setOnClickListener(v -> showDarshan());
+            findViewById(R.id.btnMemory).setOnClickListener(v -> popups.freeMemory());
+            findViewById(R.id.btnDarshan).setOnClickListener(v -> popups.showDarshan());
             findViewById(R.id.btnPhone).setOnClickListener(v -> open(new Intent(this, PhoneDropActivity.class)));
-            findViewById(R.id.btnRecipe).setOnClickListener(v -> showRecipe());
+            findViewById(R.id.btnRecipe).setOnClickListener(v -> popups.showRecipe());
         }
         View btnSleep = findViewById(R.id.btnSleep);
         if (extras.sleepTimer) {
             btnSleep.setVisibility(View.VISIBLE);
-            btnSleep.setOnClickListener(v -> showSleepChoices());
+            btnSleep.setOnClickListener(v -> popups.showSleepChoices());
         }
         View btnToday = findViewById(R.id.btnToday);
         if (extras.todayPage) {
@@ -1062,7 +1036,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         if (openLiveTvAfterBoot()) return;
         updateGreeting();
-        updateRace();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
         // when the network or the inputs change, so this refresh only catches anything missed. Its binder calls
         // (about 7 ms on a TCL C755, most of it WifiManager.getConnectionInfo) would hold up the first frame back
@@ -2573,64 +2546,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     : getString(R.string.greeting_with_name, getString(res), greetingName));
             greeting.setTextColor(greetingColor);
         }
-        if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));
-        if (lunar) lunarDate.setText(Lunar.today(getResources(), lunarOffset));
         if (widgets != null) widgets.setGreeting(greeting.getText());
-    }
-
-    // ---- race-weekend panel (a theme's race_calendar) -----------------------------------------------
-
-    private static final int RACE_RED = 0xFFFF3B2F;
-
-    /**
-     * Shows or hides the race-weekend panel for this minute. Text only, set once a minute with the clock:
-     * nothing animates, so the panel costs the GPU nothing between ticks.
-     */
-    private void updateRace() {
-        if (raceCalendar.isEmpty()) return;
-        RaceWeekend.State s = RaceWeekend.at(raceCalendar, java.time.Instant.now());
-        if (s == null) {
-            racePanel.setVisibility(View.GONE);
-            return;
-        }
-        RaceWeekend.Race race = s.race;
-        raceKicker.setText(race.place.isEmpty()
-                ? getString(R.string.race_kicker_no_place, race.round, race.shortName())
-                : getString(R.string.race_kicker, race.round, race.shortName(), race.place));
-
-        if (s.live != null) {
-            SpannableString live = new SpannableString("\u25CF  " + getString(R.string.race_live, s.live.title(getResources())));
-            live.setSpan(new android.text.style.ForegroundColorSpan(RACE_RED), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            raceHeadline.setText(live);
-        } else if (s.next != null) {
-            String in = RaceWeekend.countdown(getResources(), s.untilNext);
-            raceHeadline.setText(s.next.isRace() ? getString(R.string.race_lights_out, in)
-                    : getString(R.string.race_next, s.next.title(getResources()), in));
-        } else {
-            raceHeadline.setText(R.string.race_finished);
-        }
-
-        // FP1 FRI 11:00 PM   FP2 SAT 2:30 AM ...: done sessions fade, the live one is red, the next one bright.
-        java.time.format.DateTimeFormatter when = java.time.format.DateTimeFormatter.ofPattern(
-                android.text.format.DateFormat.is24HourFormat(this) ? "EEE HH:mm" : "EEE h:mm a", Locale.getDefault())
-                .withZone(java.time.ZoneId.systemDefault());
-        android.text.SpannableStringBuilder row = new android.text.SpannableStringBuilder();
-        for (int i = 0; i < race.sessions.size(); i++) {
-            RaceWeekend.Session session = race.sessions.get(i);
-            if (i > 0) row.append("     ");
-            int start = row.length();
-            row.append(session.shortName(getResources())).append("  ").append(when.format(session.start).toUpperCase(Locale.getDefault()));
-            int color;
-            switch (s.statuses.get(i)) {
-                case DONE: color = 0x47FFFFFF; break;
-                case LIVE: color = RACE_RED; break;
-                case NEXT: color = 0xFFFFFFFF; break;
-                default: color = 0x99FFFFFF;
-            }
-            row.setSpan(new android.text.style.ForegroundColorSpan(color), start, row.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        raceSessions.setText(row);
-        racePanel.setVisibility(View.VISIBLE);
     }
 
     private void refreshPillsAfterNextDraw() {
@@ -3046,7 +2962,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /** sleep_timer: the moon alone while off, "45m" beside it while a timer runs. */
-    private void updateSleepPill() {
+    void updateSleepPill() {
         if (!extras.sleepTimer) return;
         TextView pill = findViewById(R.id.btnSleep);
         int left = SleepTimer.minutesLeft(this);
@@ -3059,165 +2975,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             pill.setPadding(Math.round(10 * density), 0, Math.round(left == 0 ? 10 * density : 14 * density), 0);
         }
         pill.setText(left == 0 ? "" : left + "m");
-    }
-
-    /** sleep_timer: Off, 30, 60 or 90 minutes under the moon pill; the running choice is marked. */
-    private void showSleepChoices() {
-        View anchor = findViewById(R.id.btnSleep);
-        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
-        LinearLayout rows = panel.findViewById(R.id.rows);
-        final PopupWindow popup = glassPopup(panel, (int) (240 * density));
-        int left = SleepTimer.minutesLeft(this);
-        View focus = null;
-        int[] choices = {0, 30, 60, 90};
-        for (int minutes : choices) {
-            View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) row.findViewById(R.id.icon)).setImageResource(minutes == 0 ? R.drawable.ic_play : R.drawable.ic_moon);
-            ((TextView) row.findViewById(R.id.title)).setText(minutes == 0
-                    ? getString(R.string.sleep_off) : minutes + " minutes");
-            row.findViewById(R.id.dot).setVisibility(View.GONE);
-            TextView status = row.findViewById(R.id.status);
-            boolean current = minutes == 0 ? left == 0 : left > 0 && left <= minutes && (minutes == 30 || left > minutes - 30);
-            status.setText(current ? (left == 0 ? "" : left + " min left") : "");
-            row.setOnClickListener(v -> {
-                popup.dismiss();
-                SleepTimer.set(this, minutes);
-                updateSleepPill();
-            });
-            rows.addView(row);
-            if (current) focus = row;
-        }
-        dropIn(popup, panel, anchor, Gravity.END);
-        (focus != null ? focus : rows.getChildAt(0)).requestFocus();
-    }
-
-    /** radio_pill: the stations under the pill, the playing one marked, with Stop while one plays. */
-    private void showRadio() {
-        View anchor = findViewById(R.id.btnRadio);
-        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
-        LinearLayout rows = panel.findViewById(R.id.rows);
-        final PopupWindow popup = glassPopup(panel, (int) (500 * density));
-        String playing = Radio.playing();
-        View focus = null;
-        if (!playing.isEmpty()) {
-            View stop = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) stop.findViewById(R.id.icon)).setImageResource(R.drawable.ic_radio);
-            ((TextView) stop.findViewById(R.id.title)).setText("Stop the radio");
-            stop.findViewById(R.id.dot).setVisibility(View.GONE);
-            stop.setOnClickListener(v -> {
-                popup.dismiss();
-                Radio.stop();
-            });
-            rows.addView(stop);
-        }
-        for (String[] st : Daily.read(this, "today/radio.txt", 3)) {
-            View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) row.findViewById(R.id.icon)).setImageResource(R.drawable.ic_radio);
-            ((TextView) row.findViewById(R.id.title)).setText(st[0]);
-            boolean on = playing.startsWith(st[0]);
-            row.findViewById(R.id.dot).setVisibility(on ? View.VISIBLE : View.GONE);
-            ((TextView) row.findViewById(R.id.status)).setText(on ? "Playing" : st[1]);
-            row.setOnClickListener(v -> {
-                popup.dismiss();
-                Radio.play(this, st[0], st[2]);
-            });
-            rows.addView(row);
-            if (on) focus = row;
-        }
-        // In the middle of the screen, where the list is easy to read, instead of hanging off the pill.
-        panel.setAlpha(0f);
-        if (comicHome != null) comicPopup(panel);
-        popup.showAtLocation(anchor, Gravity.CENTER, 0, 0);
-        panel.animate().alpha(1f).setDuration(reducedMotion ? Motion.REDUCED_MS : 200).start();
-        (focus != null ? focus : rows.getChildAt(0)).requestFocus();
-    }
-
-    /** more_pills: ends other apps' background processes and says how much memory came back. */
-    private void freeMemory() {
-        android.app.ActivityManager am = getSystemService(android.app.ActivityManager.class);
-        android.app.ActivityManager.MemoryInfo before = new android.app.ActivityManager.MemoryInfo();
-        am.getMemoryInfo(before);
-        for (ApplicationInfo app : getPackageManager().getInstalledApplications(0)) {
-            if (!app.packageName.equals(getPackageName())) am.killBackgroundProcesses(app.packageName);
-        }
-        root.postDelayed(() -> {
-            android.app.ActivityManager.MemoryInfo after = new android.app.ActivityManager.MemoryInfo();
-            am.getMemoryInfo(after);
-            long freed = Math.max(0, after.availMem - before.availMem) / 1048576;
-            android.widget.Toast.makeText(this, "Freed " + freed + " MB · " + (after.availMem / 1048576)
-                    + " MB of " + (after.totalMem / 1048576) + " MB free", android.widget.Toast.LENGTH_LONG).show();
-        }, 800);
-    }
-
-    /** more_pills: the temples under the pill; OK searches YouTube for that temple's live stream. */
-    private void showDarshan() {
-        View anchor = findViewById(R.id.btnDarshan);
-        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
-        LinearLayout rows = panel.findViewById(R.id.rows);
-        final PopupWindow popup = glassPopup(panel, (int) (340 * density));
-        for (String[] t : Daily.read(this, "today/darshan.txt", 3)) {
-            View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) row.findViewById(R.id.icon)).setImageResource(R.drawable.ic_temple);
-            ((TextView) row.findViewById(R.id.title)).setText(t[0]);
-            row.findViewById(R.id.dot).setVisibility(View.GONE);
-            ((TextView) row.findViewById(R.id.status)).setText(t[1]);
-            row.setOnClickListener(v -> {
-                popup.dismiss();
-                YouTube.search(this, t[2]);
-            });
-            rows.addView(row);
-        }
-        dropIn(popup, panel, anchor, Gravity.END);
-        if (rows.getChildCount() > 0) rows.getChildAt(0).requestFocus();
-    }
-
-    /** more_pills: today's dish first, then a few others; OK searches YouTube for how it is made. */
-    private void showRecipe() {
-        List<String[]> recipes = Daily.read(this, "today/recipes.txt", 3);
-        if (recipes.isEmpty()) return;
-        View anchor = findViewById(R.id.btnRecipe);
-        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
-        LinearLayout rows = panel.findViewById(R.id.rows);
-        final PopupWindow popup = glassPopup(panel, (int) (520 * density));
-        int today = Daily.pick(LocalDate.now(), recipes.size(), 3);
-        for (int i = 0; i < Math.min(5, recipes.size()); i++) {
-            String[] r = recipes.get((today + i * 7) % recipes.size());
-            View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) row.findViewById(R.id.icon)).setImageResource(R.drawable.ic_recipe);
-            ((TextView) row.findViewById(R.id.title)).setText(i == 0 ? "Today: " + r[0] : r[0]);
-            row.findViewById(R.id.dot).setVisibility(View.GONE);
-            ((TextView) row.findViewById(R.id.status)).setText(r[1]);
-            row.setOnClickListener(v -> {
-                popup.dismiss();
-                YouTube.search(this, r[2]);
-            });
-            rows.addView(row);
-        }
-        dropIn(popup, panel, anchor, Gravity.END);
-        rows.getChildAt(0).requestFocus();
-    }
-
-    /** games_pill: the games under the dice pill; OK starts one. */
-    private void showGames() {
-        View anchor = findViewById(R.id.btnSurprise);
-        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
-        LinearLayout rows = panel.findViewById(R.id.rows);
-        final PopupWindow popup = glassPopup(panel, (int) (340 * density));
-        String[][] games = {{"memory", "Memory", "Find the pairs"}, {"tictactoe", "Tic-tac-toe", "Play against the TV"}};
-        for (String[] g : games) {
-            View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-            ((ImageView) row.findViewById(R.id.icon)).setImageResource(R.drawable.ic_dice);
-            ((TextView) row.findViewById(R.id.title)).setText(g[1]);
-            row.findViewById(R.id.dot).setVisibility(View.GONE);
-            ((TextView) row.findViewById(R.id.status)).setText(g[2]);
-            row.setOnClickListener(v -> {
-                popup.dismiss();
-                open(new Intent(this, GameActivity.class).putExtra(GameActivity.EXTRA_GAME, g[0]));
-            });
-            rows.addView(row);
-        }
-        dropIn(popup, panel, anchor, Gravity.END);
-        rows.getChildAt(0).requestFocus();
     }
 
     /**
@@ -3234,14 +2991,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 switch (which) {
                     case "wifi": openNetworkPill(); break;
                     case "voice": openVoice(); break;
-                    case "radio": showRadio(); break;
-                    case "games": showGames(); break;
+                    case "radio": popups.showRadio(); break;
+                    case "games": popups.showGames(); break;
                     case "today": MainActivity.this.open(new Intent(MainActivity.this, TodayActivity.class)); break;
-                    case "darshan": showDarshan(); break;
-                    case "recipe": showRecipe(); break;
+                    case "darshan": popups.showDarshan(); break;
+                    case "recipe": popups.showRecipe(); break;
                     case "phone": MainActivity.this.open(new Intent(MainActivity.this, PhoneDropActivity.class)); break;
-                    case "memory": freeMemory(); break;
-                    case "sleep": showSleepChoices(); break;
+                    case "memory": popups.freeMemory(); break;
+                    case "sleep": popups.showSleepChoices(); break;
                     case "settings": MainActivity.this.open(systemIntent(Settings.ACTION_SETTINGS)); break;
                     case "apps": onLibraryRequested(); break;
                     default: break;
@@ -3279,7 +3036,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         open(assist);
     }
 
-    private void open(Intent i) {
+    void open(Intent i) {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             startActivity(i);
@@ -3534,7 +3291,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rows.getChildAt(0).requestFocus();
     }
 
-    private PopupWindow glassPopup(View panel, int width) {
+    PopupWindow glassPopup(View panel, int width) {
         if (extras != null && extras.mangaStyle) panel.setBackground(MangaSkin.panel(density));
         final PopupWindow popup = new PopupWindow(panel, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));   // needed for Back to dismiss
@@ -3550,13 +3307,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Drop in: fade and unfold from the top edge, hanging under the anchor pill. */
     /** manga_layout: a pop-up on paper with ink rows, the focused one red. */
-    private void comicPopup(View panel) {
+    void comicPopup(View panel) {
         panel.setBackground(MangaSkin.paperPanel(density));
         panel.setPadding(Math.round(10 * density), Math.round(10 * density), Math.round(16 * density), Math.round(16 * density));
         MangaSkin.comicRows(panel.findViewById(R.id.rows), density);
     }
 
-    private void dropIn(PopupWindow popup, View panel, View anchor, int gravity) {
+    void dropIn(PopupWindow popup, View panel, View anchor, int gravity) {
         if (comicHome != null) {
             // The comic page has no pills to hang a list from: the middle of the screen instead, on paper.
             comicPopup(panel);

@@ -102,21 +102,6 @@
     <plurals name="library_app_count">
         <item quantity="other">%1$d ứng dụng</item>
     </plurals>
-    <string name="race_kicker">Chặng %1$d · %2$s · %3$s</string>
-    <string name="race_kicker_no_place">Chặng %1$d · %2$s</string>
-    <string name="race_next">%1$s sau %2$s</string>
-    <string name="race_lights_out">Xuất phát sau %1$s</string>
-    <string name="race_live">%1$s · đang diễn ra</string>
-    <string name="race_finished">Cờ ca-rô</string>
-    <string name="race_practice_1">Chạy thử 1</string>
-    <string name="race_practice_2">Chạy thử 2</string>
-    <string name="race_practice_3">Chạy thử 3</string>
-    <string name="race_sprint_qualifying">Phân hạng sprint</string>
-    <string name="race_qualifying">Phân hạng</string>
-    <string name="race_race">Đua chính</string>
-    <string name="race_countdown_minutes">%1$d phút</string>
-    <string name="race_countdown_hours">%1$d giờ %2$d phút</string>
-    <string name="race_countdown_days">%1$d ngày %2$d giờ</string>
     <string name="last_opened">Mở lần cuối %1$s</string>
     <string name="tile_move">Di chuyển</string>
 </resources>

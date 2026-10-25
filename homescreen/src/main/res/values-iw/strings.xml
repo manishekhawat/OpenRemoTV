@@ -21,18 +21,6 @@
     <string name="not_available">לא זמין בטלוויזיה זו</string>
     <string name="cant_open">לא ניתן לפתוח את %1$s</string>
     <string name="date_format">EEEE  d בMMMM</string>
-    <string name="shamsi_month_farvardin">פרוורדין</string>
-    <string name="shamsi_month_ordibehesht">אורדיבהשת</string>
-    <string name="shamsi_month_khordad">ח׳ורדאד</string>
-    <string name="shamsi_month_tir">תיר</string>
-    <string name="shamsi_month_mordad">מורדאד</string>
-    <string name="shamsi_month_shahrivar">שהריוור</string>
-    <string name="shamsi_month_mehr">מהר</string>
-    <string name="shamsi_month_aban">אבאן</string>
-    <string name="shamsi_month_azar">אזר</string>
-    <string name="shamsi_month_dey">די</string>
-    <string name="shamsi_month_bahman">בהמן</string>
-    <string name="shamsi_month_esfand">אספנד</string>
     <string name="stats_cpu">מעבד %1$d%%</string>
     <string name="stats_memory">זיכרון %1$d / %2$d MB</string>
     <string name="stats_storage">אחסון %1$s פנוי</string>
@@ -120,28 +108,5 @@
     <string name="wallpaper_theme_default">ברירת המחדל של ערכת הנושא</string>
 
     <!-- Race-weekend panel (RaceWeekend). -->
-    <string name="race_kicker">סבב %1$d · %2$s · %3$s</string>
-    <string name="race_kicker_no_place">סבב %1$d · %2$s</string>
-    <string name="race_next">%1$s בעוד %2$s</string>
-    <string name="race_lights_out">הזינוק בעוד %1$s</string>
-    <string name="race_live">%1$s · בשידור חי</string>
-    <string name="race_finished">הדגל המשובץ</string>
-    <string name="race_practice_1">אימון 1</string>
-    <string name="race_practice_2">אימון 2</string>
-    <string name="race_practice_3">אימון 3</string>
-    <string name="race_sprint_qualifying">מקצה דירוג לספרינט</string>
-    <string name="race_sprint">ספרינט</string>
-    <string name="race_qualifying">מקצה דירוג</string>
-    <string name="race_race">מרוץ</string>
-    <string name="race_practice_1_short">אימון 1</string>
-    <string name="race_practice_2_short">אימון 2</string>
-    <string name="race_practice_3_short">אימון 3</string>
-    <string name="race_sprint_qualifying_short">דירוג ספרינט</string>
-    <string name="race_sprint_short">ספרינט</string>
-    <string name="race_qualifying_short">דירוג</string>
-    <string name="race_race_short">מרוץ</string>
-    <string name="race_countdown_minutes">%1$d דק׳</string>
-    <string name="race_countdown_hours">%1$d שע׳ %2$d דק׳</string>
-    <string name="race_countdown_days">%1$d ימ׳ %2$d שע׳</string>
     <string name="last_opened">פתיחה אחרונה: %1$s</string>
 </resources>

@@ -99,11 +99,5 @@
     <string name="card_state_new">Nova</string>
     <string name="card_state_new_key">Clau nova</string>
     <string name="card_state_new_label">Nom nou</string>
-    <string name="race_kicker">Ronda %1$d · %2$s · %3$s</string>
-    <string name="race_kicker_no_place">Ronda %1$d · %2$s</string>
-    <string name="race_next">%1$s d\'aquí a %2$s</string>
-    <string name="race_lights_out">Sortida d\'aquí a %1$s</string>
-    <string name="race_live">%1$s · en directe</string>
-    <string name="race_finished">Bandera de quadres</string>
     <string name="last_opened">Obert per últim cop: %1$s</string>
 </resources>
