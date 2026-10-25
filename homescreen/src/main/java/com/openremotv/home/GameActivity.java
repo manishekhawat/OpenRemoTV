@@ -49,7 +49,7 @@ public class GameActivity extends Activity {
                 new int[]{0xFF1A1430, 0xFF0B1020, 0xFF02040A}));
         LinearLayout column = new LinearLayout(this);
         column.setOrientation(LinearLayout.VERTICAL);
-        column.setGravity(Gravity.CENTER_HORIZONTAL);
+        column.setGravity(Gravity.CENTER);
         column.setPadding(0, dp(28), 0, dp(20));
         root.addView(column, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         status = new TextView(this);
@@ -64,7 +64,9 @@ public class GameActivity extends Activity {
         for (int r = 0; r < size; r++) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
-            column.addView(row);
+            // Centred on the screen: a full-width row would leave the board at the left edge.
+            row.setGravity(Gravity.CENTER_HORIZONTAL);
+            column.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             for (int c = 0; c < size; c++) {
                 int i = r * size + c;
                 TextView t = new TextView(this);

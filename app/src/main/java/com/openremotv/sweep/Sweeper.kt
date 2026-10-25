@@ -157,7 +157,13 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         } finally {
             apk.delete()
         }
-        val out = tv.shell("pm install -r -g /data/local/tmp/openremotv-home.apk; rm -f /data/local/tmp/openremotv-home.apk")
+        var out = tv.shell("pm install -r -g /data/local/tmp/openremotv-home.apk")
+        if (out.contains("UPDATE_INCOMPATIBLE")) {
+            // A copy signed with another key (a test build) is in the way: replace it. The theme is copied in next.
+            tv.shell("pm uninstall com.openremotv.home")
+            out = tv.shell("pm install -r -g /data/local/tmp/openremotv-home.apk")
+        }
+        tv.shell("rm -f /data/local/tmp/openremotv-home.apk")
         check(out.contains("Success")) { out.trim() }
         return setHome("com.openremotv.home")
     }

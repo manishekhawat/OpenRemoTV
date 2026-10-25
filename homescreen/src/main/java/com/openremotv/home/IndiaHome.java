@@ -58,7 +58,7 @@ final class IndiaHome extends FrameLayout {
     private final ScrollView scroll;
     private final LinearLayout dock;
     private final GridLayout grid;
-    private final View topShade;
+    private final GlassHighlight glass;
 
     IndiaHome(Context context, Theme theme, Host host) {
         super(context);
@@ -68,6 +68,7 @@ final class IndiaHome extends FrameLayout {
         d = getResources().getDisplayMetrics().density;
         setBackgroundColor(0xFF0B0B0F);
         wallpapers = new Wallpapers(theme);
+        glass = new GlassHighlight(context, theme.reducedMotion);
 
         // The photo, two deep so a new one fades in over the last.
         for (int i = 0; i < 2; i++) {
@@ -79,10 +80,15 @@ final class IndiaHome extends FrameLayout {
         View dim = new View(context);
         dim.setBackgroundColor((Math.round(theme.wallpaperDim * 2.55f) << 24));
         addView(dim, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        // A darker band at the top, so the Panchang and the buttons read over a bright sky.
-        topShade = new View(context);
-        topShade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{0x99000000, 0x00000000}));
-        addView(topShade, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(150), Gravity.TOP));
+        // Shade from the top over half the screen and from the bottom over most of it, so the Panchang, the buttons,
+        // the cards and the dock read over a bright photo, while its middle stays clear.
+        int screenH = getResources().getDisplayMetrics().heightPixels;
+        View top = new View(context);
+        top.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{0xD9000000, 0x80000000, 0x00000000}));
+        addView(top, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Math.round(screenH * 0.5f), Gravity.TOP));
+        View bottom = new View(context);
+        bottom.setBackground(new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xE6000000, 0x99000000, 0x00000000}));
+        addView(bottom, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Math.round(screenH * 0.62f), Gravity.BOTTOM));
 
         // Today's Panchang, top left.
         today = new TextView(context);
@@ -118,8 +124,10 @@ final class IndiaHome extends FrameLayout {
             b.setClickable(true);
             b.setContentDescription(context.getString(NAMES[i]));
             b.setOnClickListener(v -> host.button(which, v));
-            b.setOnFocusChangeListener((v, f) -> v.animate().scaleX(f ? 1.12f : 1f).scaleY(f ? 1.12f : 1f)
-                    .setDuration(theme.reducedMotion ? 0 : 120).start());
+            b.setOnFocusChangeListener((v, f) -> {
+                v.animate().scaleX(f ? 1.12f : 1f).scaleY(f ? 1.12f : 1f).setDuration(theme.reducedMotion ? 0 : 120).start();
+                if (f) glass.moveTo(v, 1.12f, true);
+            });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(42), dp(42));
             lp.gravity = Gravity.CENTER_VERTICAL;
             lp.setMarginStart(dp(i == 0 ? 0 : 10));
@@ -139,7 +147,8 @@ final class IndiaHome extends FrameLayout {
         LinearLayout column = new LinearLayout(context);
         column.setOrientation(LinearLayout.VERTICAL);
         column.setClipChildren(false);
-        column.setPadding(dp(60), dp(56), dp(60), dp(140));
+        // The dock sits at the bottom, just above the news line; the middle of the screen stays clear for the photo.
+        column.setPadding(dp(60), dp(160), dp(60), dp(140));
         scroll.addView(column);
         LayoutParams sp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         sp.topMargin = dp(200);
@@ -149,11 +158,11 @@ final class IndiaHome extends FrameLayout {
         dock.setOrientation(LinearLayout.HORIZONTAL);
         dock.setClipChildren(false);
         dock.setPadding(dp(20), dp(13), dp(20), dp(13));
-        GradientDrawable glass = new GradientDrawable();
-        glass.setColor(0x1FFFFFFF);
-        glass.setStroke(Math.max(1, dp(1)), 0x40FFFFFF);
-        glass.setCornerRadius(dp(26));
-        dock.setBackground(glass);
+        GradientDrawable dockGlass = new GradientDrawable();
+        dockGlass.setColor(0x1FFFFFFF);
+        dockGlass.setStroke(Math.max(1, dp(1)), 0x40FFFFFF);
+        dockGlass.setCornerRadius(dp(26));
+        dock.setBackground(dockGlass);
         column.addView(dock, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(130)));
 
         grid = new GridLayout(context);
@@ -164,6 +173,10 @@ final class IndiaHome extends FrameLayout {
         gp.topMargin = dp(26);
         gp.leftMargin = dp(20);
         column.addView(grid, gp);
+
+        addView(glass, new LayoutParams(dp(10), dp(10), Gravity.TOP | Gravity.START));
+        glass.setElevation(dp(6));   // over the focused tile (4 dp), under the news line
+        scroll.setOnScrollChangeListener((v, x, y, ox, oy) -> glass.follow());
 
         fillApps();
         nextPhoto();
@@ -227,8 +240,7 @@ final class IndiaHome extends FrameLayout {
         base.setColor(banner ? 0x00000000 : 0xE61C1C20);
         GradientDrawable ring = new GradientDrawable();
         ring.setCornerRadius(dp(14));
-        ring.setColor(banner ? 0x00000000 : 0xF22A2A30);
-        ring.setStroke(dp(3), 0xFFFFFFFF);
+        ring.setColor(banner ? 0x00000000 : 0xF2303036);
         StateListDrawable bg = new StateListDrawable();
         bg.addState(new int[]{android.R.attr.state_focused}, ring);
         bg.addState(new int[]{}, base);
@@ -267,6 +279,7 @@ final class IndiaHome extends FrameLayout {
             v.animate().scaleX(f ? 1.06f : 1f).scaleY(f ? 1.06f : 1f).setDuration(theme.reducedMotion ? 0 : 140).start();
             v.setZ(f ? dp(4) : 0);
             if (!f) return;
+            glass.moveTo(v, 1.06f, false);
             if (inDock) {
                 scroll.smoothScrollTo(0, 0);
                 grid.animate().alpha(0f).setDuration(theme.reducedMotion ? 0 : 200).start();
@@ -306,6 +319,8 @@ final class IndiaHome extends FrameLayout {
     void focusStart() {
         View first = dock.getChildCount() > 0 ? dock.getChildAt(0) : buttons.getChildAt(0);
         first.requestFocus();
+        // Opened fresh, the page may not be laid out yet: settle on the dock again once it is.
+        first.post(first::requestFocus);
         scroll.scrollTo(0, 0);
         grid.setAlpha(0f);
     }

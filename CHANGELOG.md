@@ -2,6 +2,18 @@
 
 All notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.1.1 (2026-10-25)
+
+### TV home screen
+- IndiaMinimalist: a frosted glass pane glides with the remote over the buttons and app tiles again.
+- The shade at the top and bottom of the photo is back, and the app row sits at the bottom, clear of the middle.
+- Memory and Tic-tac-toe are centred on the screen.
+- Everything on the home screen is in Hindi when the TV is set to Hindi, the Panchang included.
+- MangaHome's sound-effect bursts are hidden from TalkBack; with reduced motion the focus zoom is instant.
+
+### Phone app
+- Picking a theme replaces a home screen signed with a different key instead of failing.
+
 ## 0.1.0 (2026-10-25)
 
 The first open-source release.
