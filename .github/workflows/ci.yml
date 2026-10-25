@@ -21,7 +21,7 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: "platforms;android-35 build-tools;35.0.0"
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Tests and lint
         run: ./gradlew --no-daemon test lint
       - name: Build the app (with the TV helper and home screen)
@@ -47,7 +47,7 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: "platforms;android-35 build-tools;35.0.0"
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Build and sign
         env:
           OPENREMOTV_KEYSTORE_BASE64: ${{ secrets.OPENREMOTV_KEYSTORE_BASE64 }}
