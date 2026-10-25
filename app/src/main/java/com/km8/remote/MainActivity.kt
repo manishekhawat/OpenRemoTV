@@ -38,9 +38,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * KM8 Remote: a phone app for the KM8 TV box over Wi-Fi. Five tabs: Remote (arrows, OK, back, home, volume,
- * power, typing), Apps (open anything on the TV), Send (YouTube links, photos, videos, files), Tidy (turn apps off
- * and on, undo everything) and Check (apps a TV update turned back on). Sharing a link or a file to this app from
+ * KM8 Remote: a phone app for Android TV, Google TV and Fire TV over Wi-Fi, TidyTV-style with a manga look. First
+ * Pick my TV and Connect; then five tabs: Remote (arrows, OK, back, home, volume, power, typing), Apps (open anything
+ * on the TV), Send (YouTube links, photos, videos, files), Sweep (backup, the tested list for this TV, clean home
+ * screen, done, share it, undo anytime; or single apps by hand) and Check (apps a TV update turned back on). Sharing a link or a file to this app from
  * any other app sends it straight to the TV.
  */
 class MainActivity : ComponentActivity() {
@@ -74,7 +75,7 @@ internal enum class Tab(val label: String, val icon: ImageVector) {
     REMOTE("Remote", Icons.Filled.SettingsRemote),
     APPS("Apps", Icons.Filled.Apps),
     SEND("Send", Icons.Filled.Send),
-    TIDY("Tidy", Icons.Filled.CleaningServices),
+    SWEEP("Sweep", Icons.Filled.CleaningServices),
     CHECK("Check", Icons.Filled.VerifiedUser),
 }
 
@@ -88,6 +89,9 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
     var connected by remember { mutableStateOf(tv.connected) }
     var model by remember { mutableStateOf("") }
     var tab by remember { mutableStateOf(Tab.REMOTE) }
+    val prefs = remember { context.getSharedPreferences("tv", android.content.Context.MODE_PRIVATE) }
+    var kind by remember { mutableStateOf(prefs.getString("kind", null)?.let { runCatching { TvKind.valueOf(it) }.getOrNull() }) }
+    var manual by remember { mutableStateOf(false) }
     val apps = remember { Apps(context, tv) }
     val send = remember { Send(context, tv) }
 
@@ -148,12 +152,24 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
         }
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (!connected) {
-                ConnectScreen(tv, scope) { m -> model = m; connected = true }
+                if (kind == null) PickScreen { k -> kind = k; prefs.edit().putString("kind", k.name).apply() }
+                else ConnectScreen(tv, scope, onBack = { kind = null }) { m -> model = m; connected = true }
             } else when (tab) {
                 Tab.REMOTE -> RemoteScreen(tv, ::run)
                 Tab.APPS -> AppsScreen(apps, ::run)
                 Tab.SEND -> SendScreen(send, ::run, ::say)
-                Tab.TIDY -> TidyScreen(apps, ::run, ::say)
+                Tab.SWEEP -> if (manual) {
+                    Column {
+                        Text("← BACK TO SWEEP", style = Shout, modifier = Modifier.clickable { manual = false }.padding(16.dp))
+                        TidyScreen(apps, ::run, ::say)
+                    }
+                } else {
+                    Column {
+                        Box(Modifier.weight(1f)) { SweepScreen(tv, apps, ::run, ::say) }
+                        Text("Turn single apps on or off →", color = Ink.ink, fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.End).clickable { manual = true }.padding(12.dp))
+                    }
+                }
                 Tab.CHECK -> CheckScreen(apps, ::run, ::say)
             }
             message?.let {
@@ -197,7 +213,7 @@ private fun Heading(text: String, sub: String? = null) {
 }
 
 @Composable
-internal fun ConnectScreen(tv: Tv, scope: CoroutineScope, onConnected: (String) -> Unit) {
+internal fun ConnectScreen(tv: Tv, scope: CoroutineScope, onBack: () -> Unit = {}, onConnected: (String) -> Unit) {
     val context = LocalContext.current
     var host by remember { mutableStateOf(tv.host) }
     var status by remember { mutableStateOf("") }
@@ -247,6 +263,7 @@ internal fun ConnectScreen(tv: Tv, scope: CoroutineScope, onConnected: (String) 
             }
         }
         if (status.isNotEmpty()) SpeechBubble(status)
+        Text("← Pick a different kind of TV", color = Ink.muted, modifier = Modifier.clickable { onBack() }.padding(vertical = 8.dp))
     }
 }
 

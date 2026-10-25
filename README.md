@@ -1,7 +1,16 @@
 # KM8 Remote
 
-A phone app for the MECOOL KM8 TV box, inspired by [TidyTV](https://github.com/jolan94/tidytv) (MIT). It talks to
-the TV over Wi-Fi with ADB (port 5555), using [dadb](https://github.com/mobile-dev-inc/dadb).
+A phone app for Android TV, Google TV and Fire TV, inspired by [TidyTV](https://github.com/jolan94/tidytv) (MIT),
+with a manga look and an original mascot, Remo. It talks to the TV over Wi-Fi with ADB (port 5555), using
+[dadb](https://github.com/mobile-dev-inc/dadb), plus a small helper it starts on the TV (`keyserver/`) for instant
+keys, files and app switches.
+
+First run: **Pick my TV** (Android TV, Google TV or Fire TV, with the steps to turn on network debugging) and
+**Connect**. Then the **Sweep** tab walks through **Backup** (always first; the first backup of each TV is kept as
+the original), the **tested list** for this TV (260 TVs from cleanyourtv's `examples/`, matched by model, or the
+common list), a switch per app, the **sweep** itself, an optional **clean home screen** (Manga Home, the bundled
+cleanyourtv launcher; Projectivy Launcher; or keep), **Done**, **Share it** (a manga card through the share sheet)
+and **Undo anytime** (back to the original backup). Rebuild the lists with `python3 tools/make-lists.py ../cleanyourtv`.
 
 - **Remote:** arrows, OK, back, home, play/pause, volume, mute, power, and typing into the TV.
 - **Apps:** everything on the TV's home screen; tap to open it on the TV.
