@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    // Screenshots of the screens on the Mac, no phone needed: ./gradlew recordPaparazziDebug
+    id("app.cash.paparazzi")
 }
 
 android {
@@ -12,8 +14,8 @@ android {
         applicationId = "com.km8.remote"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.4"
+        versionCode = 5
+        versionName = "0.5"
     }
 
     buildTypes {

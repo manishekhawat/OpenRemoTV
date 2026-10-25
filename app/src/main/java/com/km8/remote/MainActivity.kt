@@ -8,71 +8,29 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.VolumeDown
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.Backspace
-import androidx.compose.material.icons.filled.CleaningServices
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.SettingsRemote
-import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,7 +53,7 @@ class MainActivity : ComponentActivity() {
         tv = Tv(applicationContext)
         shared.value = intent?.takeIf { it.action == Intent.ACTION_SEND }
         setContent {
-            MaterialTheme(colorScheme = darkColorScheme(primary = Color(0xFFFFD54F), secondary = Color(0xFF9FA8FF))) {
+            MangaTheme {
                 App(tv, shared.value) { shared.value = null }
             }
         }
@@ -112,7 +70,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class Tab(val label: String, val icon: ImageVector) {
+internal enum class Tab(val label: String, val icon: ImageVector) {
     REMOTE("Remote", Icons.Filled.SettingsRemote),
     APPS("Apps", Icons.Filled.Apps),
     SEND("Send", Icons.Filled.Send),
@@ -120,25 +78,34 @@ private enum class Tab(val label: String, val icon: ImageVector) {
     CHECK("Check", Icons.Filled.VerifiedUser),
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val snack = remember { SnackbarHostState() }
+    var message by remember { mutableStateOf<String?>(null) }
+    var messageId by remember { mutableIntStateOf(0) }
     var connected by remember { mutableStateOf(tv.connected) }
     var model by remember { mutableStateOf("") }
     var tab by remember { mutableStateOf(Tab.REMOTE) }
     val apps = remember { Apps(context, tv) }
     val send = remember { Send(context, tv) }
 
-    fun say(text: String) = scope.launch { snack.showSnackbar(text) }
+    fun say(text: String) {
+        message = text
+        messageId++
+    }
     fun run(block: suspend () -> Unit) = scope.launch {
         try {
             block()
         } catch (e: Exception) {
             say("The TV didn't answer: ${e.message ?: e.javaClass.simpleName}")
         }
+    }
+    LaunchedEffect(messageId) {
+        if (message == null) return@LaunchedEffect
+        kotlinx.coroutines.delay(3500)
+        message = null
     }
 
     // Something shared to the app: send it once connected.
@@ -154,9 +121,9 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
                 @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
             when {
-                stream != null -> say("Sent ${send.file(stream)} to the TV")
-                text != null && send.youtube(text) -> say("Playing on the TV")
-                else -> say("That isn't a YouTube link, a photo or a file")
+                stream != null -> { say("Sending…"); say("Sent ${send.file(stream)} to the TV!") }
+                text != null && send.youtube(text) -> say("Playing on the TV!")
+                else -> say("Hmm, that isn't a YouTube link, a photo or a file")
             }
         } catch (e: Exception) {
             say("Couldn't send: ${e.message}")
@@ -164,28 +131,22 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
         sharedHandled()
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = {
-                Column {
-                    Text("KM8 Remote", fontWeight = FontWeight.SemiBold)
-                    if (connected) Text("$model · ${tv.host}", fontSize = 12.sp, color = Color.Gray)
-                }
-            }, actions = {
-                if (connected) TextButton(onClick = { tv.disconnect(); connected = false }) { Text("Change TV") }
-            })
-        },
-        bottomBar = {
-            if (connected) NavigationBar {
-                Tab.entries.forEach { t ->
-                    NavigationBarItem(selected = tab == t, onClick = { tab = t },
-                        icon = { Icon(t.icon, null) }, label = { Text(t.label) })
-                }
+    MangaPage {
+        // Title strip, like a chapter heading.
+        Row(
+            Modifier.fillMaxWidth().background(Ink.ink).statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Mascot(Modifier.size(44.dp))
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) {
+                Text("KM8 REMOTE", style = Shout, fontSize = 22.sp, color = Ink.paper)
+                if (connected) Text("$model · ${tv.host}", fontSize = 12.sp, color = Ink.tone)
             }
-        },
-        snackbarHost = { SnackbarHost(snack) },
-    ) { pad ->
-        Box(Modifier.padding(pad).fillMaxSize()) {
+            if (connected) Text("Change TV", color = Ink.paper, fontWeight = FontWeight.Bold,
+                modifier = Modifier.clickable { tv.disconnect(); connected = false }.padding(8.dp))
+        }
+        Box(Modifier.weight(1f).fillMaxWidth()) {
             if (!connected) {
                 ConnectScreen(tv, scope) { m -> model = m; connected = true }
             } else when (tab) {
@@ -195,13 +156,49 @@ private fun App(tv: Tv, shared: Intent?, sharedHandled: () -> Unit) {
                 Tab.TIDY -> TidyScreen(apps, ::run, ::say)
                 Tab.CHECK -> CheckScreen(apps, ::run, ::say)
             }
+            message?.let {
+                SpeechBubble(it, Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 8.dp))
+            }
+        }
+        if (connected) MangaTabs(tab) { tab = it }
+    }
+}
+
+/** The tab bar as a strip of comic panels; the chosen one is inked solid. */
+@Composable
+internal fun MangaTabs(current: Tab, onPick: (Tab) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().background(Ink.paper).border(3.dp, Ink.ink).navigationBarsPadding()
+            .padding(horizontal = 6.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        Tab.entries.forEach { t ->
+            val on = t == current
+            Column(
+                Modifier.weight(1f).padding(horizontal = 3.dp)
+                    .background(if (on) Ink.ink else Ink.paper, RoundedCornerShape(8.dp))
+                    .border(2.dp, Ink.ink, RoundedCornerShape(8.dp))
+                    .clickable { onPick(t) }.padding(vertical = 6.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(t.icon, null, tint = if (on) Ink.paper else Ink.ink)
+                Text(t.label.uppercase(), style = Shout, fontSize = 10.sp, color = if (on) Ink.paper else Ink.ink)
+            }
         }
     }
 }
 
 @Composable
-private fun ConnectScreen(tv: Tv, scope: CoroutineScope, onConnected: (String) -> Unit) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+private fun Heading(text: String, sub: String? = null) {
+    Column(Modifier.padding(bottom = 8.dp)) {
+        Text(text.uppercase(), style = Shout, fontSize = 26.sp, color = Ink.ink)
+        if (sub != null) Text(sub, color = Ink.muted, fontSize = 14.sp)
+    }
+}
+
+@Composable
+internal fun ConnectScreen(tv: Tv, scope: CoroutineScope, onConnected: (String) -> Unit) {
+    val context = LocalContext.current
     var host by remember { mutableStateOf(tv.host) }
     var status by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
@@ -214,132 +211,156 @@ private fun ConnectScreen(tv: Tv, scope: CoroutineScope, onConnected: (String) -
             try {
                 onConnected(tv.connect(address))
             } catch (e: Exception) {
-                status = "Couldn't connect to $address. Is the TV on, on the same Wi-Fi, with network debugging on?"
+                status = "Couldn't reach $address. Is the TV on, on the same Wi-Fi, with network debugging on?"
             }
             busy = false
         }
     }
 
-    Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text("Connect to your TV", fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text("Your phone and the TV must be on the same Wi-Fi.", color = Color.Gray)
-        OutlinedTextField(host, { host = it }, label = { Text("TV address") }, singleLine = true,
-            modifier = Modifier.fillMaxWidth())
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = { connect(host) }, enabled = !busy) { Text("Connect") }
-            OutlinedButton(onClick = {
+    Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Box(Modifier.fillMaxWidth().height(170.dp)) {
+            Canvas(Modifier.matchParentSize()) { speedLines(count = 60) }
+            Mascot(Modifier.size(140.dp).align(Alignment.Center), happy = !busy)
+        }
+        Heading("Let's connect!", "Your phone and the TV must be on the same Wi-Fi.")
+        Panel(Modifier.fillMaxWidth()) {
+            OutlinedTextField(host, { host = it }, label = { Text("TV address") }, singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(8.dp))
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            MangaButton("CONNECT!", loud = true) { if (!busy) connect(host) }
+            MangaButton("FIND MY TV") {
+                if (busy) return@MangaButton
                 busy = true
-                status = "Looking for TVs on your Wi-Fi…"
+                status = "Searching your Wi-Fi…"
                 scope.launch {
                     found.clear()
                     found.addAll(Tv.scan(context))
-                    status = if (found.isEmpty()) "No TV found. Is it on, with network debugging on?" else "Found:"
+                    status = if (found.isEmpty()) "No TV found. Is it on, with network debugging on?" else "Found it!"
                     busy = false
                 }
-            }, enabled = !busy) { Text("Find my TV") }
+            }
         }
         found.forEach { ip ->
-            Card(onClick = { host = ip; connect(ip) }, modifier = Modifier.fillMaxWidth()) {
-                Text(ip, Modifier.padding(16.dp), fontSize = 18.sp)
+            Panel(Modifier.fillMaxWidth(), onClick = { host = ip; connect(ip) }) {
+                Text("📺  $ip", Modifier.padding(14.dp), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         }
-        if (status.isNotEmpty()) Text(status)
+        if (status.isNotEmpty()) SpeechBubble(status)
     }
 }
 
 @Composable
-private fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
+internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
     var text by remember { mutableStateOf("") }
-    fun key(code: Int) = run { tv.key(code) }
+    var sfx by remember { mutableStateOf("") }
+    var sfxKey by remember { mutableIntStateOf(0) }
+    fun key(code: Int, word: String = "PON!") {
+        sfx = word
+        sfxKey++
+        run { tv.key(code) }
+    }
 
     Column(
-        Modifier.fillMaxSize().padding(20.dp),
+        Modifier.fillMaxSize().verticalScrollable().padding(horizontal = 20.dp, vertical = 14.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            RoundKey(Icons.Filled.PowerSettingsNew, "Power", Color(0xFFE57373)) { key(26) }
-            RoundKey(Icons.Filled.Home, "Home") { key(3) }
-            RoundKey(Icons.AutoMirrored.Filled.ArrowBack, "Back") { key(4) }
-            RoundKey(Icons.Filled.PlayArrow, "Play/pause") { key(85) }
+        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            InkKey(Icons.Filled.PowerSettingsNew, "Power", tint = Ink.red) { key(26, "BAN!") }
+            InkKey(Icons.Filled.Home, "Home") { key(3, "TADA!") }
+            InkKey(Icons.AutoMirrored.Filled.ArrowBack, "Back") { key(4, "SHU!") }
+            InkKey(Icons.Filled.PlayArrow, "Play/pause") { key(85) }
         }
-        // The D-pad: four arrows round a big OK.
-        Box(Modifier.size(260.dp)) {
-            PadKey(Icons.Filled.KeyboardArrowUp, Modifier.align(Alignment.TopCenter)) { key(19) }
-            PadKey(Icons.Filled.KeyboardArrowDown, Modifier.align(Alignment.BottomCenter)) { key(20) }
-            PadKey(Icons.Filled.KeyboardArrowLeft, Modifier.align(Alignment.CenterStart)) { key(21) }
-            PadKey(Icons.Filled.KeyboardArrowRight, Modifier.align(Alignment.CenterEnd)) { key(22) }
-            Button(onClick = { key(23) }, shape = CircleShape, modifier = Modifier.size(104.dp).align(Alignment.Center)) {
-                Text("OK", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        // The D-pad inside a burst of speed lines.
+        Box(Modifier.size(290.dp), contentAlignment = Alignment.Center) {
+            Canvas(Modifier.matchParentSize()) { speedLines(count = 56) }
+            Box(Modifier.size(266.dp)) {
+                Box(Modifier.align(Alignment.TopCenter)) { InkKey(Icons.Filled.KeyboardArrowUp, "Up", 74.dp) { key(19) } }
+                Box(Modifier.align(Alignment.BottomCenter)) { InkKey(Icons.Filled.KeyboardArrowDown, "Down", 74.dp) { key(20) } }
+                Box(Modifier.align(Alignment.CenterStart)) { InkKey(Icons.Filled.KeyboardArrowLeft, "Left", 74.dp) { key(21) } }
+                Box(Modifier.align(Alignment.CenterEnd)) { InkKey(Icons.Filled.KeyboardArrowRight, "Right", 74.dp) { key(22) } }
+                Panel(Modifier.size(92.dp).align(Alignment.Center), CircleShape, Ink.ink, onClick = { key(23, "DON!") }) {
+                    Text("OK", style = Shout, fontSize = 30.sp, color = Ink.paper, modifier = Modifier.align(Alignment.Center))
+                }
             }
+            SoundEffect(sfx, sfxKey, Modifier.align(Alignment.TopEnd))
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            RoundKey(Icons.AutoMirrored.Filled.VolumeDown, "Volume down") { key(25) }
-            RoundKey(Icons.AutoMirrored.Filled.VolumeOff, "Mute") { key(164) }
-            RoundKey(Icons.AutoMirrored.Filled.VolumeUp, "Volume up") { key(24) }
+        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            InkKey(Icons.AutoMirrored.Filled.VolumeDown, "Volume down") { key(25) }
+            InkKey(Icons.AutoMirrored.Filled.VolumeOff, "Mute") { key(164, "SHIIN…") }
+            InkKey(Icons.AutoMirrored.Filled.VolumeUp, "Volume up") { key(24) }
         }
-        Spacer(Modifier.height(4.dp))
-        Text("Type on the TV (put the TV's cursor in a search box first)", color = Color.Gray, fontSize = 13.sp)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(text, { text = it }, singleLine = true, modifier = Modifier.weight(1f))
-            Spacer(Modifier.width(8.dp))
-            FilledTonalIconButton(onClick = { key(67) }) { Icon(Icons.Filled.Backspace, "Delete") }
-            Spacer(Modifier.width(4.dp))
-            Button(onClick = { val t = text; text = ""; run { tv.type(t); tv.key(66) } }) { Text("Send") }
-        }
-    }
-}
-
-@Composable
-private fun RoundKey(icon: ImageVector, label: String, tint: Color = Color.White, onClick: () -> Unit) {
-    FilledTonalIconButton(onClick = onClick, modifier = Modifier.size(60.dp)) {
-        Icon(icon, label, tint = tint, modifier = Modifier.size(28.dp))
-    }
-}
-
-@Composable
-private fun PadKey(icon: ImageVector, modifier: Modifier, onClick: () -> Unit) {
-    FilledTonalIconButton(onClick = onClick, modifier = modifier.size(76.dp)) {
-        Icon(icon, null, modifier = Modifier.size(44.dp))
-    }
-}
-
-@Composable
-private fun AppsScreen(apps: Apps, run: (suspend () -> Unit) -> Unit) {
-    val list = remember { mutableStateListOf<TvApp>() }
-    LaunchedEffect(Unit) { run { list.clear(); list.addAll(apps.list().filter { it.launch != null && it.enabled }) } }
-    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        item { Text("Open on the TV", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(vertical = 12.dp)) }
-        if (list.isEmpty()) item { Text("Loading the TV's apps…", color = Color.Gray) }
-        items(list, key = { it.pkg }) { app ->
-            Card(onClick = { run { apps.open(app) } }, modifier = Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp)) {
-                    Text(app.name, fontSize = 18.sp)
-                    Text(app.pkg, fontSize = 12.sp, color = Color.Gray)
+        Panel(Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(10.dp)) {
+                Text("TYPE ON THE TV", style = Shout, fontSize = 13.sp)
+                Text("Put the TV's cursor in a search box first.", color = Ink.muted, fontSize = 12.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(text, { text = it }, singleLine = true, modifier = Modifier.weight(1f))
+                    Spacer(Modifier.width(8.dp))
+                    InkKey(Icons.Filled.Backspace, "Delete", 48.dp) { key(67) }
+                    Spacer(Modifier.width(8.dp))
+                    MangaButton("GO", loud = true) { val t = text; text = ""; sfx = "KAKI!"; sfxKey++; run { tv.type(t); tv.key(66) } }
                 }
             }
         }
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Mascot(Modifier.size(84.dp))
+            SpeechBubble("Remo here! Point, press, enjoy. Ganbatte!", Modifier.weight(1f))
+        }
+    }
+}
+
+/** The remote is taller than small phones: let it scroll. */
+@Composable
+private fun Modifier.verticalScrollable(): Modifier =
+    this.verticalScroll(androidx.compose.foundation.rememberScrollState())
+
+@Composable
+internal fun AppsScreen(apps: Apps, run: (suspend () -> Unit) -> Unit) {
+    val list = remember { mutableStateListOf<TvApp>() }
+    LaunchedEffect(Unit) { run { list.clear(); list.addAll(apps.list().filter { it.launch != null && it.enabled }) } }
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        item { Spacer(Modifier.height(12.dp)); Heading("Open on the TV") }
+        if (list.isEmpty()) item { SpeechBubble("Fetching the TV's apps…") }
+        items(list, key = { it.pkg }) { app ->
+            Panel(Modifier.fillMaxWidth(), onClick = { run { apps.open(app) } }) {
+                Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(40.dp).background(Ink.ink, CircleShape), contentAlignment = Alignment.Center) {
+                        Text(app.name.take(1).uppercase(), style = Shout, color = Ink.paper, fontSize = 20.sp)
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(app.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(app.pkg, fontSize = 11.sp, color = Ink.muted)
+                    }
+                }
+            }
+        }
+        item { Spacer(Modifier.height(16.dp)) }
     }
 }
 
 @Composable
-private fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
+internal fun SendScreen(send: Send, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
     var link by remember { mutableStateOf("") }
     val pick = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) run { say("Sending…"); say("Sent ${send.file(uri)} to the TV") }
+        if (uri != null) run { say("Sending… ZOOM!"); say("Sent ${send.file(uri)} to the TV!") }
     }
-    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text("Send to the TV", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-        Text("Tip: in YouTube, Photos or Files, tap Share and choose KM8 Remote.", color = Color.Gray)
-        OutlinedTextField(link, { link = it }, label = { Text("YouTube link") }, modifier = Modifier.fillMaxWidth())
-        Button(onClick = {
-            run { if (send.youtube(link)) { say("Playing on the TV"); link = "" } else say("That isn't a YouTube link") }
-        }) { Text("Play on TV") }
-        Spacer(Modifier.height(8.dp))
-        FilledTonalButton(onClick = { pick.launch("image/*") }, modifier = Modifier.fillMaxWidth()) { Text("Show a photo") }
-        FilledTonalButton(onClick = { pick.launch("video/*") }, modifier = Modifier.fillMaxWidth()) { Text("Play a video") }
-        FilledTonalButton(onClick = { pick.launch("*/*") }, modifier = Modifier.fillMaxWidth()) { Text("Send any file") }
-        Text("Files go to the TV's Download/KM8Remote folder.", color = Color.Gray, fontSize = 13.sp)
+    Column(Modifier.fillMaxSize().verticalScrollable().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Heading("Send to the TV", "Tip: in YouTube, Photos or Files, tap Share and pick KM8 Remote.")
+        Panel(Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                OutlinedTextField(link, { link = it }, label = { Text("YouTube link") }, modifier = Modifier.fillMaxWidth())
+                MangaButton("PLAY ON TV!", loud = true) {
+                    run { if (send.youtube(link)) { say("Playing on the TV!"); link = "" } else say("That isn't a YouTube link") }
+                }
+            }
+        }
+        MangaButton("📷  SHOW A PHOTO", Modifier.fillMaxWidth()) { pick.launch("image/*") }
+        MangaButton("🎬  PLAY A VIDEO", Modifier.fillMaxWidth()) { pick.launch("video/*") }
+        MangaButton("📦  SEND ANY FILE", Modifier.fillMaxWidth()) { pick.launch("*/*") }
+        Text("Files land in the TV's Download/KM8Remote folder.", color = Ink.muted, fontSize = 13.sp)
     }
 }
 
@@ -353,51 +374,59 @@ private fun TidyScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (Stri
 
     if (confirmUndo) AlertDialog(
         onDismissRequest = { confirmUndo = false },
-        title = { Text("Undo everything?") },
+        containerColor = Ink.paper,
+        title = { Text("UNDO EVERYTHING?", style = Shout) },
         text = { Text("Turns back on every app this phone has turned off.") },
-        confirmButton = { TextButton(onClick = { confirmUndo = false; run { say("Turned ${apps.undoAll()} apps back on"); reload() } }) { Text("Undo") } },
-        dismissButton = { TextButton(onClick = { confirmUndo = false }) { Text("Cancel") } },
+        confirmButton = { MangaButton("UNDO", loud = true) { confirmUndo = false; run { say("Turned ${apps.undoAll()} apps back on"); reload() } } },
+        dismissButton = { MangaButton("CANCEL") { confirmUndo = false } },
     )
 
-    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
-            Column(Modifier.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Turn apps off and on", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-                Text("Off means disabled, not uninstalled: switch it back on any time. Apps the TV needs have a lock.",
-                    color = Color.Gray, fontSize = 13.sp)
+            Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Heading("Tidy up", "Off means disabled, never uninstalled. Apps the TV needs are locked.")
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Show built-in apps", Modifier.weight(1f))
-                    Switch(showSystem, { showSystem = it })
+                    Text("Show built-in apps", Modifier.weight(1f), fontWeight = FontWeight.Bold)
+                    Switch(showSystem, { showSystem = it }, colors = inkSwitch())
                 }
-                OutlinedButton(onClick = { confirmUndo = true }) { Text("Undo everything") }
+                MangaButton("UNDO EVERYTHING") { confirmUndo = true }
             }
         }
-        if (list.isEmpty()) item { Text("Loading the TV's apps…", color = Color.Gray) }
+        if (list.isEmpty()) item { SpeechBubble("Fetching the TV's apps…") }
         items(list.filter { showSystem || !it.system }, key = { it.pkg }) { app ->
-            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(app.name, fontSize = 16.sp)
-                    Text(app.pkg, fontSize = 11.sp, color = Color.Gray)
-                }
-                if (app.protected) {
-                    Icon(Icons.Filled.Lock, "Needed by the TV", tint = Color.Gray)
-                } else {
-                    Switch(app.enabled, { on ->
-                        run {
-                            apps.setEnabled(app.pkg, on)
-                            val i = list.indexOfFirst { it.pkg == app.pkg }
-                            if (i >= 0) list[i] = app.copy(enabled = on)
-                            say(if (on) "${app.name} is on" else "${app.name} is off")
-                        }
-                    })
+            Panel(Modifier.fillMaxWidth(), shadow = 3.dp) {
+                Row(Modifier.padding(horizontal = 12.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(app.name, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(app.pkg, fontSize = 11.sp, color = Ink.muted)
+                    }
+                    if (app.protected) {
+                        Icon(Icons.Filled.Lock, "Needed by the TV", tint = Ink.muted)
+                    } else {
+                        Switch(app.enabled, { on ->
+                            run {
+                                apps.setEnabled(app.pkg, on)
+                                val i = list.indexOfFirst { it.pkg == app.pkg }
+                                if (i >= 0) list[i] = app.copy(enabled = on)
+                                say(if (on) "${app.name}: ON!" else "${app.name}: OFF! Poof.")
+                            }
+                        }, colors = inkSwitch())
+                    }
                 }
             }
         }
+        item { Spacer(Modifier.height(16.dp)) }
     }
 }
 
 @Composable
-private fun CheckScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
+private fun inkSwitch() = SwitchDefaults.colors(
+    checkedThumbColor = Ink.paper, checkedTrackColor = Ink.ink, checkedBorderColor = Ink.ink,
+    uncheckedThumbColor = Ink.ink, uncheckedTrackColor = Ink.paper, uncheckedBorderColor = Ink.ink,
+)
+
+@Composable
+internal fun CheckScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (String) -> Unit) {
     val back = remember { mutableStateListOf<TvApp>() }
     var checked by remember { mutableStateOf(false) }
     fun check() = run {
@@ -408,27 +437,30 @@ private fun CheckScreen(apps: Apps, run: (suspend () -> Unit) -> Unit, say: (Str
         checked = true
     }
     LaunchedEffect(Unit) { check() }
-    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Check my TV", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-        Text("TV updates sometimes switch cleaned-up apps back on. This finds them.", color = Color.Gray)
+    Column(Modifier.fillMaxSize().verticalScrollable().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Heading("Check my TV", "TV updates sometimes switch cleaned-up apps back on. Remo will find them.")
+        Box(Modifier.fillMaxWidth().height(150.dp)) {
+            Canvas(Modifier.matchParentSize()) { speedLines(count = 40) }
+            Mascot(Modifier.size(120.dp).align(Alignment.Center), happy = checked && back.isEmpty())
+        }
         when {
-            !checked -> Text("Checking…", color = Color.Gray)
-            back.isEmpty() -> Text("All good: everything you turned off is still off.", fontSize = 18.sp)
+            !checked -> SpeechBubble("Checking… hmm hmm…")
+            back.isEmpty() -> SpeechBubble("All clear! Everything you turned off is still off.")
             else -> {
-                Text("${back.size} app(s) came back on:", fontSize = 18.sp)
+                SpeechBubble("Uh-oh! ${back.size} app(s) came back on:")
                 back.forEach { app ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(app.name, Modifier.weight(1f))
-                        TextButton(onClick = { run { apps.setEnabled(app.pkg, false); back.remove(app); say("${app.name} is off again") } }) {
-                            Text("Turn off")
+                    Panel(Modifier.fillMaxWidth(), shadow = 3.dp) {
+                        Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(app.name, Modifier.weight(1f), fontWeight = FontWeight.Bold)
+                            MangaButton("OFF") { run { apps.setEnabled(app.pkg, false); back.remove(app); say("${app.name} is off again") } }
                         }
                     }
                 }
-                Button(onClick = { run { back.toList().forEach { apps.setEnabled(it.pkg, false) }; back.clear(); say("All turned off again") } }) {
-                    Text("Turn them all off")
+                MangaButton("TURN THEM ALL OFF!", loud = true) {
+                    run { back.toList().forEach { apps.setEnabled(it.pkg, false) }; back.clear(); say("All off again. Mission complete!") }
                 }
             }
         }
-        OutlinedButton(onClick = { checked = false; check() }) { Text("Check again") }
+        MangaButton("CHECK AGAIN") { checked = false; check() }
     }
 }
