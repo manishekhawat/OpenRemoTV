@@ -14,8 +14,8 @@ android {
         applicationId = "com.km8.remote"
         minSdk = 26
         targetSdk = 34
-        versionCode = 19
-        versionName = "1.11"
+        versionCode = 20
+        versionName = "1.12"
     }
 
     buildTypes {
