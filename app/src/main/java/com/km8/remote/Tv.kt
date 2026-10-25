@@ -77,14 +77,33 @@ class Tv(private val context: Context) {
         }
     }
 
+    /**
+     * Copies a file to the TV through a shell's input ("head -c" reads exactly its size) instead of ADB's sync
+     * protocol: on the KM8 a sync push left empty files behind and kept the TV's adbd busy.
+     */
     suspend fun push(file: File, remotePath: String) = withContext(Dispatchers.IO) {
         lock.withLock {
+            val d = dadb ?: open()
+            val size = file.length()
+            val stream = d.open("shell:head -c $size > ${shellQuote(remotePath)} && echo copied")
             try {
-                (dadb ?: open()).push(file, remotePath, 420 /* 0644 */, System.currentTimeMillis())
-            } catch (e: Exception) {
-                dadb?.close()
-                dadb = null
-                open().push(file, remotePath, 420, System.currentTimeMillis())
+                file.inputStream().use { input ->
+                    val buffer = ByteArray(64 * 1024)
+                    while (true) {
+                        val n = input.read(buffer)
+                        if (n < 0) break
+                        stream.sink.write(buffer, 0, n)
+                    }
+                }
+                stream.sink.flush()
+                val answer = stream.source.readUtf8()
+                check(answer.contains("copied")) { "the TV kept only part of the file" }
+            } finally {
+                try {
+                    stream.close()
+                } catch (e: Exception) {
+                    // already closed by the TV
+                }
             }
         }
     }
