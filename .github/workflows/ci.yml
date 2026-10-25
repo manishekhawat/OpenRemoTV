@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew --no-daemon test lint
       - name: Build the app (with the TV helper and home screen)
         run: ./gradlew --no-daemon :app:assembleRelease
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: OpenRemoTV-unsigned-${{ github.sha }}
           path: app/build/outputs/apk/release/app-release.apk
