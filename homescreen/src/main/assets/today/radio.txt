@@ -7,3 +7,6 @@
 AIR News 24x7 | All India Radio news | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi01/air001_Auto.m3u8
 Raagam | Indian classical music | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airbang04/air036_Auto.m3u8
 Akashvani Aaradhana | Bhajans and devotional music | https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi05/air005_Auto.m3u8
+Mirchi Top 20 | The Bollywood top 20, from Radio Mirchi | https://drive.uber.radio/uber/bollywoodnow/icecast.audio
+Mirchi Bollywood Dance | Hindi dance and party songs, from Radio Mirchi | https://drive.uber.radio/uber/bollywooddance/icecast.audio
+80s80s Rock | Rock from the 80s and 90s, from Germany | https://regiocast.streamabc.net/regc-80s80srock2191507-mp3-192-4255750

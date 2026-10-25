@@ -11,6 +11,7 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
 - The weather says whose weather it is: the town now shows on both MangaHome and IndiaMinimalist.
 - Memory and Tic-tac-toe are drawn as a comic page on MangaHome.
 - The air quality comes last in the weather box, after the temperatures.
+- Three more radio stations: Mirchi Top 20, Mirchi Bollywood Dance and 80s80s Rock.
 
 ### Phone app
 - The sparkle key is back on the phone's own speech recogniser, which hands your question to the TV's search. The
