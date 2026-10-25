@@ -1,4 +1,4 @@
-# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, films and music, then English sport, news and films, from
+# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, films and music, then English sport, history, news and films, from
 # the iptv-org India list (live-tv/refresh.sh), each from the broadcaster's own or its partner's server, and each
 # played when checked on 2026-10-26. Free streams come and go: recheck with live-tv/check.py.
 DD National HD | Hindi · Doordarshan, India's public channel | https://mumbai-edge.smartplaytv.in/DDNational/index.m3u8
@@ -8,6 +8,6 @@ The Movie Club | Hindi · Movies | https://sis-global.prod.samsungtv.plus/v1/tvp
 South Station | Hindi · South Indian films in Hindi | https://cc-yw7ztecy8do3q.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-yw7ztecy8do3q/SS_IN.m3u8
 B4U Music | Hindi · Bollywood songs | https://amg01408-amg01408c5-amgplt0747.playout.now3.amagi.tv/b4um001/playlist.m3u8
 Cricket Gold | English · Classic cricket matches | https://streams2.sofast.tv/ptnr-yupptv/title-cricketgold/v1/master/611d79b11b77e2f571934fd80ca1413453772ac7/b2048bb8-1686-4432-aa50-647245383e0c/manifest.m3u8
-India Today | English · News | https://d1rc86nwwc9fag.cloudfront.net/vglive-sk-293160/master.m3u8
+History TV18 HD | English · History and documentaries | https://amg01448-amg01448c16-samsung-in-3495.playouts.now.amagi.tv/playlist/amg01448-samsungindia-historychannelenglish-samsungin/playlist.m3u8
 CNN-News18 | English · News | https://n18syndication.akamaized.net/bpk-tv/CNN_News18_NW18_MOB/output01/master.m3u8
 MovieSphere | English · Hollywood films from Lionsgate | https://moviesphereuk-samsunguk.amagi.tv/playlist.m3u8
