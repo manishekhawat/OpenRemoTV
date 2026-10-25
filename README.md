@@ -26,7 +26,7 @@ and **Undo anytime** (back to the original backup). Rebuild the lists with `pyth
 | `app/` | The OpenRemoTV phone app (Kotlin, Jetpack Compose). |
 | `app/src/main/assets/themes/manga` | The **MangaHome** theme: a full comic-page home screen (`manga_layout`), Remo and six manga wallpapers. |
 | `app/src/main/assets/themes/india` | The **IndiaMinimalist** theme: monuments of India and the world, the Panchang, festivals and glass cards. |
-| `homescreen/` | The TV home screen both themes run on: the cleanyourtv launcher (`com.gathin.tvhome`, MIT, see `homescreen/LICENSE-cleanyourtv`) with the MangaHome comic page, Today, radio, games, Phone to TV and the other additions. |
+| `homescreen/` | The TV home screen both themes run on: OpenRemoTV Home (`com.openremotv.home`), built on the cleanyourtv launcher by Gathin (MIT, see `homescreen/LICENSE-cleanyourtv`) with the MangaHome comic page, Today, radio, games, Phone to TV and the other additions. |
 | `keyserver/` | The small helper OpenRemoTV starts on the TV for instant keys, files and app switches. Its built `keyserver.dex` is in `app/src/main/assets`. |
 | `tools/` | `make-lists.py` rebuilds the tested debloat lists; `build-all.sh` builds the home screen and the app; `build-keyserver.sh` rebuilds the TV helper. |
 

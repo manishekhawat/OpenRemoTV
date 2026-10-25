@@ -105,7 +105,7 @@ class Apps(private val context: Context, private val tv: Tv) {
             "com.google.android.tvsetup", "com.google.android.katniss", "com.google.android.inputmethod.latin",
             "com.google.android.leanback.ime", "com.google.android.tv.frameworkpackagestubs",
             "com.google.android.apps.mediashell", "com.android.vending", "com.droidlogic.", "com.amlogic.",
-            "com.gathin.tvhome", "com.google.android.backdrop",
+            "com.openremotv.home", "com.google.android.backdrop",
         )
 
         fun isProtected(pkg: String): Boolean {
@@ -130,7 +130,7 @@ class Apps(private val context: Context, private val tv: Tv) {
             "com.android.vending" to "Play Store",
             "com.android.tv.settings" to "Settings",
             "com.droidlogic.tv.settings" to "TV settings",
-            "com.gathin.tvhome" to "Home screen",
+            "com.openremotv.home" to "Home screen",
             "com.google.android.tvlauncher" to "Old Google TV home",
             "com.google.android.leanbacklauncher" to "Old Android TV home",
             "com.google.android.music" to "Play Music",

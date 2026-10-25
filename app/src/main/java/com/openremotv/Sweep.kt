@@ -150,7 +150,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         }
         val out = tv.shell("pm install -r -g /data/local/tmp/manga-home.apk; rm -f /data/local/tmp/manga-home.apk")
         check(out.contains("Success")) { out.trim() }
-        return setHome("com.gathin.tvhome")
+        return setHome("com.openremotv.home")
     }
 
     /**
@@ -176,11 +176,11 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
     }
 
     companion object {
-        private const val THEME_DIR = "/sdcard/Android/data/com.gathin.tvhome/files"
-        private const val THEME_URI = "content://com.gathin.tvhome.theme"
+        private const val THEME_DIR = "/sdcard/Android/data/com.openremotv.home/files"
+        private const val THEME_URI = "content://com.openremotv.home.theme"
         /** cleanyourtv's theme.sh restart: back through the Home intent, with its accessibility helpers put back. */
-        private const val RESTART = "a=\$(settings get secure enabled_accessibility_services); am force-stop com.gathin.tvhome; " +
-            "am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null; case \"\$a\" in *com.gathin.tvhome*) " +
+        private const val RESTART = "a=\$(settings get secure enabled_accessibility_services); am force-stop com.openremotv.home; " +
+            "am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null; case \"\$a\" in *com.openremotv.home*) " +
             "sleep 1; settings put secure enabled_accessibility_services \"\$a\"; settings put secure accessibility_enabled 1 ;; esac"
 
         fun packages(out: String) =
