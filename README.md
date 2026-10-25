@@ -8,8 +8,7 @@ keys, files and app switches.
 First run: **Pick my TV** (Android TV, Google TV or Fire TV, with the steps to turn on network debugging) and
 **Connect**. Then the **Sweep** tab walks through **Backup** (always first; the first backup of each TV is kept as
 the original), the **tested list** for this TV (260 TVs from cleanyourtv's `examples/`, matched by model, or the
-common list), a switch per app, the **sweep** itself, an optional **clean home screen** (Manga Home, the bundled
-cleanyourtv launcher; Projectivy Launcher; or keep), **Done**, **Share it** (a manga card through the share sheet)
+common list), a switch per app, the **sweep** itself, an optional **clean home screen** (MangaHome or IndiaMinimalist, on the bundled cleanyourtv launcher, or keep the current one), **Done**, **Share it** (a manga card through the share sheet)
 and **Undo anytime** (back to the original backup). Rebuild the lists with `python3 tools/make-lists.py ../cleanyourtv`.
 
 - **Remote:** arrows, OK, back, home, play/pause, volume, mute, power, and typing into the TV.

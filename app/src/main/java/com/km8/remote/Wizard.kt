@@ -252,17 +252,6 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                             if (ok) { homeName = "IndiaMinimalist"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
-                    HomeChoice("PROJECTIVY LAUNCHER", "A popular free launcher. Its Play Store page opens on the TV: press Install with the remote, then come back here.") {
-                        run {
-                            if (sweeper.projectivyInstalled()) {
-                                if (sweeper.setHome(Sweeper.PROJECTIVY)) { homeName = "Projectivy"; step = Step.DONE }
-                                else say("Your TV kept its old home screen; nothing changed.")
-                            } else {
-                                sweeper.openProjectivy()
-                                say("Press Install on the TV, then tap Projectivy here again.")
-                            }
-                        }
-                    }
                     HomeChoice("KEEP MY HOME SCREEN", "Leave it as it is.") { step = Step.DONE }
                     if (busy.isNotEmpty()) SpeechBubble(busy)
                 }

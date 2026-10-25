@@ -153,13 +153,6 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         return setHome("com.gathin.tvhome")
     }
 
-    /** Opens Projectivy Launcher's Play Store page on the TV, for the family to press Install. */
-    suspend fun openProjectivy() {
-        tv.shell("am start -a android.intent.action.VIEW -d " + Tv.shellQuote("market://details?id=$PROJECTIVY"))
-    }
-
-    suspend fun projectivyInstalled() = tv.shell("pm list packages $PROJECTIVY").contains(PROJECTIVY)
-
     /**
      * Undo anytime: back to the TV's original backup. Every app that was on then and is off now goes back on, the
      * original home screen and animation speeds come back. Returns how many apps came back.
@@ -183,7 +176,6 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
     }
 
     companion object {
-        const val PROJECTIVY = "com.spocky.projengmenu"
         private const val THEME_DIR = "/sdcard/Android/data/com.gathin.tvhome/files"
         private const val THEME_URI = "content://com.gathin.tvhome.theme"
         /** cleanyourtv's theme.sh restart: back through the Home intent, with its accessibility helpers put back. */
