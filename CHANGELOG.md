@@ -9,6 +9,11 @@ All notable changes, newest first. Versions follow [Semantic Versioning](https:/
   full screen. Up and down change channel; Back returns Home.
 - The weather says whose weather it is: the town now shows on both MangaHome and IndiaMinimalist.
 - Memory and Tic-tac-toe are drawn as a comic page on MangaHome.
+- The air quality comes last in the weather box, after the temperatures.
+
+### Phone app
+- The sparkle key is back on the phone's own speech recogniser, which hands your question to the TV's search. The
+  TV's own voice link didn't hear the phone reliably on Android TV 8.
 
 ## 0.1.8 (2026-10-26)
 

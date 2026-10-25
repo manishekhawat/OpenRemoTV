@@ -421,13 +421,14 @@ final class ComicHome extends FrameLayout {
                 StringBuilder more = new StringBuilder();
                 if (!extras.weatherCity.isEmpty()) more.append(extras.weatherCity).append("\n");
                 more.append(ctx.getString(R.string.feels, Math.round(now.optDouble("apparent_temperature"))));
-                if (w.has("aqi")) more.append(" · ").append(ctx.getString(R.string.aqi_line, w.optLong("aqi"), Widgets.aqiWord(w.optLong("aqi"))));
                 JSONObject daily = w.optJSONObject("daily");
                 JSONArray max = daily == null ? null : daily.optJSONArray("temperature_2m_max");
                 JSONArray min = daily == null ? null : daily.optJSONArray("temperature_2m_min");
                 if (max != null && min != null && max.length() > 1) {
                     more.append("\n").append(ctx.getString(R.string.tomorrow_temps, Math.round(max.optDouble(1)), Math.round(min.optDouble(1))));
                 }
+                // Air quality last, after everything about the temperature.
+                if (w.has("aqi")) more.append("\n").append(ctx.getString(R.string.aqi_line, w.optLong("aqi"), Widgets.aqiWord(w.optLong("aqi"))));
                 weatherMore.setText(more);
             } else {
                 weatherBig.setText("--°");

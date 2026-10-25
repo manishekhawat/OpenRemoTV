@@ -159,10 +159,11 @@ final class Widgets {
         now.addView(top);
         weatherDetails = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         now.addView(weatherDetails);
-        weatherAir = text(11, 0xCCFFFFFF, UiFont.REGULAR);
-        now.addView(weatherAir);
         weatherSun = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         now.addView(weatherSun);
+        // Air quality last, after everything about the temperature and the sun.
+        weatherAir = text(11, 0xCCFFFFFF, UiFont.REGULAR);
+        now.addView(weatherAir);
         forecast = new LinearLayout(context);
         forecast.setOrientation(LinearLayout.HORIZONTAL);
         weatherCard.addView(forecast, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,

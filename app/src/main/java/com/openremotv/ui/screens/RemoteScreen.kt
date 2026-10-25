@@ -80,69 +80,6 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
             if (assistant) run { tv.assistant() }
         }
     }
-    // The phone as the TV's own microphone, through the TV's remote service (paired once with a code on the TV).
-    val remote = remember { com.openremotv.tv.TvRemote(context) { tv.host } }
-    var voice by remember { mutableStateOf("") }          // "", "code", "connecting", "listening"
-    var code by remember { mutableStateOf("") }
-    fun talkToTv() = run {
-        voice = "connecting"
-        try {
-            remote.talk { voice = "listening" }
-        } catch (e: Exception) {
-            voice = ""
-            speak(true)   // the TV's remote service didn't answer: the phone's own recogniser instead
-            return@run
-        }
-        voice = ""
-    }
-    val askMic = androidx.activity.compose.rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
-    ) { granted -> if (granted) talkToTv() else speak(true) }
-    fun assistantKey() {
-        when {
-            voice == "listening" -> remote.stopTalking()
-            voice.isNotEmpty() -> Unit
-            remote.paired -> askMic.launch(android.Manifest.permission.RECORD_AUDIO)
-            else -> run {
-                voice = "connecting"
-                try {
-                    remote.startPairing()
-                    code = ""
-                    voice = "code"
-                } catch (e: Exception) {
-                    voice = ""
-                    speak(true)
-                }
-            }
-        }
-    }
-    if (voice == "code") androidx.compose.material3.AlertDialog(
-        onDismissRequest = { voice = "" },
-        containerColor = Ink.paper,
-        title = { Text(stringResource(R.string.pair_title), style = Shout) },
-        text = {
-            androidx.compose.foundation.layout.Column {
-                Text(stringResource(R.string.pair_text))
-                OutlinedTextField(code, { code = it.uppercase().take(6) }, singleLine = true,
-                    label = { Text(stringResource(R.string.pair_code)) })
-            }
-        },
-        confirmButton = {
-            MangaButton(stringResource(R.string.pair_ok), loud = true) {
-                val c = code
-                run {
-                    if (remote.finishPairing(c)) {
-                        voice = ""
-                        askMic.launch(android.Manifest.permission.RECORD_AUDIO)
-                    } else {
-                        code = ""
-                    }
-                }
-            }
-        },
-        dismissButton = { MangaButton(stringResource(R.string.cancel)) { voice = "" } },
-    )
-
     fun key(code: Int, word: String = "PON!") {
         sfx = word
         sfxKey++
@@ -177,18 +114,13 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
                         modifier = Modifier.align(Alignment.Center))
                 }
                 SoundEffect(sfx, sfxKey, Modifier.align(Alignment.TopEnd))
-                if (voice == "connecting" || voice == "listening") {
-                    com.openremotv.ui.SpeechBubble(stringResource(if (voice == "listening") R.string.voice_listening else R.string.voice_connecting),
-                        Modifier.align(Alignment.BottomCenter))
-                }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 InkKey(Icons.AutoMirrored.Filled.VolumeDown, stringResource(R.string.key_volume_down), k, repeat = true) { key(25) }
                 InkKey(Icons.AutoMirrored.Filled.VolumeOff, stringResource(R.string.key_mute), k) { key(164, "SHIIN…") }
                 InkKey(Icons.AutoMirrored.Filled.VolumeUp, stringResource(R.string.key_volume_up), k, repeat = true) { key(24) }
                 // Ask the TV's Google Assistant or Gemini, speaking into the phone.
-                InkKey(if (voice == "listening") Icons.Filled.Mic else Icons.Filled.AutoAwesome, stringResource(R.string.key_assistant), k,
-                    tint = Ink.red) { assistantKey() }
+                InkKey(Icons.Filled.AutoAwesome, stringResource(R.string.key_assistant), k, tint = Ink.red) { speak(true) }
             }
             // Typing: one compact row (put the TV's cursor in a search box first).
             Row(verticalAlignment = Alignment.CenterVertically) {
