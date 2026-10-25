@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import kotlinx.coroutines.CoroutineScope
@@ -34,5 +36,17 @@ class ScreensTest {
     @Test fun connect() {
         val tv = Tv(paparazzi.context)
         page(Tab.REMOTE) { ConnectScreen(tv, CoroutineScope(Dispatchers.Unconfined)) {} }
+    }
+
+    @Test fun appTiles() = paparazzi.snapshot {
+        MangaTheme {
+            MangaPage {
+                androidx.compose.foundation.layout.Column(Modifier.fillMaxWidth()) {
+                    listOf("in.startv.hotstar", "com.droidlogic.FileBrower", "com.google.android.tv").forEach { pkg ->
+                        Box(Modifier.fillMaxWidth(0.5f).padding(8.dp)) { AppTile(TvApp(pkg, true, false, "x")) {} }
+                    }
+                }
+            }
+        }
     }
 }

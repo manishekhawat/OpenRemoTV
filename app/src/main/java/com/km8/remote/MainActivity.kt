@@ -339,6 +339,23 @@ internal fun RemoteScreen(tv: Tv, run: (suspend () -> Unit) -> Unit) {
 private fun Modifier.verticalScrollable(): Modifier =
     this.verticalScroll(androidx.compose.foundation.rememberScrollState())
 
+/** One app in the Apps grid: its initial in an ink circle, then its name. */
+@Composable
+internal fun AppTile(app: TvApp, onClick: () -> Unit) {
+    Panel(Modifier.fillMaxWidth().height(64.dp), shadow = 4.dp, onClick = onClick) {
+        // Fills the panel, so the circle and the name centre on the same line however long the name is.
+        Row(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(32.dp).background(Ink.ink, CircleShape), contentAlignment = Alignment.Center) {
+                Text(app.name.take(1).uppercase(), color = Ink.paper, fontSize = 16.sp, fontWeight = FontWeight.Black,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    style = androidx.compose.ui.text.TextStyle(platformStyle = androidx.compose.ui.text.PlatformTextStyle(includeFontPadding = false)))
+            }
+            Spacer(Modifier.width(8.dp))
+            Text(app.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 2, lineHeight = 17.sp)
+        }
+    }
+}
+
 @Composable
 internal fun AppsScreen(apps: Apps, run: (suspend () -> Unit) -> Unit) {
     val list = remember { mutableStateListOf<TvApp>() }
@@ -355,15 +372,7 @@ internal fun AppsScreen(apps: Apps, run: (suspend () -> Unit) -> Unit) {
         if (list.isEmpty()) item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(2) }) { SpeechBubble("Fetching the TV's apps…") }
         items(list.size) { i ->
             val app = list[i]
-            Panel(Modifier.fillMaxWidth().height(64.dp), shadow = 4.dp, onClick = { run { apps.open(app) } }) {
-                Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(32.dp).background(Ink.ink, CircleShape), contentAlignment = Alignment.Center) {
-                        Text(app.name.take(1).uppercase(), style = Shout, color = Ink.paper, fontSize = 16.sp)
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    Text(app.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 2)
-                }
-            }
+            AppTile(app) { run { apps.open(app) } }
         }
     }
 }
