@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Lint for the launcher. CI runs lintRelease; keep it at zero errors. -->
 <lint>
-    <!-- A string missing from a values-* folder falls back to English by design: translations arrive
-         one language at a time from contributors, and a partial one is better than none. -->
+    <!-- A string missing from values-hi falls back to English. -->
     <issue id="MissingTranslation" severity="informational" />
+    <!-- Built for TV and phone-free use; the home screen keeps the screen landscape. -->
+    <issue id="LockedOrientationActivity" severity="ignore" />
+    <issue id="DiscouragedApi" severity="informational" />
 </lint>

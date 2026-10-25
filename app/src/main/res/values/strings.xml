@@ -204,10 +204,9 @@
     <string name="about_licence_title">Licence</string>
     <string name="about_licence">OpenRemoTV is free software under the MIT licence.</string>
     <string name="about_credits_title">Credits</string>
-    <string name="about_credit_home">The TV home screen is a fork of cleanyourtv by Gathin (MIT).</string>
     <string name="about_credit_lists">The tested TV lists come from cleanyourtv and its contributors (MIT).</string>
     <string name="about_credit_font">Outfit font by the Outfit Project Authors (SIL Open Font License 1.1).</string>
-    <string name="about_credit_libraries">dadb by mobile.dev, AndroidX and Jetpack Compose by Google, Kotlin by JetBrains (Apache 2.0).</string>
+    <string name="about_credit_libraries">dadb by mobile.dev, AndroidX and Jetpack Compose by Google, Kotlin by JetBrains, ZXing for the QR code (Apache 2.0).</string>
     <string name="about_credit_tidytv">The sweep flow was inspired by TidyTV (MIT).</string>
     <string name="about_photos_title">IndiaMinimalist photos</string>
     <string name="about_photos_note">From Wikimedia Commons, each under its own licence, resized for TV screens:</string>

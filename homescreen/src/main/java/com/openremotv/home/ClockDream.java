@@ -1,41 +1,32 @@
 package com.openremotv.home;
 
 import android.service.dreams.DreamService;
+import android.widget.FrameLayout;
 
 /**
- * Screensaver: the launcher's thin clock and date on black, over a slow ambient glow (ClockScene).
- * No network, no images: cheap enough for a 1 GB TV.
+ * The screensaver: the theme's photos one a minute, with the time, the weather and the photo's place and fact
+ * (see {@link AmbientScene}). Choose it in the TV's Settings › Device Preferences › Screen saver.
  */
-public class ClockDream extends DreamService {
+public final class ClockDream extends DreamService {
+    private AmbientScene scene;
 
-    private ClockScene scene;
-
-    @Override
-    public void onAttachedToWindow() {
+    @Override public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setInteractive(false);   // any key wakes the TV back to where it was
+        setInteractive(false);
         setFullscreen(true);
-        setScreenBright(false);
-        setContentView(R.layout.dream_clock);
-        scene = new ClockScene(getWindow().getDecorView());
-        scene.useHomeWallpaper(this);
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(0xFF000000);
+        setContentView(root);
+        scene = new AmbientScene(root, Theme.load(this));
     }
 
-    @Override
-    public void onDreamingStarted() {
+    @Override public void onDreamingStarted() {
         super.onDreamingStarted();
-        scene.start();
+        if (scene != null) scene.start();
     }
 
-    @Override
-    public void onDreamingStopped() {
-        scene.stop();
-        super.onDreamingStopped();
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
+    @Override public void onDreamingStopped() {
         if (scene != null) scene.stop();
-        super.onDetachedFromWindow();
+        super.onDreamingStopped();
     }
 }

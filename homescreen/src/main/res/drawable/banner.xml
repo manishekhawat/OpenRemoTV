@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The TV launcher banner: Remo's face on ink. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp" android:height="180dp" android:viewportWidth="320" android:viewportHeight="180">
+    <path android:fillColor="#FF141414" android:pathData="M0,0h320v180h-320z" />
+    <path android:fillColor="#FFFBF8F1" android:pathData="M160,98m-52,0a52,52 0,1 1,104 0a52,52 0,1 1,-104 0" />
+    <path android:fillColor="#FF141414" android:pathData="M112,92 L118,58 L136,70 L142,42 L158,62 L170,36 L180,62 L198,44 L202,70 L216,62 L210,92 L196,80 L188,92 L176,74 L164,92 L152,76 L142,92 L130,80 Z" />
+    <path android:fillColor="#FF141414" android:pathData="M140,102m-8,0a8,12 0,1 1,16 0a8,12 0,1 1,-16 0" />
+    <path android:fillColor="#FF141414" android:pathData="M180,102m-8,0a8,12 0,1 1,16 0a8,12 0,1 1,-16 0" />
+    <path android:strokeColor="#FF141414" android:strokeWidth="4" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M150,124 Q160,134 170,124" />
+    <path android:strokeColor="#FFFBF8F1" android:strokeWidth="4" android:strokeLineCap="round" android:pathData="M168,40 L186,14" />
+    <path android:fillColor="#FFE0262B" android:pathData="M188,12m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+</vector>

@@ -38,7 +38,7 @@ final class AnalogClockView extends View {
         setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
 
-    /** manga_style: ink on paper, with a red second accent. */
+    /** MangaHome: ink on paper, with a red second accent. */
     void useInk() {
         ring.setColor(0xCC141414);
         ring.setStrokeWidth(ring.getStrokeWidth() * 2);

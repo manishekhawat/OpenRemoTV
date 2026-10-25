@@ -15,7 +15,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 /**
- * sleep_timer: puts the TV to sleep after 30, 60 or 90 minutes. An alarm warns a minute before, then pauses
+ * The sleep timer: puts the TV to sleep after 30, 60 or 90 minutes. An alarm warns a minute before, then pauses
  * whatever plays and locks the screen through device admin, which on Android TV sends the box to standby.
  * Admin is switched on once over ADB (dpm set-active-admin com.openremotv.home/.SleepTimer$Admin); without it the
  * timer still pauses playback and goes back to Home. restore.sh turns admin off again with

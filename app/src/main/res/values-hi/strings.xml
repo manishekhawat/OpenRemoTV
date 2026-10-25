@@ -202,10 +202,9 @@
     <string name="about_licence_title">लाइसेंस</string>
     <string name="about_licence">OpenRemoTV, MIT लाइसेंस के तहत मुफ़्त सॉफ़्टवेयर है।</string>
     <string name="about_credits_title">आभार</string>
-    <string name="about_credit_home">टीवी की होम स्क्रीन Gathin के cleanyourtv पर बनी है (MIT)।</string>
     <string name="about_credit_lists">जाँचे गए टीवी की सूचियाँ cleanyourtv और उसके योगदानकर्ताओं से हैं (MIT)।</string>
     <string name="about_credit_font">Outfit फ़ॉन्ट, Outfit Project Authors का (SIL Open Font License 1.1)।</string>
-    <string name="about_credit_libraries">mobile.dev का dadb, Google के AndroidX और Jetpack Compose, JetBrains का Kotlin (Apache 2.0)।</string>
+    <string name="about_credit_libraries">mobile.dev का dadb, Google के AndroidX और Jetpack Compose, JetBrains का Kotlin, QR कोड के लिए ZXing (Apache 2.0)।</string>
     <string name="about_credit_tidytv">सफ़ाई का तरीका TidyTV से प्रेरित है (MIT)।</string>
     <string name="about_photos_title">IndiaMinimalist की तस्वीरें</string>
     <string name="about_photos_note">Wikimedia Commons से, हर एक अपने लाइसेंस के तहत, टीवी के लिए छोटी की गईं:</string>

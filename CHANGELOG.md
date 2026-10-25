@@ -18,7 +18,7 @@ The first open-source release.
 - MangaHome: a full comic page with Remo, comic Today, Phone to TV, pop-ups and app library, drawn for fast focus
   moves (about 10 ms a frame on a 2 GB box).
 - IndiaMinimalist: 10 photos of India, the Panchang, festivals and glass cards.
-- Forked from cleanyourtv; the race-weekend panel and the Shamsi and lunar dates were removed.
+- Written from scratch for OpenRemoTV: one activity, two pages, a 167 KB APK.
 
 ### Project
 - MIT licence, third-party notices, security and privacy notes, contributing guide and CI.

@@ -63,7 +63,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         val installed = packages(tv.shell("pm list packages")).toSet()
         val off = packages(tv.shell("pm list packages -d")).toSet()
         val homePkg = home().substringBefore('/')
-        // Wi-Fi set up by setupwraith goes with it (cleanyourtv's Home guard): keep it when it owns the network.
+        // Wi-Fi set up by setupwraith goes with it: keep it when it owns the network, or the TV drops off Wi-Fi.
         val wraithOwnsWifi = tv.shell("dumpsys wifi | grep -o 'cname=[^ ]*' | head -3").contains("setupwraith")
         return list.packages.filter { it in installed && it !in off && !Apps.isProtected(it) && it != homePkg }
             .filterNot { wraithOwnsWifi && it.contains("setupwraith") }
@@ -99,7 +99,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
     }
 
     /**
-     * Installs the bundled home screen (assets/openremotv-home.apk, cleanyourtv's launcher), puts one of the bundled
+     * Installs the bundled home screen (assets/openremotv-home.apk, OpenRemoTV Home), puts one of the bundled
      * themes on it (assets/themes/<name>: "manga" for MangaHome, "india" for IndiaMinimalist) and makes it Home.
      */
     suspend fun installHome(theme: HomeTheme, progress: (String) -> Unit): Boolean {
@@ -110,7 +110,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         return true
     }
 
-    /** Copies a bundled theme into the home screen's theme folder the way cleanyourtv's tools/theme.sh does, then restarts it. */
+    /** Copies a bundled theme into the home screen's theme folder (through its provider, or a plain copy), then restarts it. */
     suspend fun applyTheme(theme: HomeTheme, progress: (String) -> Unit) {
         val base = "themes/${theme.key}"
         val files = mutableListOf<String>()
@@ -187,10 +187,8 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
     companion object {
         private const val THEME_DIR = "/sdcard/Android/data/com.openremotv.home/files"
         private const val THEME_URI = "content://com.openremotv.home.theme"
-        /** cleanyourtv's theme.sh restart: back through the Home intent, with its accessibility helpers put back. */
-        private const val RESTART = "a=\$(settings get secure enabled_accessibility_services); am force-stop com.openremotv.home; " +
-            "am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null; case \"\$a\" in *com.openremotv.home*) " +
-            "sleep 1; settings put secure enabled_accessibility_services \"\$a\"; settings put secure accessibility_enabled 1 ;; esac"
+        /** Restarts the home screen so it reads the new theme, and brings it to the front. */
+        private const val RESTART = "am force-stop com.openremotv.home; am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null"
 
         fun packages(out: String) =
             out.lines().map { it.trim() }.filter { it.startsWith("package:") }.map { it.removePrefix("package:") }

@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * manga_layout: Home as a page of a comic, in place of the usual layout. Ink panels on paper with screentone:
+ * MangaHome: Home as a page of a comic, in place of the usual layout. Ink panels on paper with screentone:
  * a big lettered clock with Remo saying hello, the weather with its sound effect, Today as narration boxes
  * (Panchang, the next festival, the Gita verse or the Hindi word), the apps as slanted panels that "POW!" when the
  * remote lands on them, round speech-bubble buttons, and the news as a caption strip. Every button and app panel
@@ -55,7 +55,7 @@ final class ComicHome extends FrameLayout {
 
     private final float d;
     private final Host host;
-    private final Extras extras;
+    private final Theme extras;
     private final List<String> dock;
     private TextView greeting, weatherBig, weatherWord, weatherSfx, weatherMore;
     private TextView tithi, rahu, festival, wisdom, caption;
@@ -63,7 +63,7 @@ final class ComicHome extends FrameLayout {
     private int wisdomTurn;
     private final Random random = new Random();
 
-    ComicHome(Context context, Extras extras, List<String> dockApps, Host host) {
+    ComicHome(Context context, Theme extras, List<String> dockApps, Host host) {
         super(context);
         this.host = host;
         this.extras = extras;
@@ -207,7 +207,7 @@ final class ComicHome extends FrameLayout {
     }
 
     /** The dock's apps (and the next most used ones up to four), then "All apps". */
-    private void fillApps() {
+    void fillApps() {
         apps.removeAllViews();
         PackageManager pm = getContext().getPackageManager();
         List<String> pkgs = new ArrayList<>();
@@ -389,7 +389,7 @@ final class ComicHome extends FrameLayout {
         t.setEllipsize(TextUtils.TruncateAt.END);
         Typeface base;
         try {
-            base = UiFont.get(getContext(), R.string.font_medium);
+            base = UiFont.get(getContext(), UiFont.MEDIUM);
         } catch (Exception e) {
             base = Typeface.DEFAULT;
         }
@@ -410,7 +410,7 @@ final class ComicHome extends FrameLayout {
             if (now != null) {
                 int code = now.optInt("weather_code", -1);
                 weatherBig.setText(Math.round(now.optDouble("temperature_2m")) + "°");
-                weatherWord.setText(WeatherPill.condition(code).toUpperCase());
+                weatherWord.setText(Weather.condition(code).toUpperCase());
                 weatherSfx.setText(sfx(code, now.optDouble("temperature_2m")));
                 StringBuilder more = new StringBuilder();
                 more.append("Feels ").append(Math.round(now.optDouble("apparent_temperature"))).append("°");

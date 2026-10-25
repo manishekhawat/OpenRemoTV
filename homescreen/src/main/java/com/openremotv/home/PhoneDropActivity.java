@@ -65,7 +65,7 @@ public class PhoneDropActivity extends Activity {
         FrameLayout root = new FrameLayout(this);
         boolean comic = false;
         try {
-            Extras extras = Extras.load(this);
+            Theme extras = Theme.load(this);
             comic = extras.mangaLayout || extras.mangaStyle;
         } catch (RuntimeException ignored) {
             // the plain look
@@ -358,7 +358,7 @@ public class PhoneDropActivity extends Activity {
         t.setTextColor(comic ? ComicHome.INK : color);
         t.setText(s);
         try {
-            t.setTypeface(UiFont.get(this, R.string.font_regular));
+            t.setTypeface(UiFont.get(this, UiFont.REGULAR));
         } catch (Exception ignored) {
             // the system font is fine
         }

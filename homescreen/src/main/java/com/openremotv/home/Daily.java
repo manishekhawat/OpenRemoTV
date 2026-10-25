@@ -83,16 +83,16 @@ final class Daily {
     }
 
     /** The coming events from today, nearest first, at most {@code limit}. */
-    static List<Event> upcoming(Extras extras, LocalDate today, ZoneId zone, int limit) {
+    static List<Event> upcoming(Theme extras, LocalDate today, ZoneId zone, int limit) {
         List<Event> out = new ArrayList<>();
-        for (Extras.FestivalDate f : extras.festivalDates) {
+        for (Theme.FestivalDate f : extras.festivalDates) {
             if (!today.isAfter(f.until)) {
                 String name = f.greeting.isEmpty() ? title(f.festival) : f.greeting.replaceFirst("^(Happy|Merry) ", "");
                 out.add(new Event(name, f.from.isBefore(today) ? today : f.from));
             }
         }
         for (Event e : extras.calendarDates) if (!e.date.isBefore(today)) out.add(e);
-        for (Extras.FamilyDate f : extras.familyDates) {
+        for (Theme.FamilyDate f : extras.familyDates) {
             LocalDate d = f.day.atYear(today.getYear());
             if (d.isBefore(today)) d = f.day.atYear(today.getYear() + 1);
             out.add(new Event(f.name, d));

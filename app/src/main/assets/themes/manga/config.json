@@ -1,25 +1,20 @@
 {
+  "layout": "manga",
   "dock_apps": [
     "com.google.android.youtube.tv",
     "in.startv.hotstar",
     "com.sonyliv",
     "com.graymatrix.did"
   ],
-  "wallpaper": true,
   "wallpaper_rotation_minutes": 1,
   "wallpaper_order": "shuffle",
-  "wallpaper_captions": false,
   "wallpaper_dim": 0,
-  "wallpaper_true_color": true,
-  "dock_glass": true,
-  "dock_opacity": 50,
-  "ambient_glow": false,
-  "glass_style": "rim",
-  "fade_rows": true,
-  "wallpaper_motion": false,
-  "wallpaper_facts": false,
-  "voice_pill": true,
-  "sort_by_recent": true,
+  "wallpaper_months": {},
+  "captions": false,
+  "daily_card": false,
+  "news_ticker": true,
+  "screensaver": true,
+  "reduced_motion": true,
   "weather_city": "Delhi",
   "weather_latitude": 28.6139,
   "weather_longitude": 77.209,
@@ -72,17 +67,6 @@
       "accent_color": "#E040FB"
     }
   ],
-  "icon_only_buttons": true,
-  "date_below_clock": true,
-  "readable_text": true,
-  "dock_title": false,
-  "widgets": false,
-  "app_library": true,
-  "tile_menu": true,
-  "today_line": false,
-  "today_page": true,
-  "sleep_timer": true,
-  "daily_card": false,
   "calendar_dates": [
     {
       "name": "Children's Day",
@@ -97,15 +81,5 @@
       "date": "2027-10-02"
     }
   ],
-  "family_dates": [],
-  "news_ticker": true,
-  "ambient_screensaver": true,
-  "home_idle_clock_minutes": 10,
-  "wallpaper_months": {},
-  "radio_pill": true,
-  "games_pill": true,
-  "more_pills": true,
-  "reduced_motion": true,
-  "manga_style": true,
-  "manga_layout": true
+  "family_dates": []
 }

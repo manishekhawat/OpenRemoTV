@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * ambient_screensaver: the screensaver as a slow gallery of the theme's wallpapers (in season, family photos
+ * The screensaver as a slow gallery of the theme's wallpapers (in season, family photos
  * included) with the time, date and weather at the bottom left and the picture's name and fact at the bottom
  * right. Every third named picture is a quiz: "Where is this?" first, the answer twenty seconds later. The
  * text block shifts a little every minute so nothing burns in. The ambient sound plays under it when chosen.
@@ -62,19 +62,17 @@ final class AmbientScene {
         }
     };
 
-    AmbientScene(FrameLayout root, Config cfg, Extras extras) {
+    AmbientScene(FrameLayout root, Theme theme) {
         context = root.getContext();
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         density = dm.density;
         screenW = dm.widthPixels;
         screenH = dm.heightPixels;
-        List<File> all = Extras.inSeason(new ArrayList<>(cfg.wallpapers), extras.wallpaperMonths,
-                LocalDate.now().getMonthValue());
-        pictures = new ArrayList<>(all);
+        pictures = new ArrayList<>(theme.wallpapersFor(LocalDate.now().getMonthValue()));
         Collections.shuffle(pictures, random);
-        File folder = pictures.isEmpty() ? null : pictures.get(0).getParentFile();
-        names = WallpaperCaptions.read(folder);
-        facts = folder == null ? Collections.emptyMap() : WallpaperCaptions.readFile(new File(folder, "facts.txt"));
+        File folder = new File(theme.folder, Theme.WALLPAPERS);
+        names = Wallpapers.read(new File(folder, "captions.txt"));
+        facts = Wallpapers.read(new File(folder, "facts.txt"));
         for (int i = 0; i < 2; i++) {
             images[i] = new ImageView(context);
             images[i].setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -103,14 +101,14 @@ final class AmbientScene {
         TextClock time = new TextClock(context);
         time.setFormat12Hour("h:mm");
         time.setFormat24Hour("HH:mm");
-        style(time, 72, 0xFFFFFFFF, R.string.font_extralight);
+        style(time, 72, 0xFFFFFFFF, UiFont.EXTRA_LIGHT);
         left.addView(time);
         TextClock date = new TextClock(context);
         date.setFormat12Hour("EEEE, d MMMM");
         date.setFormat24Hour("EEEE, d MMMM");
-        style(date, 20, 0xE6FFFFFF, R.string.font_regular);
+        style(date, 20, 0xE6FFFFFF, UiFont.REGULAR);
         left.addView(date);
-        weather = text(18, 0xCCFFFFFF, R.string.font_regular);
+        weather = text(18, 0xCCFFFFFF, UiFont.REGULAR);
         LinearLayout.LayoutParams wp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         wp.topMargin = dp(6);
@@ -120,11 +118,11 @@ final class AmbientScene {
         right.setOrientation(LinearLayout.VERTICAL);
         right.setGravity(Gravity.END);
         overlay.addView(right, new LinearLayout.LayoutParams(dp(380), ViewGroup.LayoutParams.WRAP_CONTENT));
-        name = text(24, 0xFFFFFFFF, R.string.font_medium);
+        name = text(24, 0xFFFFFFFF, UiFont.MEDIUM);
         name.setGravity(Gravity.END);
         right.addView(name, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        fact = text(16, 0xD9FFFFFF, R.string.font_regular);
+        fact = text(16, 0xD9FFFFFF, UiFont.REGULAR);
         fact.setGravity(Gravity.END);
         fact.setSingleLine(false);
         fact.setMaxLines(3);
@@ -163,7 +161,7 @@ final class AmbientScene {
         File file = pictures.get(index++ % pictures.size());
         int gen = generation;
         new Thread(() -> {
-            Bitmap bmp = ClockScene.decode(file, screenW, screenH);
+            Bitmap bmp = Wallpapers.decode(file, screenW, screenH);
             if (bmp == null) return;
             handler.post(() -> {
                 if (gen != generation || !running) {
@@ -214,7 +212,7 @@ final class AmbientScene {
         }).start();
     }
 
-    /** The weather Home last fetched (WeatherPill's cache): "22° Clear · AQI 183 · Moderate". */
+    /** The weather Home last fetched (Weather's cache): "22° Clear · AQI 183 · Moderate". */
     private void updateWeather() {
         SharedPreferences cache = context.getSharedPreferences("weather", Context.MODE_PRIVATE);
         String text = cache.getString("text", "");

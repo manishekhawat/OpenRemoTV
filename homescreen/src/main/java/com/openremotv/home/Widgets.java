@@ -20,7 +20,7 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 /**
- * widgets: three dark glass cards between the top bar and the Continue watching row, in place of the loose header
+ * Three glass cards under the round buttons on IndiaMinimalist, in place of loose header
  * text: a clock card (analog face, time, date), a weather card (now, feels like, humidity, wind, AQI, sun times and
  * the next four days) and the wallpaper's monument with its fact. Plain translucent panels, no blur: a 2 GB box
  * cannot afford a live blur behind them. Nothing here takes focus.
@@ -33,7 +33,7 @@ final class Widgets {
     private final TextView weatherNow, weatherCondition, weatherDetails, weatherAir, weatherSun;
     private final LinearLayout forecast;
     private final LinearLayout weatherCard;
-    /** daily_card: the Gita verse, taking the weather card's place every other minute. */
+    /** the Gita verse, taking the weather card's place every other minute. */
     private final LinearLayout weatherNowBox, verseBox;
     private final TextView verseText, verseMeaning;
     private boolean verseShown;
@@ -47,11 +47,11 @@ final class Widgets {
     private final LinearLayout monumentCard;
     private final FrameLayout root;
     private final int lineTopDp;
-    /** today_line: room kept on the right for the pills (six of 42dp with 10dp gaps, and the edge margin). */
+    /** room kept on the right for the pills (six of 42dp with 10dp gaps, and the edge margin). */
     private int rightClearDp = 400;
-    /** today_line: the Panchang and calendar line under the cards, made on first use. */
+    /** the Panchang and calendar line under the cards, made on first use. */
     private TextView todayLine;
-    /** daily_card: {title, body} pairs the monument card turns over to half a minute after each new picture. */
+    /** {title, body} pairs the monument card turns over to half a minute after each new picture. */
     private java.util.List<String[]> daily = java.util.Collections.emptyList();
     private int dailyIndex;
     private String shownName;
@@ -63,7 +63,7 @@ final class Widgets {
         }
     };
 
-    /** manga_style: paper cards with an ink border and a hard ink shadow, and ink lettering. */
+    /** MangaHome: paper cards with an ink border and a hard ink shadow, and ink lettering. */
     private final boolean manga;
 
     Widgets(Context context, FrameLayout root, int topDp, int heightDp) {
@@ -84,8 +84,7 @@ final class Widgets {
         lp.topMargin = dp(topDp);
         lp.leftMargin = dp(68);
         lp.rightMargin = dp(68);
-        View glass = root.findViewById(R.id.glass);
-        root.addView(band, glass == null ? -1 : root.indexOfChild(glass), lp);
+        root.addView(band, lp);
 
         // Clock: the face, then the time, the date and the greeting.
         LinearLayout clockCard = card(LinearLayout.HORIZONTAL);
@@ -98,7 +97,7 @@ final class Widgets {
         LinearLayout.LayoutParams ctp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
         ctp.setMarginStart(dp(12));
         clockCard.addView(clockText, ctp);
-        greeting = text(10, 0xA6FFFFFF, R.string.font_medium);
+        greeting = text(10, 0xA6FFFFFF, UiFont.MEDIUM);
         greeting.setLetterSpacing(0.2f);
         greeting.setSingleLine(false);
         greeting.setMaxLines(2);
@@ -111,13 +110,13 @@ final class Widgets {
         TextClock time = new TextClock(context);
         time.setFormat12Hour("h:mm");
         time.setFormat24Hour("HH:mm");
-        style(time, 24, 0xFFFFFFFF, R.string.font_light);
+        style(time, 24, 0xFFFFFFFF, UiFont.LIGHT);
         time.setEllipsize(null);
         timeRow.addView(time);
         TextClock ampm = new TextClock(context);
         ampm.setFormat12Hour("a");
         ampm.setFormat24Hour("");
-        style(ampm, 11, 0xB3FFFFFF, R.string.font_medium);
+        style(ampm, 11, 0xB3FFFFFF, UiFont.MEDIUM);
         ampm.setAllCaps(true);
         LinearLayout.LayoutParams ap = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -132,7 +131,7 @@ final class Widgets {
         TextClock date = new TextClock(context);
         date.setFormat12Hour("EEEE, d MMMM");
         date.setFormat24Hour("EEEE, d MMMM");
-        style(date, 12, 0xCCFFFFFF, R.string.font_regular);
+        style(date, 12, 0xCCFFFFFF, UiFont.REGULAR);
         clockText.addView(date);
         band.addView(clockCard, weight(0.29f, false));
 
@@ -147,20 +146,20 @@ final class Widgets {
         LinearLayout top = new LinearLayout(context);
         top.setOrientation(LinearLayout.HORIZONTAL);
         top.setGravity(Gravity.BOTTOM);
-        weatherNow = text(26, 0xFFFFFFFF, R.string.font_light);
+        weatherNow = text(26, 0xFFFFFFFF, UiFont.LIGHT);
         top.addView(weatherNow);
-        weatherCondition = text(13, 0xE6FFFFFF, R.string.font_medium);
+        weatherCondition = text(13, 0xE6FFFFFF, UiFont.MEDIUM);
         LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         cp.setMarginStart(dp(8));
         cp.bottomMargin = dp(6);
         top.addView(weatherCondition, cp);
         now.addView(top);
-        weatherDetails = text(11, 0xCCFFFFFF, R.string.font_regular);
+        weatherDetails = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         now.addView(weatherDetails);
-        weatherAir = text(11, 0xCCFFFFFF, R.string.font_regular);
+        weatherAir = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         now.addView(weatherAir);
-        weatherSun = text(11, 0xCCFFFFFF, R.string.font_regular);
+        weatherSun = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         now.addView(weatherSun);
         forecast = new LinearLayout(context);
         forecast.setOrientation(LinearLayout.HORIZONTAL);
@@ -170,14 +169,14 @@ final class Widgets {
         verseBox.setOrientation(LinearLayout.VERTICAL);
         verseBox.setVisibility(View.GONE);
         // As large as the card allows: each text shrinks only as far as its longest verse needs.
-        verseText = text(16, 0xFFFFFFFF, R.string.font_regular);
+        verseText = text(16, 0xFFFFFFFF, UiFont.REGULAR);
         verseText.setSingleLine(false);
         verseText.setMaxLines(2);
         verseText.setEllipsize(null);
         verseText.setTypeface(android.graphics.Typeface.DEFAULT);   // the UI font has no Devanagari
         verseText.setAutoSizeTextTypeUniformWithConfiguration(11, 17, 1, TypedValue.COMPLEX_UNIT_SP);
         verseBox.addView(verseText, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(46)));
-        verseMeaning = text(13, 0xE6FFFFFF, R.string.font_regular);
+        verseMeaning = text(13, 0xE6FFFFFF, UiFont.REGULAR);
         verseMeaning.setSingleLine(false);
         verseMeaning.setMaxLines(2);
         verseMeaning.setEllipsize(null);
@@ -192,9 +191,9 @@ final class Widgets {
         monumentCard = card(LinearLayout.VERTICAL);
         monumentCard.setGravity(Gravity.CENTER_VERTICAL);
         monumentCard.setVisibility(View.INVISIBLE);
-        monumentName = text(14, 0xFFFFFFFF, R.string.font_medium);
+        monumentName = text(14, 0xFFFFFFFF, UiFont.MEDIUM);
         monumentCard.addView(monumentName);
-        monumentFact = text(11, 0xCCFFFFFF, R.string.font_regular);
+        monumentFact = text(11, 0xCCFFFFFF, UiFont.REGULAR);
         monumentFact.setSingleLine(false);
         monumentFact.setMaxLines(3);
         LinearLayout.LayoutParams fp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -251,7 +250,7 @@ final class Widgets {
 
     private void style(TextView t, int sp, int color, int font) {
         t.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
-        // manga_style: the same strengths of white become the same strengths of ink on the paper cards.
+        // MangaHome: the same strengths of white become the same strengths of ink on the paper cards.
         t.setTextColor(manga ? (color & 0xFF000000) | 0x141414 : color);
         if (manga && sp >= 14) {
             t.setIncludeFontPadding(false);
@@ -273,12 +272,12 @@ final class Widgets {
     }
 
     /**
-     * today_line: one line at the top left, level with the pills (the space there is otherwise empty), so it
+     * one line at the top left, level with the pills (the space there is otherwise empty), so it
      * does not crowd the Continue watching label under the cards; empty hides it.
      */
     void setTodayLine(CharSequence text) {
         if (todayLine == null) {
-            todayLine = text(13, 0xF2FFFFFF, R.string.font_medium);
+            todayLine = text(13, 0xF2FFFFFF, UiFont.MEDIUM);
             todayLine.setTextColor(0xF2FFFFFF);   // on the wallpaper, not on a card: stays white
             todayLine.setSingleLine(false);
             todayLine.setMaxLines(3);
@@ -312,7 +311,7 @@ final class Widgets {
         todayLine.setVisibility(text == null || text.length() == 0 ? View.GONE : View.VISIBLE);
     }
 
-    /** today_line: how much of the right side the pills take, so the line ends before them. */
+    /** how much of the right side the pills take, so the line ends before them. */
     void setTodayLineRightClear(int dp) {
         rightClearDp = dp;
         if (todayLine != null) {
@@ -325,7 +324,7 @@ final class Widgets {
         }
     }
 
-    /** daily_card: the day's Gita verse, swapped with the weather every minute. */
+    /** the day's Gita verse, swapped with the weather every minute. */
     void setVerse(Daily.Verse v) {
         if (v == null) return;
         verseText.setText(v.line1 + "\n" + v.line2);
@@ -346,7 +345,7 @@ final class Widgets {
         }).start();
     }
 
-    /** daily_card: the things the monument card turns over to, as {title, body}. */
+    /** the things the monument card turns over to, as {title, body}. */
     void setDaily(java.util.List<String[]> items) {
         daily = items == null ? java.util.Collections.emptyList() : items;
     }
@@ -389,12 +388,12 @@ final class Widgets {
         monumentCard.setVisibility(View.VISIBLE);
     }
 
-    /** WeatherPill's answer: {"current": {...}, "daily": {...}, "aqi": n}. */
+    /** Weather's answer: {"current": {...}, "daily": {...}, "aqi": n}. */
     void setWeather(JSONObject w) {
         JSONObject now = w.optJSONObject("current");
         if (now == null) return;
         weatherNow.setText(Math.round(now.optDouble("temperature_2m")) + "°");
-        weatherCondition.setText(WeatherPill.condition(now.optInt("weather_code", -1)));
+        weatherCondition.setText(Weather.condition(now.optInt("weather_code", -1)));
         StringBuilder details = new StringBuilder();
         if (now.has("apparent_temperature")) details.append("Feels ").append(Math.round(now.optDouble("apparent_temperature"))).append("°");
         if (now.has("relative_humidity_2m")) details.append(" · ").append(now.optInt("relative_humidity_2m")).append("%");
@@ -422,18 +421,18 @@ final class Widgets {
                     day = "";
                 }
                 col.setMinimumWidth(dp(30));
-                TextView d = text(11, 0xB3FFFFFF, R.string.font_medium);
+                TextView d = text(11, 0xB3FFFFFF, UiFont.MEDIUM);
                 d.setEllipsize(null);
                 d.setText(day.toUpperCase(Locale.getDefault()));
                 col.addView(d);
-                TextView hi = text(15, 0xFFFFFFFF, R.string.font_regular);
+                TextView hi = text(15, 0xFFFFFFFF, UiFont.REGULAR);
                 hi.setEllipsize(null);
                 hi.setText(Math.round(max.optDouble(i)) + "°");
                 LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 hp.topMargin = dp(5);
                 col.addView(hi, hp);
-                TextView lo = text(11, 0x99FFFFFF, R.string.font_regular);
+                TextView lo = text(11, 0x99FFFFFF, UiFont.REGULAR);
                 lo.setEllipsize(null);
                 lo.setText(Math.round(min.optDouble(i)) + "°");
                 col.addView(lo);

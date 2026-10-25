@@ -8,7 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 
 /**
- * manga_style's look for the parts of Home outside the cards: ink-framed tiles, paper pills with an ink ring that
+ * MangaHome's look for the parts of Home outside the cards: ink-framed tiles, paper pills with an ink ring that
  * go red when focused, ink panels with a paper border for the dock and the pop-ups, a red focus ring, a paper
  * speech bubble for the Panchang line and a paper strip for the ticker. Ink #141414, paper #FBF8F1, red #E0262B.
  */

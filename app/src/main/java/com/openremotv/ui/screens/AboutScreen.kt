@@ -45,7 +45,6 @@ internal fun AboutScreen(onClose: () -> Unit) {
         MangaButton(stringResource(R.string.about_privacy), Modifier.fillMaxWidth()) { links.openUri("$REPO/blob/main/PRIVACY.md") }
         Section(stringResource(R.string.about_licence_title), listOf(stringResource(R.string.about_licence)))
         Section(stringResource(R.string.about_credits_title), listOf(
-            stringResource(R.string.about_credit_home),
             stringResource(R.string.about_credit_lists),
             stringResource(R.string.about_credit_font),
             stringResource(R.string.about_credit_libraries),

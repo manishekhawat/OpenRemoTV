@@ -1,5 +1,9 @@
 plugins {
     id 'com.android.application'
+    // Screenshots of both pages on a computer, no TV needed: ./gradlew :homescreen:recordPaparazziDebug
+    id 'app.cash.paparazzi'
+    // Kotlin for the screenshot tests only; the app itself is plain Java.
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -7,8 +11,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        // Opt-in identity for firmware with a package-name HOME allowlist; see docs/devices/xiaomi-mitv-aetp0-dofus.md.
-        applicationId providers.gradleProperty('launcherApplicationId').getOrElse('com.openremotv.home')
+        applicationId 'com.openremotv.home'
         minSdk 26
         targetSdk 35
         versionCode rootProject.ext.versionCode
@@ -30,7 +33,7 @@ android {
 
     buildTypes {
         release {
-            // R8 strips and optimises the code (AndroidX included): smaller APK, faster start on a slow TV CPU.
+            // R8 shrinks the code: a smaller APK and a faster start on a TV's CPU.
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -38,25 +41,24 @@ android {
         }
     }
 
-    packagingOptions {
-        resources {
-            // Kotlin metadata pulled in by AndroidX's dependencies. This launcher is plain Java and never reads it;
-            // leaving it out saves about 14 KB of every install.
-            excludes += ['kotlin/**', 'META-INF/*.version', 'META-INF/*.kotlin_module', 'DebugProbesKt.bin']
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    lint {
+        lintConfig file('lint.xml')
+    }
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     // The QR code on the Phone to TV page (PhoneDropActivity).
     implementation 'com.google.zxing:core:3.5.3'
-    // Test only (never in the APK): plain JVM tests for the module card validators, src/test.
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
+    // The real org.json for JVM tests (Android's is a stub there).
+    testImplementation 'org.json:json:20240303'
 }

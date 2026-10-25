@@ -5,12 +5,12 @@ each under its own licence.
 
 | Part | Where | Author | Licence |
 | --- | --- | --- | --- |
-| The TV home screen, OpenRemoTV Home, is a fork of the cleanyourtv launcher | `homescreen/` | Gathin ([cleanyourtv](https://github.com/Gathin23/cleanyourtv)) | MIT, see [homescreen/LICENSE-cleanyourtv](homescreen/LICENSE-cleanyourtv) |
 | Tested debloat lists for 260 TVs, built from cleanyourtv's `examples/` | `app/src/main/assets/lists.json` | Gathin and cleanyourtv contributors | MIT |
-| Outfit font | `homescreen/app/src/main/res/font/` | The Outfit Project Authors | SIL Open Font License 1.1, see [homescreen/FONT-LICENSE-OFL.txt](homescreen/FONT-LICENSE-OFL.txt) |
+| Outfit font | `homescreen/src/main/assets/fonts/` | The Outfit Project Authors | SIL Open Font License 1.1, see [OFL.txt](homescreen/src/main/assets/fonts/OFL.txt) |
 | 10 IndiaMinimalist wallpapers | `app/src/main/assets/themes/india/wallpapers/` | Wikimedia Commons photographers, named per photo | CC BY-SA 3.0/4.0 and CC BY 4.0, see [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md) |
 | dadb (ADB client) | dependency | mobile.dev | Apache 2.0 |
 | AndroidX, Jetpack Compose, Material components | dependency | Google / The Android Open Source Project | Apache 2.0 |
+| ZXing core (the Phone to TV QR code) | dependency | ZXing authors | Apache 2.0 |
 | Kotlin standard library and coroutines | dependency | JetBrains | Apache 2.0 |
 
 The six MangaHome wallpapers (drawn by `app/src/test/java/com/openremotv/MangaWallpapers.kt`) and the mascot Remo

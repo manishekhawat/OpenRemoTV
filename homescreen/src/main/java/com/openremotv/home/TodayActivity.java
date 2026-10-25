@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * today_page: one screen of things to read with the remote, as rows of glass cards: the Panchang, what is coming
+ * The Today page: one screen of things to read with the remote, as rows of glass cards: the Panchang, what is coming
  * up, the night sky, the Hindi word, the Gita verse, storage and memory, and the sleep timer. Every card takes
  * focus, so the remote walks through all of them and the page scrolls to follow; OK acts on the cards that do
  * something (free memory, sleep timer).
@@ -43,7 +43,7 @@ public class TodayActivity extends Activity {
     private LinearLayout page;
     private LinearLayout row;
     private float rowWeight;
-    private Extras extras;
+    private Theme extras;
     private TextView storageTitle, storageBody, sleepTitle;
 
     @Override
@@ -51,7 +51,7 @@ public class TodayActivity extends Activity {
         super.onCreate(state);
         density = getResources().getDisplayMetrics().density;
         try {
-            extras = Extras.load(this);
+            extras = Theme.load(this);
         } catch (RuntimeException e) {
             extras = null;
         }
@@ -83,7 +83,7 @@ public class TodayActivity extends Activity {
     private void build() {
         LocalDate today = LocalDate.now();
         ZoneId zone = ZoneId.systemDefault();
-        TextView head = text(30, 0xFFFFFFFF, R.string.font_light);
+        TextView head = text(30, 0xFFFFFFFF, UiFont.LIGHT);
         head.setText(getString(R.string.today));
         if (comic) {
             // A title strip: Remo with the day in his speech bubble.
@@ -101,7 +101,7 @@ public class TodayActivity extends Activity {
         } else {
             page.addView(head);
         }
-        TextView date = text(15, 0xB3FFFFFF, R.string.font_regular);
+        TextView date = text(15, 0xB3FFFFFF, UiFont.REGULAR);
         date.setText(today.format(DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", Locale.getDefault())));
         LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -264,7 +264,7 @@ public class TodayActivity extends Activity {
                     v.animate().scaleX(focused ? 1.03f : 1f).scaleY(focused ? 1.03f : 1f).setDuration(150).start());
         }
         if (!label.isEmpty()) {
-            TextView l = text(12, 0xB3FFFFFF, R.string.font_medium);
+            TextView l = text(12, 0xB3FFFFFF, UiFont.MEDIUM);
             l.setLetterSpacing(0.16f);
             l.setText(label);
             if (comic) {
@@ -277,7 +277,7 @@ public class TodayActivity extends Activity {
                 card.addView(l);
             }
         }
-        TextView t = text(20, 0xFFFFFFFF, R.string.font_medium);
+        TextView t = text(20, 0xFFFFFFFF, UiFont.MEDIUM);
         t.setSingleLine(false);
         t.setLineSpacing(dp(4), 1f);
         t.setText(title);
@@ -286,7 +286,7 @@ public class TodayActivity extends Activity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         tp.topMargin = dp(8);
         card.addView(t, tp);
-        TextView b = text(15, 0xE6FFFFFF, R.string.font_regular);
+        TextView b = text(15, 0xE6FFFFFF, UiFont.REGULAR);
         b.setSingleLine(false);
         b.setLineSpacing(dp(5), 1f);
         b.setText(body);
@@ -463,7 +463,7 @@ public class TodayActivity extends Activity {
         } catch (Exception e) {
             t.setTypeface(Typeface.DEFAULT);
         }
-        if (comic && (sp >= 20 || font == R.string.font_medium)) {
+        if (comic && (sp >= 20 || font == UiFont.MEDIUM)) {
             t.setTypeface(Typeface.create("sans-serif-black", Typeface.ITALIC));
         }
         t.setGravity(Gravity.START);

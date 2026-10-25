@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * news_ticker: a slim line along the bottom of Home that turns over, every eight seconds, between cricket and
+ * The news line: a slim line along the bottom of Home that turns over, every eight seconds, between cricket and
  * India headlines from Google News' RSS. Fetched at most every 15 minutes, only while Home is shown; the headlines
  * are cached so the line is there at once after a restart. Display only: it never takes focus.
  */
@@ -43,6 +43,9 @@ final class Ticker {
     private int index;
     private long fetched;
     private boolean fetching, shown;
+    /** Without a page to show it on (MangaHome letters the headlines itself), it only fetches and caches. */
+    private final boolean headless;
+    private final android.os.Handler main = new android.os.Handler(android.os.Looper.getMainLooper());
 
     private final Runnable turn = new Runnable() {
         @Override public void run() {
@@ -75,11 +78,12 @@ final class Ticker {
         line.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         line.setFocusable(false);
         try {
-            line.setTypeface(UiFont.get(context, R.string.font_medium));
+            line.setTypeface(UiFont.get(context, UiFont.MEDIUM));
         } catch (Exception ignored) {
             // the system font is fine
         }
-        root.addView(line, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        headless = root == null;
+        if (!headless) root.addView(line, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 Math.round(40 * d), Gravity.BOTTOM));
         String saved = cache.getString("items", "");
         if (!saved.isEmpty()) items = new ArrayList<>(java.util.Arrays.asList(saved.split("\n")));
@@ -87,7 +91,7 @@ final class Ticker {
         line.setVisibility(items.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
-    /** manga_style: a paper strip under a thick ink line, with ink comic lettering. */
+    /** MangaHome: a paper strip under a thick ink line, with ink comic lettering. */
     void manga() {
         float d = line.getResources().getDisplayMetrics().density;
         line.setBackground(MangaSkin.strip(d));
@@ -98,7 +102,7 @@ final class Ticker {
 
     /** Home shown: start turning over, and fetch when the headlines are old. */
     void resume() {
-        if (!shown) {
+        if (!shown && !headless) {
             shown = true;
             line.removeCallbacks(turn);
             turn.run();
@@ -116,7 +120,7 @@ final class Ticker {
                 if (c < cricket.size()) fresh.add("🏏  " + cricket.get(c++));
                 for (int k = 0; k < 2 && n < news.size(); k++) fresh.add("●  " + news.get(n++));
             }
-            line.post(() -> {
+            main.post(() -> {
                 fetching = false;
                 fetched = System.currentTimeMillis();
                 if (fresh.isEmpty()) return;

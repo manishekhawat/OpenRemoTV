@@ -85,7 +85,7 @@ key; see [CONTRIBUTING.md](CONTRIBUTING.md) for tests, screenshots and signing.
 | --- | --- |
 | `app/` | The phone app (Kotlin, Jetpack Compose): `tv/` talks to the TV, `sweep/` debloats and restores, `send/` sends links and files, `ui/` draws the manga screens |
 | `app/src/main/assets/themes/` | The **MangaHome** and **IndiaMinimalist** themes: settings, wallpapers, captions and facts |
-| `homescreen/` | **OpenRemoTV Home**, the TV home screen the themes run on (Java, a fork of cleanyourtv) |
+| `homescreen/` | **OpenRemoTV Home**, the TV home screen the themes run on (plain Java, one activity, two pages) |
 | `keyserver/` | The small helper the app starts on the TV for instant keys, files and app switches |
 | `tools/make-lists.py` | Rebuilds `assets/lists.json` from cleanyourtv's tested TV lists |
 | `docs/` | Screenshots and the project website |
@@ -104,8 +104,7 @@ Bug reports, TV lists, translations and themes are welcome. Start with [CONTRIBU
 
 ## Licence and credits
 
-OpenRemoTV is released under the [MIT licence](LICENSE). The home screen is a fork of
-[cleanyourtv](https://github.com/Gathin23/cleanyourtv) by Gathin (MIT), and the tested TV lists come from its
-contributors. The Sweep flow was inspired by [TidyTV](https://github.com/jolan94/tidytv). The IndiaMinimalist
+OpenRemoTV is released under the [MIT licence](LICENSE). The tested TV lists come from the
+[cleanyourtv](https://github.com/Gathin23/cleanyourtv) project and its contributors (MIT). The Sweep flow was inspired by [TidyTV](https://github.com/jolan94/tidytv). The IndiaMinimalist
 photos are from Wikimedia Commons under their own Creative Commons licences, credited in
 [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md). See [NOTICE.md](NOTICE.md) for everything else.
