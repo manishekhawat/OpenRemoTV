@@ -7,15 +7,15 @@ plugins {
 }
 
 android {
-    namespace = "com.km8.remote"
+    namespace = "com.openremotv"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.km8.remote"
+        applicationId = "com.openremotv"
         minSdk = 26
         targetSdk = 34
-        versionCode = 20
-        versionName = "1.12"
+        versionCode = 21
+        versionName = "2.0"
     }
 
     buildTypes {
