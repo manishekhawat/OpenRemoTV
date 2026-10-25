@@ -1,4 +1,4 @@
-package com.openremotv
+package com.openremotv.tv
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -202,7 +202,7 @@ class Tv(private val context: Context) {
     suspend fun setAppEnabled(pkg: String, on: Boolean) {
         val answer = runCatching { ask("e:$pkg:${if (on) 1 else 0}") }.getOrNull()
         if (answer == "ok") return
-        val out = shell(if (on) "pm enable $pkg" else "pm disable-user --user 0 $pkg")
+        val out = shell(if (on) "pm enable " + shellQuote(pkg) else "pm disable-user --user 0 " + shellQuote(pkg))
         check(out.contains("new state")) { out.trim().ifEmpty { "the TV refused" } }
     }
 
@@ -212,16 +212,18 @@ class Tv(private val context: Context) {
         check(answer == "ok") { answer }
     }
 
-    /** The answer to the helper's challenge: HMAC-SHA256 of its nonce with this phone's secret, in hex. */
-    private fun sign(nonce: String): String {
-        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
-        mac.init(javax.crypto.spec.SecretKeySpec(secret.toByteArray(), "HmacSHA256"))
-        return mac.doFinal(nonce.toByteArray()).joinToString("") { "%02x".format(it) }
-    }
+    private fun sign(nonce: String) = hmacHex(secret, nonce)
 
     companion object {
         const val AGENT_PORT = 8766
         private const val HELPER = "/data/local/tmp/openremotv-helper"
+
+        /** The answer to the helper's challenge: HMAC-SHA256 of its nonce with the phone's secret, in hex. */
+        fun hmacHex(secret: String, message: String): String {
+            val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+            mac.init(javax.crypto.spec.SecretKeySpec(secret.toByteArray(), "HmacSHA256"))
+            return mac.doFinal(message.toByteArray()).joinToString("") { "%02x".format(it) }
+        }
 
         /** This phone's IPv4 address on its current network, or null. */
         fun ownAddress(context: Context): String? {

@@ -1,4 +1,4 @@
-package com.openremotv
+package com.openremotv.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -41,12 +41,17 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -81,9 +86,12 @@ fun Panel(
     fill: Color = Ink.paper,
     shadow: Dp = 5.dp,
     onClick: (() -> Unit)? = null,
+    /** What a screen reader calls it when it can be tapped: a button unless said otherwise. */
+    role: Role = Role.Button,
+    interactionSource: MutableInteractionSource? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val source = remember { MutableInteractionSource() }
+    val source = interactionSource ?: remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
     val drop = if (pressed) 1.dp else shadow
     // propagateMinConstraints: a panel given a size passes it on, so its content can centre in it.
@@ -97,7 +105,7 @@ fun Panel(
             Modifier
                 .offset(if (pressed) shadow - 1.dp else 0.dp, if (pressed) shadow - 1.dp else 0.dp)
                 .clip(shape)
-                .then(if (onClick != null) Modifier.clickable(source, null, onClick = onClick) else Modifier)
+                .then(if (onClick != null) Modifier.clickable(source, null, role = role, onClick = onClick) else Modifier)
                 .padding(3.dp),
             content = content,
         )
@@ -115,10 +123,25 @@ fun MangaButton(text: String, modifier: Modifier = Modifier, loud: Boolean = fal
     }
 }
 
-/** A round key with an inked icon. */
+/**
+ * A round key with an inked icon. With {@code repeat}, holding it down presses again and again (arrows, volume),
+ * the way a real remote's key repeats.
+ */
 @Composable
-fun InkKey(icon: ImageVector, label: String, size: Dp = 60.dp, tint: Color = Ink.ink, onClick: () -> Unit) {
-    Panel(Modifier.size(size), CircleShape, shadow = 4.dp, onClick = onClick) {
+fun InkKey(icon: ImageVector, label: String, size: Dp = 60.dp, tint: Color = Ink.ink, repeat: Boolean = false, onClick: () -> Unit) {
+    val source = remember { MutableInteractionSource() }
+    if (repeat) {
+        val held by source.collectIsPressedAsState()
+        LaunchedEffect(held) {
+            if (!held) return@LaunchedEffect
+            delay(450)
+            while (true) {
+                onClick()
+                delay(110)
+            }
+        }
+    }
+    Panel(Modifier.size(size), CircleShape, shadow = 4.dp, interactionSource = source, onClick = onClick) {
         Icon(icon, label, tint = tint, modifier = Modifier.align(Alignment.Center).size(size * 0.48f))
     }
 }
@@ -161,7 +184,8 @@ fun DrawScope.speedLines(color: Color = Ink.ink.copy(alpha = 0.12f), count: Int 
 /** A speech bubble with a tail, for the app's messages. */
 @Composable
 fun SpeechBubble(text: String, modifier: Modifier = Modifier) {
-    Box(modifier.padding(bottom = 14.dp)) {
+    // A live region: TalkBack reads each new message (progress, results) without the person having to find it.
+    Box(modifier.padding(bottom = 14.dp).semantics { liveRegion = LiveRegionMode.Polite }) {
         Canvas(Modifier.matchParentSize()) {
             val r = 22.dp.toPx()
             val line = 3.dp.toPx()

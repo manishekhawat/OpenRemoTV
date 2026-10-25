@@ -1,5 +1,6 @@
-package com.openremotv
+package com.openremotv.send
 
+import com.openremotv.tv.Tv
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns

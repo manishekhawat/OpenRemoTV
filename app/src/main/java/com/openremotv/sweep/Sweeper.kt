@@ -1,9 +1,18 @@
-package com.openremotv
+package com.openremotv.sweep
 
+import com.openremotv.R
+import com.openremotv.tv.Apps
+import com.openremotv.tv.Tv
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+
+/** The two home screen themes bundled in assets/themes/<key>. */
+enum class HomeTheme(val key: String, val title: String) {
+    MANGA("manga", "MangaHome"),
+    INDIA("india", "IndiaMinimalist"),
+}
 
 /** One app the sweep offers: switched on means it will be turned off. */
 data class SweepItem(val pkg: String, val sweep: Boolean) {
@@ -80,12 +89,12 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
         val component = tv.shell(
             "cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME"
         ).lines().map { it.trim() }.firstOrNull { it.startsWith("$pkg/") } ?: return false
-        tv.shell("cmd package set-home-activity --user 0 $component")
+        tv.shell("cmd package set-home-activity --user 0 " + Tv.shellQuote(component))
         if (home() == component) {
             tv.shell("am start -a android.intent.action.MAIN -c android.intent.category.HOME")
             return true
         }
-        if (before.isNotEmpty()) tv.shell("cmd package set-home-activity --user 0 $before")
+        if (before.isNotEmpty()) tv.shell("cmd package set-home-activity --user 0 " + Tv.shellQuote(before))
         return false
     }
 
@@ -93,17 +102,17 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
      * Installs the bundled home screen (assets/openremotv-home.apk, cleanyourtv's launcher), puts one of the bundled
      * themes on it (assets/themes/<name>: "manga" for MangaHome, "india" for IndiaMinimalist) and makes it Home.
      */
-    suspend fun installHome(theme: String, progress: (String) -> Unit): Boolean {
-        progress("Installing the home screen…")
+    suspend fun installHome(theme: HomeTheme, progress: (String) -> Unit): Boolean {
+        progress(context.getString(R.string.home_installing))
         if (!installMangaHome()) return false
-        progress("Putting on the theme…")
+        progress(context.getString(R.string.home_theming))
         applyTheme(theme, progress)
         return true
     }
 
     /** Copies a bundled theme into the home screen's theme folder the way cleanyourtv's tools/theme.sh does, then restarts it. */
-    suspend fun applyTheme(theme: String, progress: (String) -> Unit) {
-        val base = "themes/$theme"
+    suspend fun applyTheme(theme: HomeTheme, progress: (String) -> Unit) {
+        val base = "themes/${theme.key}"
         val files = mutableListOf<String>()
         fun walk(dir: String) {
             for (name in context.assets.list(dir).orEmpty()) {
@@ -112,10 +121,10 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
             }
         }
         walk(base)
-        tv.shell("mkdir -p $THEME_DIR/wallpapers; rm -f $THEME_DIR/wallpapers/*.jpg $THEME_DIR/wallpapers/*.png " +
+        tv.shell("mkdir -p $THEME_DIR/wallpapers; rm -f $THEME_DIR/wallpapers/*.jpg $THEME_DIR/wallpapers/*.png $THEME_DIR/wallpapers/*.webp " +
                 "$THEME_DIR/wallpapers/captions.txt $THEME_DIR/wallpapers/facts.txt; content delete --uri $THEME_URI/wallpapers 2>/dev/null")
         files.forEachIndexed { i, path ->
-            progress("Copying ${if (theme == "manga") "MangaHome" else "IndiaMinimalist"} to your TV… ${i + 1} of ${files.size} files")
+            progress(context.getString(R.string.home_copying, theme.title, i + 1, files.size))
             val local = File(context.cacheDir, "theme-" + path.replace('/', '-'))
             context.assets.open("$base/$path").use { input -> local.outputStream().use { input.copyTo(it) } }
             try {
@@ -168,7 +177,7 @@ class Sweeper(private val context: Context, private val tv: Tv, private val apps
             if (pkg !in wasOff && runCatching { tv.setAppEnabled(pkg, true) }.isSuccess) back++
         }
         val home = json.optString("home")
-        if (home.isNotEmpty() && home() != home) tv.shell("cmd package set-home-activity --user 0 $home")
+        if (home.isNotEmpty() && home() != home) tv.shell("cmd package set-home-activity --user 0 " + Tv.shellQuote(home))
         val speeds = json.optString("animations").lines().map { it.trim() }
         val names = listOf("window_animation_scale", "transition_animation_scale", "animator_duration_scale")
         names.zip(speeds).forEach { (n, v) -> if (v.matches(Regex("-?\\d+(\\.\\d+)?"))) tv.shell("settings put global $n $v") }

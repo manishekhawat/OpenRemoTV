@@ -1,5 +1,8 @@
 package com.openremotv
 
+import com.openremotv.send.Send
+import com.openremotv.tv.Apps
+
 import dadb.AdbKeyPair
 import dadb.Dadb
 import org.junit.Assume.assumeTrue

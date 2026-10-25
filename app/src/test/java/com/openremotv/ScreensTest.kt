@@ -1,5 +1,22 @@
 package com.openremotv
 
+import com.openremotv.sweep.Lists
+import com.openremotv.sweep.ShareCard
+import com.openremotv.sweep.TvInfo
+import com.openremotv.tv.Apps
+import com.openremotv.tv.Tv
+import com.openremotv.tv.TvApp
+import com.openremotv.ui.MangaPage
+import com.openremotv.ui.MangaTheme
+import com.openremotv.ui.screens.AppTile
+import com.openremotv.ui.screens.ConnectScreen
+import com.openremotv.ui.screens.MangaTabs
+import com.openremotv.ui.screens.PickScreen
+import com.openremotv.ui.screens.RemoteScreen
+import com.openremotv.ui.screens.SweepScreen
+import com.openremotv.ui.screens.Tab
+import com.openremotv.ui.screens.TvBar
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +39,7 @@ class ScreensTest {
         MangaTheme {
             MangaPage {
                 Box(Modifier.weight(1f).fillMaxWidth()) { body() }
-                TvBar(true, "KM8", "192.168.1.50") {}
+                TvBar(true, "KM8", "192.168.1.50", onChange = {})
                 MangaTabs(tab) {}
             }
         }

@@ -1,4 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OpenRemoTV</string>
+    <string name="app_name" translatable="false">OpenRemoTV</string>
+
+    <!-- Tabs -->
+    <string name="tab_remote">Remote</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_send">Send</string>
+    <string name="tab_sweep">Sweep</string>
+    <string name="tab_check">Check</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="undo">Undo</string>
+    <string name="change_tv">Change TV</string>
+    <string name="my_tv">My TV</string>
+    <string name="tv_no_answer">The TV didn\'t answer: %1$s</string>
+    <string name="switch_failed">Couldn\'t switch %1$s: %2$s</string>
+
+    <!-- Pick my TV -->
+    <string name="pick_hello">Hi, I\'m Remo! Which TV are we sweeping today?</string>
+    <string name="pick_title">PICK YOUR TV</string>
+    <string name="pick_ready_title">GET IT READY</string>
+    <string name="pick_ready_button">IT\'S READY! CONNECT →</string>
+    <string name="kind_android_tv">Android TV</string>
+    <string name="kind_android_tv_blurb">Most smart TVs and boxes (Sony, TCL, Mi Box, MECOOL…)</string>
+    <string name="kind_google_tv">Google TV</string>
+    <string name="kind_google_tv_blurb">Chromecast with Google TV and newer TVs with the Google TV home screen</string>
+    <string name="kind_fire_tv">Fire TV</string>
+    <string name="kind_fire_tv_blurb">Amazon Fire TV sticks and Fire TV edition sets (sweep only)</string>
+    <string name="step_atv_1">Settings › Device Preferences › About: press OK on \"Build\" 7 times, until it says you\'re a developer.</string>
+    <string name="step_atv_2">Settings › Device Preferences › Developer options: turn on \"USB debugging\".</string>
+    <string name="step_atv_3">If there is \"Network debugging\" or \"ADB over network\", turn it on too.</string>
+    <string name="step_atv_4">Find the TV\'s address in Settings › Network (it looks like 192.168.1.20).</string>
+    <string name="step_gtv_1">Settings › System › About: press OK on \"Android TV OS build\" 7 times.</string>
+    <string name="step_gtv_2">Settings › System › Developer options: turn on \"USB debugging\".</string>
+    <string name="step_gtv_3">Turn on \"Wireless debugging\" if you see it.</string>
+    <string name="step_gtv_4">Find the TV\'s address in Settings › Network &amp; Internet.</string>
+    <string name="step_fire_1">Settings › My Fire TV › About: press OK on the device name 7 times.</string>
+    <string name="step_fire_2">Settings › My Fire TV › Developer options: turn on \"ADB debugging\".</string>
+    <string name="step_fire_3">Find the address in Settings › My Fire TV › About › Network.</string>
+
+    <!-- Connect -->
+    <string name="connect_title">Let\'s connect!</string>
+    <string name="connect_sub">Your phone and the TV must be on the same Wi-Fi.</string>
+    <string name="connect_address">TV address</string>
+    <string name="connect_button">CONNECT!</string>
+    <string name="connect_find">FIND MY TV</string>
+    <string name="connect_connecting">Connecting… If the TV asks \"Allow USB debugging?\", tick \"Always allow\" and press OK.</string>
+    <string name="connect_failed">Couldn\'t reach %1$s. Is the TV on, on the same Wi-Fi, with network debugging on?</string>
+    <string name="connect_searching">Searching your Wi-Fi…</string>
+    <string name="connect_none">No TV found. Is it on, with network debugging on?</string>
+    <string name="connect_found">Found it!</string>
+    <string name="connect_back">← Pick a different kind of TV</string>
+
+    <!-- Remote -->
+    <string name="key_power">Power</string>
+    <string name="key_home">Home</string>
+    <string name="key_back">Back</string>
+    <string name="key_play">Play or pause</string>
+    <string name="key_up">Up</string>
+    <string name="key_down">Down</string>
+    <string name="key_left">Left</string>
+    <string name="key_right">Right</string>
+    <string name="key_ok">OK</string>
+    <string name="key_volume_down">Volume down</string>
+    <string name="key_mute">Mute</string>
+    <string name="key_volume_up">Volume up</string>
+    <string name="key_delete">Delete</string>
+    <string name="remote_type_hint">Type on the TV…</string>
+    <string name="remote_go">GO</string>
+
+    <!-- Apps, by hand, check -->
+    <string name="apps_title">Open on the TV</string>
+    <string name="apps_fetching">Fetching the TV\'s apps…</string>
+    <string name="by_hand_link">Turn single apps on or off →</string>
+    <string name="back_to_sweep">← BACK TO SWEEP</string>
+    <string name="by_hand_title">Sweep by hand</string>
+    <string name="by_hand_sub">Off means swept away (disabled, never uninstalled). Apps the TV needs are locked.</string>
+    <string name="by_hand_show_system">Show built-in apps</string>
+    <string name="by_hand_locked">Needed by the TV</string>
+    <string name="undo_all">UNDO EVERYTHING</string>
+    <string name="undo_all_title">UNDO EVERYTHING?</string>
+    <string name="undo_all_text">Turns back on every app this phone has turned off.</string>
+    <plurals name="undo_done">
+        <item quantity="one">Turned %1$d app back on</item>
+        <item quantity="other">Turned %1$d apps back on</item>
+    </plurals>
+    <string name="check_title">Check my TV</string>
+    <string name="check_sub">TV updates sometimes switch swept apps back on. Remo will find them.</string>
+    <string name="check_checking">Checking… hmm hmm…</string>
+    <string name="check_clear">All clear! Everything you turned off is still off.</string>
+    <plurals name="check_back">
+        <item quantity="one">Uh-oh! %1$d app came back on:</item>
+        <item quantity="other">Uh-oh! %1$d apps came back on:</item>
+    </plurals>
+    <string name="check_off">OFF</string>
+    <string name="check_all_off">TURN THEM ALL OFF!</string>
+    <string name="check_all_off_done">All off again. Mission complete!</string>
+    <string name="check_again">CHECK AGAIN</string>
+
+    <!-- Send -->
+    <string name="send_title">Send to the TV</string>
+    <string name="send_tip">Tip: in YouTube, Photos or Files, tap Share and pick OpenRemoTV.</string>
+    <string name="send_link">YouTube link</string>
+    <string name="send_play">PLAY ON TV!</string>
+    <string name="send_photo">📷  SHOW A PHOTO</string>
+    <string name="send_video">🎬  PLAY A VIDEO</string>
+    <string name="send_file">📦  SEND ANY FILE</string>
+    <string name="send_where">Files land in the TV\'s Download/OpenRemoTV folder.</string>
+    <string name="send_sending">Sending… ZOOM!</string>
+    <string name="send_sent">Sent %1$s to the TV!</string>
+    <string name="send_playing">Playing on the TV!</string>
+    <string name="send_not_youtube">That isn\'t a YouTube link</string>
+    <string name="send_unknown">Hmm, that isn\'t a YouTube link, a photo or a file</string>
+    <string name="send_failed">Couldn\'t send: %1$s</string>
+
+    <!-- Sweep -->
+    <string name="sweep_title">SWEEP</string>
+    <string name="sweep_looking">Looking at your TV…</string>
+    <string name="sweep_ready">%1$s (Android %2$s) is connected. Ready to sweep away the clutter?</string>
+    <string name="step_backup">Backup</string>
+    <string name="step_sweep">Sweep</string>
+    <string name="step_home">Home</string>
+    <string name="step_done">Done</string>
+    <string name="step_share">Share</string>
+    <string name="sweep_start">START THE SWEEP!</string>
+    <string name="sweep_change_theme">🎨  CHANGE HOME SCREEN THEME</string>
+    <string name="undo_anytime">↩  UNDO ANYTIME</string>
+    <string name="sweep_promise">Apps are turned off, never deleted. Your first backup is kept forever.</string>
+    <string name="restore_title">RESTORE EVERYTHING?</string>
+    <string name="restore_text">Every app comes back on and the original home screen returns, as in your first backup.</string>
+    <string name="restore">RESTORE</string>
+    <string name="restoring">Restoring…</string>
+    <plurals name="restored">
+        <item quantity="one">Restored! %1$d app back on.</item>
+        <item quantity="other">Restored! %1$d apps back on.</item>
+    </plurals>
+    <string name="backup_title">1 · BACKUP</string>
+    <string name="backup_sub">First, Remo saves a backup of your apps, settings and home screen.</string>
+    <string name="backing_up">Backing up…</string>
+    <string name="saving">Saving…</string>
+    <plurals name="backed_up">
+        <item quantity="one">Backed up %1$d app, on your phone and on the TV.</item>
+        <item quantity="other">Backed up %1$d apps, on your phone and on the TV.</item>
+    </plurals>
+    <string name="list_title">2 · WHICH LIST?</string>
+    <string name="list_sub">These tested TVs look like yours. Pick the closest, or the common list.</string>
+    <plurals name="list_apps">
+        <item quantity="one">%1$s · %2$d app in its list</item>
+        <item quantity="other">%1$s · %2$d apps in its list</item>
+    </plurals>
+    <string name="list_common">COMMON LIST</string>
+    <string name="list_common_sub">Apps most tested TVs turn off. Good for a TV nobody has tested.</string>
+    <string name="list_search">Search all %1$d tested TVs</string>
+    <string name="sweep_reading">Reading what\'s on the TV…</string>
+    <string name="choose_title">3 · SWEEP</string>
+    <string name="choose_sub">Switched on = goes away. Apps families often keep start switched off; flip any you like.</string>
+    <string name="choose_nothing">Nothing from this list is on your TV. It\'s already swept clean!</string>
+    <plurals name="choose_go">
+        <item quantity="one">SWEEP %1$d APP! SHAAA!</item>
+        <item quantity="other">SWEEP %1$d APPS! SHAAA!</item>
+    </plurals>
+    <string name="sweeping_title">SWEEPING…</string>
+    <string name="sweeping_sub">One app at a time, each one checked and logged first.</string>
+    <string name="sweeping_start">Here we go!</string>
+    <string name="sweeping_progress">%1$d / %2$d: %3$s</string>
+    <string name="home_title">4 · CLEAN HOME SCREEN</string>
+    <string name="home_sub">Optional. A new home screen only stays if it really takes over Home.</string>
+    <string name="home_theme_title">HOME SCREEN THEME</string>
+    <string name="home_theme_sub">Pick a look for the TV\'s home screen. It only stays if it really takes over Home.</string>
+    <string name="home_manga_blurb">Ink-black manga pages, comic-panel cards and Remo, on the clean tile home screen.</string>
+    <string name="home_india_blurb">Monuments and landscapes of India, the Panchang, festivals and glass cards.</string>
+    <string name="home_keep">KEEP MY HOME SCREEN</string>
+    <string name="home_keep_sub">Leave it as it is.</string>
+    <string name="home_unchanged">Unchanged</string>
+    <string name="home_putting_on">Putting %1$s on your TV…</string>
+    <string name="home_installing">Installing the home screen…</string>
+    <string name="home_theming">Putting on the theme…</string>
+    <string name="home_copying">Copying %1$s to your TV… %2$d of %3$d files</string>
+    <string name="home_is_on">%1$s is on your TV!</string>
+    <string name="home_kept_old">Your TV kept its old home screen; nothing changed.</string>
+    <string name="done_title">5 · DONE!</string>
+    <plurals name="done_text">
+        <item quantity="one">Mission complete! %1$d app swept away. Home screen: %2$s.</item>
+        <item quantity="other">Mission complete! %1$d apps swept away. Home screen: %2$s.</item>
+    </plurals>
+    <string name="share_it">SHARE IT!</string>
+    <string name="share_title">Share your sweep</string>
+    <plurals name="share_text">
+        <item quantity="one">I swept %1$d app off my TV with OpenRemoTV!</item>
+        <item quantity="other">I swept %1$d apps off my TV with OpenRemoTV!</item>
+    </plurals>
+    <string name="back_to_start">BACK TO START</string>
+
+    <!-- About -->
+    <string name="about_open">About OpenRemoTV</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_what">An open-source remote and sweeper for Android TV, Google TV and Fire TV. No root, no accounts, no tracking.</string>
+    <string name="about_source">SOURCE CODE ON GITHUB</string>
+    <string name="about_privacy">PRIVACY</string>
+    <string name="about_licence_title">Licence</string>
+    <string name="about_licence">OpenRemoTV is free software under the MIT licence.</string>
+    <string name="about_credits_title">Credits</string>
+    <string name="about_credit_home">The TV home screen is a fork of cleanyourtv by Gathin (MIT).</string>
+    <string name="about_credit_lists">The tested TV lists come from cleanyourtv and its contributors (MIT).</string>
+    <string name="about_credit_font">Outfit font by the Outfit Project Authors (SIL Open Font License 1.1).</string>
+    <string name="about_credit_libraries">dadb by mobile.dev, AndroidX and Jetpack Compose by Google, Kotlin by JetBrains (Apache 2.0).</string>
+    <string name="about_credit_tidytv">The sweep flow was inspired by TidyTV (MIT).</string>
+    <string name="about_photos_title">IndiaMinimalist photos</string>
+    <string name="about_photos_note">From Wikimedia Commons, each under its own licence, resized for TV screens:</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.openremotv
+package com.openremotv.tv
 
 import android.content.Context
 import org.json.JSONArray
@@ -22,7 +22,7 @@ data class TvApp(
  */
 class Apps(private val context: Context, private val tv: Tv) {
 
-    private val prefs = context.getSharedPreferences("tidy", Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences("sweep", Context.MODE_PRIVATE)
 
     suspend fun list(): List<TvApp> {
         val all = packages(tv.shell("pm list packages"))
@@ -93,7 +93,7 @@ class Apps(private val context: Context, private val tv: Tv) {
         val arr = JSONArray(prefs.getString("log", "[]"))
         arr.put(JSONArray().put(pkg).put(on))
         prefs.edit().putString("log", arr.toString()).apply()
-        tv.shell("mkdir -p /sdcard/OpenRemoTV; echo \"$(date) ${if (on) "on " else "off"} $pkg\" >> /sdcard/OpenRemoTV/changes.txt")
+        tv.shell("mkdir -p /sdcard/OpenRemoTV; echo \"$(date) ${if (on) "on " else "off"} \"${Tv.shellQuote(pkg)} >> /sdcard/OpenRemoTV/changes.txt")
     }
 
     companion object {

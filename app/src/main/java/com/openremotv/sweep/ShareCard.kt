@@ -1,5 +1,6 @@
-package com.openremotv
+package com.openremotv.sweep
 
+import com.openremotv.R
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -23,9 +24,9 @@ object ShareCard {
         file.outputStream().use { draw(tvName, swept, home).compress(Bitmap.CompressFormat.PNG, 100, it) }
         val uri = FileProvider.getUriForFile(context, context.packageName + ".files", file)
         val send = Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri)
-            .putExtra(Intent.EXTRA_TEXT, "I swept $swept apps off my TV with OpenRemoTV!")
+            .putExtra(Intent.EXTRA_TEXT, context.resources.getQuantityString(R.plurals.share_text, swept, swept))
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        context.startActivity(Intent.createChooser(send, "Share your sweep").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        context.startActivity(Intent.createChooser(send, context.getString(R.string.share_title)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     fun draw(tvName: String, swept: Int, home: String): Bitmap {

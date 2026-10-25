@@ -1,5 +1,6 @@
-package com.openremotv
+package com.openremotv.sweep
 
+import com.openremotv.tv.Tv
 import android.content.Context
 import org.json.JSONArray
 
