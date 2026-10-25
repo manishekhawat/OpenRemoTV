@@ -42,6 +42,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
+        L10n.init(this);
         density = getResources().getDisplayMetrics().density;
         FrameLayout root = new FrameLayout(this);
         root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
@@ -90,7 +91,7 @@ public class GameActivity extends Activity {
         hint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         hint.setTextColor(0x99FFFFFF);
         hint.setGravity(Gravity.CENTER);
-        hint.setText("Arrows to move · OK to play · Back to leave");
+        hint.setText(R.string.game_hint);
         LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         hp.topMargin = dp(12);
         column.addView(hint, hp);
@@ -115,7 +116,7 @@ public class GameActivity extends Activity {
         moves = 0;
         pairs = 0;
         for (TextView t : cells) t.setText("");
-        status.setText("Memory: find the pairs");
+        status.setText(R.string.game_memory_start);
     }
 
     private void flip(int i) {
@@ -136,11 +137,11 @@ public class GameActivity extends Activity {
             matched[a] = matched[i] = true;
             pairs++;
             status.setText(pairs == PICTURES.length
-                    ? "All found in " + moves + " moves! OK for a new game"
-                    : "A pair! " + pairs + " of " + PICTURES.length);
+                    ? getString(R.string.game_memory_won, moves)
+                    : getString(R.string.game_memory_pair, pairs, PICTURES.length));
         } else {
             busy = true;
-            status.setText("Moves: " + moves);
+            status.setText(getString(R.string.game_moves, moves));
             handler.postDelayed(() -> {
                 cells[a].setText("");
                 cells[i].setText("");
@@ -157,7 +158,7 @@ public class GameActivity extends Activity {
         board = "         ".toCharArray();
         over = false;
         for (TextView t : cells) t.setText("");
-        status.setText("Tic-tac-toe: you are ✕, the TV is ○");
+        status.setText(R.string.game_ttt_start);
     }
 
     private void play(int i) {
@@ -170,13 +171,13 @@ public class GameActivity extends Activity {
         cells[i].setText("✕");
         if (finished()) return;
         busy = true;
-        status.setText("The TV is thinking…");
+        status.setText(R.string.game_ttt_thinking);
         handler.postDelayed(() -> {
             int move = best();
             board[move] = 'O';
             cells[move].setText("○");
             busy = false;
-            if (!finished()) status.setText("Your turn");
+            if (!finished()) status.setText(R.string.game_ttt_your_turn);
         }, 500);
     }
 
@@ -185,7 +186,7 @@ public class GameActivity extends Activity {
         boolean full = new String(board).indexOf(' ') < 0;
         if (w == ' ' && !full) return false;
         over = true;
-        status.setText((w == 'X' ? "You win! 🎉" : w == 'O' ? "The TV wins" : "A draw") + " · OK to play again");
+        status.setText(getString(w == 'X' ? R.string.game_ttt_win : w == 'O' ? R.string.game_ttt_lose : R.string.game_ttt_draw));
         return true;
     }
 

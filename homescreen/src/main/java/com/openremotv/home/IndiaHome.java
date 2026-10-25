@@ -34,12 +34,10 @@ final class IndiaHome extends FrameLayout {
         void button(String which, View anchor);
     }
 
-    /** The round buttons, left to right: {key, spoken name}. */
-    static final String[][] BUTTONS = {
-            {"wifi", "Wi-Fi"}, {"voice", "Speak"}, {"radio", "Radio"}, {"games", "Games"}, {"memory", "Free memory"},
-            {"darshan", "Live darshan"}, {"phone", "Phone to TV"}, {"recipe", "Recipe of the day"}, {"sleep", "Sleep timer"},
-            {"today", "Today"}, {"settings", "Settings"},
-    };
+    /** The round buttons, left to right, and their spoken names. */
+    static final String[] BUTTONS = {"wifi", "voice", "radio", "games", "memory", "darshan", "phone", "recipe", "sleep", "today", "settings"};
+    static final int[] NAMES = {R.string.btn_wifi, R.string.btn_voice, R.string.radio, R.string.games, R.string.btn_memory,
+            R.string.darshan, R.string.btn_phone, R.string.recipe, R.string.sleep_title, R.string.today, R.string.btn_settings};
     static final int[] ICONS = {
             R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_dice, R.drawable.ic_memory,
             R.drawable.ic_temple, R.drawable.ic_phone, R.drawable.ic_recipe, R.drawable.ic_moon, R.drawable.ic_today,
@@ -64,6 +62,7 @@ final class IndiaHome extends FrameLayout {
 
     IndiaHome(Context context, Theme theme, Host host) {
         super(context);
+        L10n.init(context);
         this.theme = theme;
         this.host = host;
         d = getResources().getDisplayMetrics().density;
@@ -107,7 +106,7 @@ final class IndiaHome extends FrameLayout {
         bp.topMargin = dp(20);
         addView(buttons, bp);
         for (int i = 0; i < BUTTONS.length; i++) {
-            String which = BUTTONS[i][0];
+            String which = BUTTONS[i];
             ImageView b = new ImageView(context);
             b.setImageResource(ICONS[i]);
             b.setImageTintList(new android.content.res.ColorStateList(
@@ -117,7 +116,7 @@ final class IndiaHome extends FrameLayout {
             b.setBackground(roundButton());
             b.setFocusable(true);
             b.setClickable(true);
-            b.setContentDescription(BUTTONS[i][1]);
+            b.setContentDescription(context.getString(NAMES[i]));
             b.setOnClickListener(v -> host.button(which, v));
             b.setOnFocusChangeListener((v, f) -> v.animate().scaleX(f ? 1.12f : 1f).scaleY(f ? 1.12f : 1f)
                     .setDuration(theme.reducedMotion ? 0 : 120).start());

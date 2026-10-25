@@ -4,6 +4,19 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # The toolchain moves together, in one planned step (the next one is SDK 36): Android Gradle Plugin, Kotlin,
+    # AndroidX and the Gradle wrapper get patch releases only. Everything else gets minor and patch releases.
+    ignore:
+      - dependency-name: "com.android.application"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "org.jetbrains.kotlin*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "androidx.*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "gradle-wrapper"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       androidx:
         patterns: ["androidx.*"]

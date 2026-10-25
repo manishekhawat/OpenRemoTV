@@ -62,6 +62,7 @@ public final class HomeActivity extends Activity implements IndiaHome.Host, Comi
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
+        L10n.init(this);
         Window w = getWindow();
         w.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         theme = Theme.load(this);

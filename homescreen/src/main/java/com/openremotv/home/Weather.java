@@ -127,15 +127,17 @@ final class Weather {
 
     /** WMO weather codes, as Open-Meteo reports them, in a word or two. */
     static String condition(int code) {
-        if (code == 0) return "Clear";
-        if (code <= 2) return "Partly cloudy";
-        if (code == 3) return "Cloudy";
-        if (code == 45 || code == 48) return "Fog";
-        if (code >= 51 && code <= 57) return "Drizzle";
-        if (code >= 61 && code <= 67) return "Rain";
-        if (code >= 71 && code <= 77) return "Snow";
-        if (code >= 80 && code <= 82) return "Showers";
-        if (code >= 95) return "Storm";
-        return "";
+        int res;
+        if (code == 0) res = R.string.sky_clear;
+        else if (code >= 1 && code <= 2) res = R.string.sky_partly_cloudy;
+        else if (code == 3) res = R.string.sky_cloudy;
+        else if (code == 45 || code == 48) res = R.string.sky_fog;
+        else if (code >= 51 && code <= 57) res = R.string.sky_drizzle;
+        else if (code >= 61 && code <= 67) res = R.string.sky_rain;
+        else if (code >= 71 && code <= 77) res = R.string.sky_snow;
+        else if (code >= 80 && code <= 82) res = R.string.sky_showers;
+        else if (code >= 95) res = R.string.sky_storm;
+        else return "";
+        return L10n.get(res);
     }
 }

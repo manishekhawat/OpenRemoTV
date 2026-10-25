@@ -41,10 +41,10 @@ final class AmbientSound {
 
     static String label(String mode) {
         switch (mode) {
-            case "rain": return "Rain";
-            case "bells": return "Temple bells";
-            case "both": return "Rain and temple bells";
-            default: return "Off";
+            case "rain": return L10n.get(R.string.sound_rain);
+            case "bells": return L10n.get(R.string.sound_bells);
+            case "both": return L10n.get(R.string.sound_both);
+            default: return L10n.get(R.string.off);
         }
     }
 

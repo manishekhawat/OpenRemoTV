@@ -12,6 +12,7 @@ public final class ClockDream extends DreamService {
 
     @Override public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        L10n.init(this);
         setInteractive(false);
         setFullscreen(true);
         FrameLayout root = new FrameLayout(this);

@@ -57,10 +57,10 @@ final class Daily {
         /** "Diwali today", "Diwali tomorrow", "Diwali in 12 days", "Diwali Sun 8 Nov". */
         String when(LocalDate today) {
             long days = ChronoUnit.DAYS.between(today, date);
-            if (days == 0) return name + " today";
-            if (days == 1) return name + " tomorrow";
-            if (days < 7) return name + " on " + date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault());
-            return name + " in " + days + " days";
+            if (days == 0) return L10n.get(R.string.event_today, name);
+            if (days == 1) return L10n.get(R.string.event_tomorrow, name);
+            if (days < 7) return L10n.get(R.string.event_on, name, date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault()));
+            return L10n.get(R.string.event_in_days, name, days);
         }
     }
 
@@ -100,11 +100,11 @@ final class Daily {
         if (extras.weatherEnabled()) {
             double lat = extras.weatherLatitude, lon = extras.weatherLongitude;
             LocalDate e = Panchang.next(today, lat, lon, zone, 10, 25);
-            if (e != null) out.add(new Event("Ekadashi", e));
+            if (e != null) out.add(new Event(L10n.get(R.string.ekadashi), e));
             LocalDate p = Panchang.next(today, lat, lon, zone, 14);
-            if (p != null) out.add(new Event("Purnima", p));
+            if (p != null) out.add(new Event(L10n.get(R.string.purnima), p));
             LocalDate a = Panchang.next(today, lat, lon, zone, 29);
-            if (a != null) out.add(new Event("Amavasya", a));
+            if (a != null) out.add(new Event(L10n.get(R.string.amavasya), a));
         }
         Collections.sort(out);
         return out.size() > limit ? new ArrayList<>(out.subList(0, limit)) : out;

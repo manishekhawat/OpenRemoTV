@@ -32,7 +32,7 @@ final class ScreenTime {
 
     /** {"title", "body"} for the card. */
     static String[] summary(Context ctx) {
-        if (!allowed(ctx)) return new String[]{"Not switched on", "Needs usage access, given once from the computer."};
+        if (!allowed(ctx)) return new String[]{ctx.getString(R.string.screen_time_off), ctx.getString(R.string.screen_time_off_body)};
         ZoneId zone = ZoneId.systemDefault();
         LocalDate monday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         long weekStart = monday.atStartOfDay(zone).toInstant().toEpochMilli();
@@ -64,8 +64,8 @@ final class ScreenTime {
             }
             body.append(label).append("  ").append(hours(apps.get(i).getTotalTimeInForeground())).append('\n');
         }
-        if (lastTotal > 0) body.append("Last week ").append(hours(lastTotal));
-        return new String[]{"This week " + hours(total), body.toString().trim()};
+        if (lastTotal > 0) body.append(ctx.getString(R.string.screen_time_last_week, hours(lastTotal)));
+        return new String[]{ctx.getString(R.string.screen_time_this_week, hours(total)), body.toString().trim()};
     }
 
     private static boolean ignore(Context ctx, String pkg) {

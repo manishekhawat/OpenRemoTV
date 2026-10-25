@@ -65,6 +65,7 @@ final class ComicHome extends FrameLayout {
 
     ComicHome(Context context, Theme extras, List<String> dockApps, Host host) {
         super(context);
+        L10n.init(context);
         this.host = host;
         this.extras = extras;
         this.dock = dockApps;
@@ -135,7 +136,7 @@ final class ComicHome extends FrameLayout {
         place(today, 660, 18, 276, 196);
         LinearLayout c = column(today, 12, 12);
         TextView head = lettering(13, INK);
-        head.setText("TODAY…");
+        head.setText(R.string.comic_today);
         c.addView(head);
         tithi = caption(c);
         rahu = caption(c);
@@ -167,9 +168,12 @@ final class ComicHome extends FrameLayout {
         bp.topMargin = dp(424);
         addView(buttons, bp);
         String[][] list = {
-                {"wifi", "Wi-Fi"}, {"voice", "Speak"}, {"radio", "Radio"}, {"games", "Games"}, {"today", "Today"},
-                {"darshan", "Darshan"}, {"recipe", "Recipe"}, {"phone", "Phone"}, {"memory", "Memory"},
-                {"sleep", "Sleep"}, {"settings", "Settings"}};
+                {"wifi", getContext().getString(R.string.btn_wifi)}, {"voice", getContext().getString(R.string.btn_voice)},
+                {"radio", getContext().getString(R.string.radio)}, {"games", getContext().getString(R.string.games)},
+                {"today", getContext().getString(R.string.today)}, {"darshan", getContext().getString(R.string.darshan)},
+                {"recipe", getContext().getString(R.string.recipe)}, {"phone", getContext().getString(R.string.btn_phone)},
+                {"memory", getContext().getString(R.string.btn_memory)}, {"sleep", getContext().getString(R.string.sleep_title)},
+                {"settings", getContext().getString(R.string.btn_settings)}};
         int[] icons = {R.drawable.ic_wifi, R.drawable.ic_mic, R.drawable.ic_radio, R.drawable.ic_dice, R.drawable.ic_today,
                 R.drawable.ic_temple, R.drawable.ic_recipe, R.drawable.ic_phone, R.drawable.ic_memory, R.drawable.ic_moon,
                 R.drawable.ic_settings};
@@ -187,7 +191,7 @@ final class ComicHome extends FrameLayout {
             b.setOnClickListener(v -> host.button(which));
             b.setOnFocusChangeListener((v, f) -> {
                 ((ImageView) v).setColorFilter(f ? PAPER : INK);
-                v.animate().scaleX(f ? 1.15f : 1f).scaleY(f ? 1.15f : 1f).setDuration(120).start();
+                v.animate().scaleX(f ? 1.15f : 1f).scaleY(f ? 1.15f : 1f).setDuration(extras.reducedMotion ? 0 : 120).start();
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(52), dp(52));
             lp.setMarginStart(dp(i == 0 ? 0 : 14));
@@ -257,7 +261,7 @@ final class ComicHome extends FrameLayout {
         FrameLayout all = appPanel(-1f);
         TextView label = lettering(20, PAPER);
         label.setSingleLine(false);
-        label.setText("ALL\nAPPS!");
+        label.setText(R.string.comic_all_apps);
         label.setGravity(Gravity.CENTER);
         all.addView(label, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
         ((PanelDrawable) all.getBackground()).fill = INK;
@@ -319,6 +323,8 @@ final class ComicHome extends FrameLayout {
         pow.setText(new String[]{"POW!", "DON!", "BAM!", "ZOOM!"}[random.nextInt(4)]);
         pow.setRotation(-14f);
         pow.setVisibility(INVISIBLE);
+        // A sound effect for the eye only: TalkBack reads the app's name, not "POW!".
+        pow.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         pow.setShadowLayer(0.01f, 0, 0, 0);
         LayoutParams pp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
                 Gravity.END | Gravity.TOP);
@@ -329,7 +335,7 @@ final class ComicHome extends FrameLayout {
             bg.focused = f;
             bg.invalidateSelf();
             pow.setVisibility(f ? VISIBLE : INVISIBLE);
-            v.animate().scaleX(f ? 1.07f : 1f).scaleY(f ? 1.07f : 1f).setDuration(140).start();
+            v.animate().scaleX(f ? 1.07f : 1f).scaleY(f ? 1.07f : 1f).setDuration(extras.reducedMotion ? 0 : 140).start();
             v.setZ(f ? 10 : 0);
         });
         return panel;
@@ -401,8 +407,8 @@ final class ComicHome extends FrameLayout {
     /** Re-reads the time of day, the weather cache, the Panchang and the headlines. Called on resume and every minute. */
     void refresh() {
         int hour = LocalTime.now().getHour();
-        greeting.setText(hour < 5 ? "Up late? Good night from Remo!" : hour < 12 ? "Good morning from Remo!"
-                : hour < 17 ? "Good afternoon from Remo!" : hour < 21 ? "Good evening from Remo!" : "Good night from Remo!");
+        greeting.setText(getContext().getString(hour < 5 ? R.string.remo_late : hour < 12 ? R.string.remo_morning
+                : hour < 17 ? R.string.remo_afternoon : hour < 21 ? R.string.remo_evening : R.string.remo_night));
         Context ctx = getContext();
         try {
             JSONObject w = new JSONObject(ctx.getSharedPreferences("weather", Context.MODE_PRIVATE).getString("raw", "{}"));
@@ -410,23 +416,22 @@ final class ComicHome extends FrameLayout {
             if (now != null) {
                 int code = now.optInt("weather_code", -1);
                 weatherBig.setText(Math.round(now.optDouble("temperature_2m")) + "°");
-                weatherWord.setText(Weather.condition(code).toUpperCase());
+                weatherWord.setText(Weather.condition(code).toUpperCase(java.util.Locale.getDefault()));
                 weatherSfx.setText(sfx(code, now.optDouble("temperature_2m")));
                 StringBuilder more = new StringBuilder();
-                more.append("Feels ").append(Math.round(now.optDouble("apparent_temperature"))).append("°");
-                if (w.has("aqi")) more.append(" · AQI ").append(w.optLong("aqi")).append(" ").append(Widgets.aqiWord(w.optLong("aqi")));
+                more.append(ctx.getString(R.string.feels, Math.round(now.optDouble("apparent_temperature"))));
+                if (w.has("aqi")) more.append(" · ").append(ctx.getString(R.string.aqi_line, w.optLong("aqi"), Widgets.aqiWord(w.optLong("aqi"))));
                 JSONObject daily = w.optJSONObject("daily");
                 JSONArray max = daily == null ? null : daily.optJSONArray("temperature_2m_max");
                 JSONArray min = daily == null ? null : daily.optJSONArray("temperature_2m_min");
                 if (max != null && min != null && max.length() > 1) {
-                    more.append("\nTomorrow ").append(Math.round(max.optDouble(1))).append("° / ")
-                            .append(Math.round(min.optDouble(1))).append("°");
+                    more.append("\n").append(ctx.getString(R.string.tomorrow_temps, Math.round(max.optDouble(1)), Math.round(min.optDouble(1))));
                 }
                 weatherMore.setText(more);
             } else {
                 weatherBig.setText("--°");
-                weatherWord.setText("WEATHER");
-                weatherMore.setText("Waiting for the forecast…");
+                weatherWord.setText(ctx.getString(R.string.weather).toUpperCase(java.util.Locale.getDefault()));
+                weatherMore.setText(R.string.weather_waiting);
             }
         } catch (Exception ignored) {
             // the cache fills on the next fetch
@@ -439,10 +444,10 @@ final class ComicHome extends FrameLayout {
             tithi.setText(p.title());
             long now = System.currentTimeMillis();
             rahu.setText(p.rahuStart != 0 && now < p.rahuEnd
-                    ? "Rahu kaal " + time.format(new java.util.Date(p.rahuStart)) + " – " + time.format(new java.util.Date(p.rahuEnd))
-                    : "Sunset " + time.format(new java.util.Date(p.sunset)));
+                    ? ctx.getString(R.string.rahu_kaal, time.format(new java.util.Date(p.rahuStart)), time.format(new java.util.Date(p.rahuEnd)))
+                    : ctx.getString(R.string.sunset_at, time.format(new java.util.Date(p.sunset))));
             List<Daily.Event> next = Daily.upcoming(extras, today, zone, 1);
-            festival.setText(next.isEmpty() ? "No festival this week" : next.get(0).when(today));
+            festival.setText(next.isEmpty() ? ctx.getString(R.string.no_festival) : next.get(0).when(today));
         }
         wisdomTurn++;
         if (wisdomTurn % 2 == 0) {
@@ -450,14 +455,14 @@ final class ComicHome extends FrameLayout {
             if (word != null) wisdom.setText(word.word + " (" + word.sound + "): " + word.meaning);
         } else {
             Daily.Verse verse = Daily.verse(ctx, today);
-            if (verse != null) wisdom.setText("Gita " + verse.ref + ": " + verse.meaning);
+            if (verse != null) wisdom.setText(ctx.getString(R.string.gita_line, verse.ref, verse.meaning));
         }
         String items = ctx.getSharedPreferences("ticker", Context.MODE_PRIVATE).getString("items", "");
         if (!items.isEmpty()) {
             String[] lines = items.split("\n");
-            caption.setText("MEANWHILE…  " + lines[random.nextInt(lines.length)].replaceFirst("^[^\\p{L}\\p{N}']+", ""));
+            caption.setText(ctx.getString(R.string.meanwhile) + "  " + lines[random.nextInt(lines.length)].replaceFirst("^[^\\p{L}\\p{N}']+", ""));
         } else {
-            caption.setText("MEANWHILE…  Remo is fetching the news.");
+            caption.setText(ctx.getString(R.string.meanwhile) + "  " + ctx.getString(R.string.fetching_news));
         }
     }
 

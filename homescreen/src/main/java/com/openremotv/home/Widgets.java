@@ -328,7 +328,7 @@ final class Widgets {
     void setVerse(Daily.Verse v) {
         if (v == null) return;
         verseText.setText(v.line1 + "\n" + v.line2);
-        verseMeaning.setText(v.meaning + "  — Gita " + v.ref);
+        verseMeaning.setText(v.meaning + "  — " + context.getString(R.string.gita_ref, v.ref));
         weatherCard.removeCallbacks(swapWeather);
         weatherCard.postDelayed(swapWeather, 60_000L);
     }
@@ -395,16 +395,16 @@ final class Widgets {
         weatherNow.setText(Math.round(now.optDouble("temperature_2m")) + "°");
         weatherCondition.setText(Weather.condition(now.optInt("weather_code", -1)));
         StringBuilder details = new StringBuilder();
-        if (now.has("apparent_temperature")) details.append("Feels ").append(Math.round(now.optDouble("apparent_temperature"))).append("°");
+        if (now.has("apparent_temperature")) details.append(context.getString(R.string.feels, Math.round(now.optDouble("apparent_temperature"))));
         if (now.has("relative_humidity_2m")) details.append(" · ").append(now.optInt("relative_humidity_2m")).append("%");
         if (now.has("wind_speed_10m")) details.append(" · ").append(Math.round(now.optDouble("wind_speed_10m"))).append(" km/h");
         weatherDetails.setText(details);
         JSONObject daily = w.optJSONObject("daily");
-        weatherAir.setText(w.has("aqi") ? "AQI " + w.optLong("aqi") + " · " + aqiWord(w.optLong("aqi")) : "");
+        weatherAir.setText(w.has("aqi") ? context.getString(R.string.aqi_line, w.optLong("aqi"), aqiWord(w.optLong("aqi"))) : "");
         weatherAir.setVisibility(w.has("aqi") ? View.VISIBLE : View.GONE);
         String rise = daily == null ? "" : timeOf(daily.optJSONArray("sunrise"));
         String set = daily == null ? "" : timeOf(daily.optJSONArray("sunset"));
-        weatherSun.setText(rise.isEmpty() ? "" : "Sunrise " + rise + " · Sunset " + set);
+        weatherSun.setText(rise.isEmpty() ? "" : context.getString(R.string.sun_times, rise, set));
         weatherSun.setVisibility(rise.isEmpty() ? View.GONE : View.VISIBLE);
         forecast.removeAllViews();
         if (daily != null) {
@@ -453,11 +453,7 @@ final class Widgets {
 
     /** The US AQI bands in a word. */
     static String aqiWord(long aqi) {
-        if (aqi <= 50) return "Good";
-        if (aqi <= 100) return "Moderate";
-        if (aqi <= 150) return "Poor";
-        if (aqi <= 200) return "Unhealthy";
-        if (aqi <= 300) return "Very poor";
-        return "Hazardous";
+        return L10n.get(aqi <= 50 ? R.string.aqi_good : aqi <= 100 ? R.string.aqi_moderate : aqi <= 150 ? R.string.aqi_poor
+                : aqi <= 200 ? R.string.aqi_unhealthy : aqi <= 300 ? R.string.aqi_very_poor : R.string.aqi_hazardous);
     }
 }

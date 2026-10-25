@@ -15,14 +15,6 @@ import java.time.ZonedDateTime;
  */
 final class Panchang {
 
-    static final String[] TITHI = {"Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi",
-            "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi"};
-    static final String[] MONTH = {"Chaitra", "Vaishakh", "Jyeshtha", "Ashadh", "Shravan", "Bhadrapad",
-            "Ashwin", "Kartik", "Margashirsha", "Paush", "Magh", "Phalgun"};
-    static final String[] NAKSHATRA = {"Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
-            "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra",
-            "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana",
-            "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"};
     /** Which eighth of the day is Rahu kaal, Monday first (Mon 2nd ... Sun 8th). */
     private static final int[] RAHU_EIGHTH = {2, 7, 5, 6, 4, 3, 8};
     /** Mean speed of the moon away from the sun, degrees a day. */
@@ -57,19 +49,24 @@ final class Panchang {
 
         /** "Purnima", "Amavasya" or the tithi's name within its fortnight. */
         String tithiName() {
-            if (tithi == 14) return "Purnima";
-            if (tithi == 29) return "Amavasya";
-            return TITHI[tithi % 15];
+            if (tithi == 14) return L10n.get(R.string.purnima);
+            if (tithi == 29) return L10n.get(R.string.amavasya);
+            return L10n.array(R.array.tithi)[tithi % 15];
         }
 
         String monthName() {
-            return (adhik ? "Adhik " : "") + MONTH[month];
+            String name = L10n.array(R.array.hindu_month)[month];
+            return adhik ? L10n.get(R.string.adhik, name) : name;
         }
 
         /** "Kartik Shukla Chaturdashi", or "Kartik Purnima" / "Kartik Amavasya" with no fortnight. */
         String title() {
             if (tithi == 14 || tithi == 29) return monthName() + " " + tithiName();
-            return monthName() + " " + (shukla() ? "Shukla" : "Krishna") + " " + tithiName();
+            return monthName() + " " + L10n.get(shukla() ? R.string.shukla : R.string.krishna) + " " + tithiName();
+        }
+
+        String nakshatraName() {
+            return L10n.array(R.array.nakshatra)[nakshatra];
         }
     }
 

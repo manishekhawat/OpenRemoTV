@@ -49,19 +49,20 @@ final class NightSky {
 
         String phaseName() {
             double p = phase;
-            if (p < 0.03 || p > 0.97) return "New moon";
-            if (p < 0.22) return "Waxing crescent";
-            if (p < 0.28) return "First quarter";
-            if (p < 0.47) return "Waxing gibbous";
-            if (p < 0.53) return "Full moon";
-            if (p < 0.72) return "Waning gibbous";
-            if (p < 0.78) return "Last quarter";
-            return "Waning crescent";
+            int res;
+            if (p < 0.03 || p > 0.97) res = R.string.moon_new;
+            else if (p < 0.22) res = R.string.moon_waxing_crescent;
+            else if (p < 0.28) res = R.string.moon_first_quarter;
+            else if (p < 0.47) res = R.string.moon_waxing_gibbous;
+            else if (p < 0.53) res = R.string.moon_full;
+            else if (p < 0.72) res = R.string.moon_waning_gibbous;
+            else if (p < 0.78) res = R.string.moon_last_quarter;
+            else res = R.string.moon_waning_crescent;
+            return L10n.get(res);
         }
     }
 
     // a, e, I, L, long. perihelion, long. node at J2000, then their rates per century (JPL, Standish).
-    private static final String[] NAMES = {"Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"};
     private static final double[][] ELEMENTS = {
             {0.38709927, 0.20563593, 7.00497902, 252.25032350, 77.45779628, 48.33076593,
                     0.00000037, 0.00001906, -0.00594749, 149472.67411175, 0.16047689, -0.12534081},
@@ -96,7 +97,7 @@ final class NightSky {
         for (int i : new int[]{1, 4, 3, 5, 0}) {   // brightest first: Venus, Jupiter, Mars, Saturn, Mercury
             double[] p = heliocentric(i, jd);
             double[] hz = horizontal(p[0] - earth[0], p[1] - earth[1], p[2] - earth[2], jd, latitude, longitude);
-            if (hz[0] > 8) up.add(new Planet(NAMES[i], hz[0], hz[1]));
+            if (hz[0] > 8) up.add(new Planet(L10n.array(R.array.planets)[i], hz[0], hz[1]));
         }
         return new Report(phase, illumination, at, up);
     }

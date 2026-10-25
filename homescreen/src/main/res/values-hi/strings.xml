@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="good_morning">सुप्रभात</string>
+    <string name="good_afternoon">शुभ दोपहर</string>
+    <string name="good_evening">शुभ संध्या</string>
+    <string name="good_night">शुभ रात्रि</string>
+    <string name="remo_morning">Remo की ओर से सुप्रभात!</string>
+    <string name="remo_afternoon">Remo की ओर से शुभ दोपहर!</string>
+    <string name="remo_evening">Remo की ओर से शुभ संध्या!</string>
+    <string name="remo_night">Remo की ओर से शुभ रात्रि!</string>
+    <string name="remo_late">इतनी देर तक जाग रहे हो? Remo की ओर से शुभ रात्रि!</string>
+
+    <string-array name="tithi">
+        <item>प्रतिपदा</item><item>द्वितीया</item><item>तृतीया</item><item>चतुर्थी</item><item>पंचमी</item>
+        <item>षष्ठी</item><item>सप्तमी</item><item>अष्टमी</item><item>नवमी</item><item>दशमी</item>
+        <item>एकादशी</item><item>द्वादशी</item><item>त्रयोदशी</item><item>चतुर्दशी</item><item>पूर्णिमा</item>
+    </string-array>
+    <string-array name="hindu_month">
+        <item>चैत्र</item><item>वैशाख</item><item>ज्येष्ठ</item><item>आषाढ़</item><item>श्रावण</item>
+        <item>भाद्रपद</item><item>आश्विन</item><item>कार्तिक</item><item>मार्गशीर्ष</item><item>पौष</item>
+        <item>माघ</item><item>फाल्गुन</item>
+    </string-array>
+    <string-array name="nakshatra">
+        <item>अश्विनी</item><item>भरणी</item><item>कृत्तिका</item><item>रोहिणी</item><item>मृगशिरा</item>
+        <item>आर्द्रा</item><item>पुनर्वसु</item><item>पुष्य</item><item>आश्लेषा</item><item>मघा</item>
+        <item>पूर्वा फाल्गुनी</item><item>उत्तरा फाल्गुनी</item><item>हस्त</item><item>चित्रा</item><item>स्वाति</item>
+        <item>विशाखा</item><item>अनुराधा</item><item>ज्येष्ठा</item><item>मूल</item><item>पूर्वाषाढ़ा</item>
+        <item>उत्तराषाढ़ा</item><item>श्रवण</item><item>धनिष्ठा</item><item>शतभिषा</item>
+        <item>पूर्वा भाद्रपद</item><item>उत्तरा भाद्रपद</item><item>रेवती</item>
+    </string-array>
+    <string name="shukla">शुक्ल</string>
+    <string name="krishna">कृष्ण</string>
+    <string name="adhik">अधिक %1$s</string>
+    <string name="purnima">पूर्णिमा</string>
+    <string name="amavasya">अमावस्या</string>
+    <string name="ekadashi">एकादशी</string>
+    <string name="rahu_kaal">राहु काल %1$s – %2$s</string>
+    <string name="sunset_at">सूर्यास्त %1$s</string>
+    <string name="sunrise_tomorrow">कल सूर्योदय %1$s</string>
+    <string name="sun_times">सूर्योदय %1$s · सूर्यास्त %2$s</string>
+    <string name="tithi_until">तिथि %1$s तक</string>
+    <string name="tithi_from">%1$s, %2$s से</string>
+    <string name="nakshatra_is">नक्षत्र %1$s</string>
+    <string name="event_today">आज %1$s</string>
+    <string name="event_tomorrow">कल %1$s</string>
+    <string name="event_on">%2$s को %1$s</string>
+    <string name="event_in_days">%2$d दिन में %1$s</string>
+    <string name="no_festival">इस हफ़्ते कोई त्योहार नहीं</string>
+
+    <string-array name="planets">
+        <item>बुध</item><item>शुक्र</item><item>पृथ्वी</item><item>मंगल</item><item>बृहस्पति</item><item>शनि</item>
+    </string-array>
+    <string name="moon_new">अमावस्या का चाँद</string>
+    <string name="moon_waxing_crescent">बढ़ता अर्धचंद्र</string>
+    <string name="moon_first_quarter">शुक्ल अष्टमी का चाँद</string>
+    <string name="moon_waxing_gibbous">बढ़ता चाँद</string>
+    <string name="moon_full">पूरा चाँद</string>
+    <string name="moon_waning_gibbous">घटता चाँद</string>
+    <string name="moon_last_quarter">कृष्ण अष्टमी का चाँद</string>
+    <string name="moon_waning_crescent">घटता अर्धचंद्र</string>
+    <string name="tonight">आज रात: %1$s</string>
+    <string name="no_planets">आज रात कोई चमकीला ग्रह नहीं</string>
+    <string name="no_planets_up">कोई चमकीला ग्रह नहीं</string>
+    <string name="look_for">अंधेरा होने पर %1$s देखें</string>
+    <string name="seen_at_nine">आज रात 9 बजे</string>
+    <string name="up_now">अभी आकाश में</string>
+    <string name="sky_clear">साफ़</string>
+    <string name="sky_partly_cloudy">कुछ बादल</string>
+    <string name="sky_cloudy">बादल</string>
+    <string name="sky_fog">कोहरा</string>
+    <string name="sky_drizzle">बूँदाबाँदी</string>
+    <string name="sky_rain">बारिश</string>
+    <string name="sky_snow">बर्फ़</string>
+    <string name="sky_showers">बौछारें</string>
+    <string name="sky_storm">तूफ़ान</string>
+    <string name="weather">मौसम</string>
+    <string name="weather_waiting">मौसम का इंतज़ार…</string>
+    <string name="feels">महसूस %1$d°</string>
+    <string name="tomorrow_temps">कल %1$d° / %2$d°</string>
+    <string name="aqi_line">AQI %1$d · %2$s</string>
+    <string name="aqi_good">अच्छा</string>
+    <string name="aqi_moderate">ठीक</string>
+    <string name="aqi_poor">ख़राब</string>
+    <string name="aqi_unhealthy">हानिकारक</string>
+    <string name="aqi_very_poor">बहुत ख़राब</string>
+    <string name="aqi_hazardous">ख़तरनाक</string>
+
+    <string name="word_of_the_day">आज का हिंदी शब्द: %1$s</string>
+    <string name="gita_ref">गीता %1$s</string>
+    <string name="gita_line">गीता %1$s: %2$s</string>
+    <string name="meanwhile">इस बीच…</string>
+    <string name="fetching_news">Remo ख़बरें ला रहा है।</string>
+
+    <string name="btn_wifi">वाई-फ़ाई</string>
+    <string name="btn_voice">बोलें</string>
+    <string name="btn_memory">मेमोरी खाली करें</string>
+    <string name="btn_phone">फ़ोन से टीवी</string>
+    <string name="btn_settings">सेटिंग्स</string>
+    <string name="all_apps">सभी ऐप्स</string>
+    <string name="comic_today">आज…</string>
+    <string name="comic_all_apps">सभी\nऐप्स!</string>
+    <string name="today">आज</string>
+    <string name="cannot_open">यह ऐप खुल नहीं सका</string>
+    <string name="off">बंद</string>
+    <string name="sleep_title">स्लीप टाइमर</string>
+    <string name="sleep_off">बंद</string>
+    <string name="sleep_minutes">%1$d मिनट</string>
+    <string name="sleep_left">%1$d मिनट बाकी</string>
+    <string name="sleeping_in">%1$d मिनट में बंद</string>
+    <string name="sleep_warning">टीवी 1 मिनट में बंद होगा। रद्द करने के लिए होम खोलकर चाँद दबाएँ।</string>
+    <string name="radio">रेडियो</string>
+    <string name="radio_stop">रेडियो बंद करें</string>
+    <string name="radio_playing">चल रहा है</string>
+    <string name="darshan">लाइव दर्शन</string>
+    <string name="recipe">आज की रेसिपी</string>
+    <string name="recipe_today">आज: %1$s</string>
+    <string name="games">खेल</string>
+    <string name="game_memory">मेमोरी</string>
+    <string name="game_memory_sub">जोड़ियाँ ढूँढें</string>
+    <string name="game_tictactoe">टिक-टैक-टो</string>
+    <string name="game_tictactoe_sub">टीवी के ख़िलाफ़ खेलें</string>
+    <string name="memory_freed">%1$d MB खाली हुआ · %3$d MB में से %2$d MB खाली</string>
+
+    <string name="game_hint">तीर से चलें · OK से खेलें · Back से बाहर</string>
+    <string name="game_memory_start">मेमोरी: जोड़ियाँ ढूँढें</string>
+    <string name="game_memory_won">%1$d चालों में सब मिल गए! नए खेल के लिए OK</string>
+    <string name="game_memory_pair">एक जोड़ी! %2$d में से %1$d</string>
+    <string name="game_moves">चालें: %1$d</string>
+    <string name="game_tictactoe_long">टीवी के ख़िलाफ़ टिक-टैक-टो</string>
+    <string name="game_ttt_start">टिक-टैक-टो: आप ✕ हैं, टीवी ○ है</string>
+    <string name="game_ttt_thinking">टीवी सोच रहा है…</string>
+    <string name="game_ttt_your_turn">आपकी बारी</string>
+    <string name="game_ttt_win">आप जीते! 🎉 · फिर खेलने के लिए OK</string>
+    <string name="game_ttt_lose">टीवी जीता · फिर खेलने के लिए OK</string>
+    <string name="game_ttt_draw">बराबरी · फिर खेलने के लिए OK</string>
+
+    <string name="drop_title">अपने फ़ोन से भेजें</string>
+    <string name="drop_scan_me">मुझे अपने फ़ोन से स्कैन करें!</string>
+    <string name="drop_steps">1.  फ़ोन का कैमरा खोलकर कोड की ओर करें।\n2.  जो लिंक आए उसे दबाएँ (फ़ोन उसी वाई-फ़ाई पर हो)।\n3.  YouTube लिंक डालें या फ़ोटो चुनें, और Send दबाएँ।</string>
+    <string name="drop_no_network">टीवी नेटवर्क पर नहीं है।</string>
+    <string name="drop_waiting">आपके फ़ोन का इंतज़ार…</string>
+    <string name="drop_close">बंद करने के लिए Back दबाएँ। पेज बंद होते ही लिंक काम करना बंद कर देगा।</string>
+    <string name="drop_port_failed">पोर्ट %1$d पर पेज नहीं खुल सका।</string>
+    <string name="drop_card_body">OK: स्कैन के लिए कोड दिखाएँ।\nYouTube लिंक या फ़ोटो भेजें।</string>
+
+    <string name="today_head">आज!</string>
+    <string name="card_panchang">पंचांग</string>
+    <string name="card_coming">आगे क्या है</string>
+    <string name="nothing_coming">कैलेंडर में अभी कुछ नहीं</string>
+    <string name="card_sky">रात का आकाश</string>
+    <string name="card_word">आज का हिंदी शब्द</string>
+    <string name="card_gita">भगवद् गीता</string>
+    <string name="card_storage">स्टोरेज और मेमोरी</string>
+    <string name="storage_line">स्टोरेज: %2$s में से %1$s खाली</string>
+    <string name="memory_line">मेमोरी: %2$s में से %1$s खाली</string>
+    <string name="ok_frees_memory">OK से मेमोरी खाली करें</string>
+    <string name="free_amount">%1$s खाली</string>
+    <string name="freed_amount">%1$s खाली हुआ</string>
+    <string name="sleep_card_standby">OK: 30, 60, 90 मिनट या बंद।\nटीवी स्टैंडबाय में जाएगा।</string>
+    <string name="sleep_card_pause">OK: 30, 60, 90 मिनट या बंद।\nवीडियो और रेडियो रुक जाएँगे।</string>
+    <string name="card_sound">स्क्रीनसेवर की आवाज़</string>
+    <string name="sound_rain">बारिश</string>
+    <string name="sound_bells">मंदिर की घंटियाँ</string>
+    <string name="sound_both">बारिश और मंदिर की घंटियाँ</string>
+    <string name="sound_card_body">OK: बंद, बारिश, घंटियाँ या दोनों।\nस्क्रीनसेवर के साथ धीमे बजती है।</string>
+    <string name="radio_card_off">OK: आकाशवाणी, FM Gold,\nभजन और बहुत कुछ।</string>
+    <string name="radio_card_on">होम पर चलता रहता है।\nOK: स्टेशन बदलें या बंद करें।</string>
+    <string name="darshan_card_title">मंदिर, लाइव</string>
+    <string name="darshan_card_body">OK: मंदिर चुनें और YouTube पर\nउसका लाइव दर्शन देखें।</string>
+    <string name="recipe_card_body">OK: बनाने का तरीका देखें।</string>
+    <string name="games_card_title">मेमोरी · टिक-टैक-टो</string>
+    <string name="games_card_body">OK: रिमोट से खेलने के लिए\nखेल चुनें।</string>
+    <string name="card_screen_time">स्क्रीन टाइम</string>
+    <string name="screen_time_off">चालू नहीं है</string>
+    <string name="screen_time_off_body">कंप्यूटर से एक बार अनुमति देनी होगी।</string>
+    <string name="screen_time_this_week">इस हफ़्ते %1$s</string>
+    <string name="screen_time_last_week">पिछले हफ़्ते %1$s</string>
+
+    <string name="quiz_question">यह कहाँ है?</string>
+    <string name="quiz_hint">जवाब थोड़ी देर में…</string>
+</resources>

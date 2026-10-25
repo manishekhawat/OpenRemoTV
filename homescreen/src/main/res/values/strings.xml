@@ -2,28 +2,119 @@
 <resources>
     <string name="app_name" translatable="false">OpenRemoTV Home</string>
 
+    <!-- Greetings -->
     <string name="good_morning">Good morning</string>
     <string name="good_afternoon">Good afternoon</string>
     <string name="good_evening">Good evening</string>
     <string name="good_night">Good night</string>
+    <string name="remo_morning">Good morning from Remo!</string>
+    <string name="remo_afternoon">Good afternoon from Remo!</string>
+    <string name="remo_evening">Good evening from Remo!</string>
+    <string name="remo_night">Good night from Remo!</string>
+    <string name="remo_late">Up late? Good night from Remo!</string>
+
+    <!-- Panchang -->
+    <string-array name="tithi">
+        <item>Pratipada</item><item>Dwitiya</item><item>Tritiya</item><item>Chaturthi</item><item>Panchami</item>
+        <item>Shashthi</item><item>Saptami</item><item>Ashtami</item><item>Navami</item><item>Dashami</item>
+        <item>Ekadashi</item><item>Dwadashi</item><item>Trayodashi</item><item>Chaturdashi</item><item>Purnima</item>
+    </string-array>
+    <string-array name="hindu_month">
+        <item>Chaitra</item><item>Vaishakh</item><item>Jyeshtha</item><item>Ashadh</item><item>Shravan</item>
+        <item>Bhadrapad</item><item>Ashwin</item><item>Kartik</item><item>Margashirsha</item><item>Paush</item>
+        <item>Magh</item><item>Phalgun</item>
+    </string-array>
+    <string-array name="nakshatra">
+        <item>Ashwini</item><item>Bharani</item><item>Krittika</item><item>Rohini</item><item>Mrigashira</item>
+        <item>Ardra</item><item>Punarvasu</item><item>Pushya</item><item>Ashlesha</item><item>Magha</item>
+        <item>Purva Phalguni</item><item>Uttara Phalguni</item><item>Hasta</item><item>Chitra</item><item>Swati</item>
+        <item>Vishakha</item><item>Anuradha</item><item>Jyeshtha</item><item>Mula</item><item>Purva Ashadha</item>
+        <item>Uttara Ashadha</item><item>Shravana</item><item>Dhanishta</item><item>Shatabhisha</item>
+        <item>Purva Bhadrapada</item><item>Uttara Bhadrapada</item><item>Revati</item>
+    </string-array>
+    <string name="shukla">Shukla</string>
+    <string name="krishna">Krishna</string>
+    <string name="adhik">Adhik %1$s</string>
+    <string name="purnima">Purnima</string>
+    <string name="amavasya">Amavasya</string>
+    <string name="ekadashi">Ekadashi</string>
     <string name="rahu_kaal">Rahu kaal %1$s – %2$s</string>
     <string name="sunset_at">Sunset %1$s</string>
     <string name="sunrise_tomorrow">Sunrise tomorrow %1$s</string>
-    <string name="word_of_the_day">Hindi word of the day: %1$s</string>
+    <string name="sun_times">Sunrise %1$s · Sunset %2$s</string>
+    <string name="tithi_until">Tithi until %1$s</string>
+    <string name="tithi_from">%1$s from %2$s</string>
+    <string name="nakshatra_is">Nakshatra %1$s</string>
+    <string name="event_today">%1$s today</string>
+    <string name="event_tomorrow">%1$s tomorrow</string>
+    <string name="event_on">%1$s on %2$s</string>
+    <string name="event_in_days">%1$s in %2$d days</string>
+    <string name="no_festival">No festival this week</string>
+
+    <!-- Sky and weather -->
+    <string-array name="planets">
+        <item>Mercury</item><item>Venus</item><item>Earth</item><item>Mars</item><item>Jupiter</item><item>Saturn</item>
+    </string-array>
+    <string name="moon_new">New moon</string>
+    <string name="moon_waxing_crescent">Waxing crescent</string>
+    <string name="moon_first_quarter">First quarter</string>
+    <string name="moon_waxing_gibbous">Waxing gibbous</string>
+    <string name="moon_full">Full moon</string>
+    <string name="moon_waning_gibbous">Waning gibbous</string>
+    <string name="moon_last_quarter">Last quarter</string>
+    <string name="moon_waning_crescent">Waning crescent</string>
     <string name="tonight">Tonight: %1$s</string>
     <string name="no_planets">No bright planets up tonight</string>
+    <string name="no_planets_up">No bright planets up</string>
     <string name="look_for">Look for %1$s after dark</string>
-    <string name="cannot_open">That app can\'t be opened</string>
+    <string name="seen_at_nine">Seen at 9 pm tonight</string>
+    <string name="up_now">Up now</string>
+    <string name="sky_clear">Clear</string>
+    <string name="sky_partly_cloudy">Partly cloudy</string>
+    <string name="sky_cloudy">Cloudy</string>
+    <string name="sky_fog">Fog</string>
+    <string name="sky_drizzle">Drizzle</string>
+    <string name="sky_rain">Rain</string>
+    <string name="sky_snow">Snow</string>
+    <string name="sky_showers">Showers</string>
+    <string name="sky_storm">Storm</string>
+    <string name="weather">Weather</string>
+    <string name="weather_waiting">Waiting for the forecast…</string>
+    <string name="feels">Feels %1$d°</string>
+    <string name="tomorrow_temps">Tomorrow %1$d° / %2$d°</string>
+    <string name="aqi_line">AQI %1$d · %2$s</string>
+    <string name="aqi_good">Good</string>
+    <string name="aqi_moderate">Moderate</string>
+    <string name="aqi_poor">Poor</string>
+    <string name="aqi_unhealthy">Unhealthy</string>
+    <string name="aqi_very_poor">Very poor</string>
+    <string name="aqi_hazardous">Hazardous</string>
 
+    <!-- Daily -->
+    <string name="word_of_the_day">Hindi word of the day: %1$s</string>
+    <string name="gita_ref">Gita %1$s</string>
+    <string name="gita_line">Gita %1$s: %2$s</string>
+    <string name="meanwhile">MEANWHILE…</string>
+    <string name="fetching_news">Remo is fetching the news.</string>
+
+    <!-- Buttons and pop-ups -->
+    <string name="btn_wifi">Wi-Fi</string>
+    <string name="btn_voice">Speak</string>
+    <string name="btn_memory">Free memory</string>
+    <string name="btn_phone">Phone to TV</string>
+    <string name="btn_settings">Settings</string>
     <string name="all_apps">All apps</string>
+    <string name="comic_today">TODAY…</string>
+    <string name="comic_all_apps">ALL\nAPPS!</string>
     <string name="today">Today</string>
-
+    <string name="cannot_open">That app can\'t be opened</string>
+    <string name="off">Off</string>
     <string name="sleep_title">Sleep timer</string>
     <string name="sleep_off">Off</string>
     <string name="sleep_minutes">%1$d minutes</string>
     <string name="sleep_left">%1$d min left</string>
+    <string name="sleeping_in">Sleeping in %1$d min</string>
     <string name="sleep_warning">The TV goes to sleep in 1 minute. Open Home and press the moon to cancel.</string>
-
     <string name="radio">Radio</string>
     <string name="radio_stop">Stop the radio</string>
     <string name="radio_playing">Playing</string>
@@ -37,6 +128,65 @@
     <string name="game_tictactoe_sub">Play against the TV</string>
     <string name="memory_freed">Freed %1$d MB · %2$d MB of %3$d MB free</string>
 
+    <!-- Games -->
+    <string name="game_hint">Arrows to move · OK to play · Back to leave</string>
+    <string name="game_memory_start">Memory: find the pairs</string>
+    <string name="game_memory_won">All found in %1$d moves! OK for a new game</string>
+    <string name="game_memory_pair">A pair! %1$d of %2$d</string>
+    <string name="game_moves">Moves: %1$d</string>
+    <string name="game_tictactoe_long">Tic-tac-toe against the TV</string>
+    <string name="game_ttt_start">Tic-tac-toe: you are ✕, the TV is ○</string>
+    <string name="game_ttt_thinking">The TV is thinking…</string>
+    <string name="game_ttt_your_turn">Your turn</string>
+    <string name="game_ttt_win">You win! 🎉 · OK to play again</string>
+    <string name="game_ttt_lose">The TV wins · OK to play again</string>
+    <string name="game_ttt_draw">A draw · OK to play again</string>
+
+    <!-- Phone to TV -->
+    <string name="drop_title">Send from your phone</string>
+    <string name="drop_scan_me">Scan me with your phone!</string>
+    <string name="drop_steps">1.  Open your phone\'s camera and point it at the code.\n2.  Tap the link that appears (your phone must be on the same Wi-Fi).\n3.  Paste a YouTube link, or pick a photo, and press Send.</string>
+    <string name="drop_no_network">The TV is not on the network.</string>
+    <string name="drop_waiting">Waiting for your phone…</string>
+    <string name="drop_close">Press Back to close. The link stops working when this page closes.</string>
+    <string name="drop_port_failed">Could not open the page on port %1$d.</string>
+    <string name="drop_card_body">OK: show a code to scan.\nSend a YouTube link or a photo.</string>
+
+    <!-- Today page -->
+    <string name="today_head">TODAY!</string>
+    <string name="card_panchang">Panchang</string>
+    <string name="card_coming">Coming up</string>
+    <string name="nothing_coming">Nothing in the calendar yet</string>
+    <string name="card_sky">Night sky</string>
+    <string name="card_word">Hindi word of the day</string>
+    <string name="card_gita">Bhagavad Gita</string>
+    <string name="card_storage">Storage and memory</string>
+    <string name="storage_line">Storage: %1$s free of %2$s</string>
+    <string name="memory_line">Memory: %1$s free of %2$s</string>
+    <string name="ok_frees_memory">OK frees memory</string>
+    <string name="free_amount">%1$s free</string>
+    <string name="freed_amount">Freed %1$s</string>
+    <string name="sleep_card_standby">OK: 30, 60, 90 minutes or off.\nThe TV goes to standby.</string>
+    <string name="sleep_card_pause">OK: 30, 60, 90 minutes or off.\nStops playback and the radio.</string>
+    <string name="card_sound">Screensaver sound</string>
+    <string name="sound_rain">Rain</string>
+    <string name="sound_bells">Temple bells</string>
+    <string name="sound_both">Rain and temple bells</string>
+    <string name="sound_card_body">OK: off, rain, temple bells or both.\nPlays softly while the screensaver shows.</string>
+    <string name="radio_card_off">OK: All India Radio, FM Gold,\nbhajans and more.</string>
+    <string name="radio_card_on">Keeps playing on Home.\nOK: change station or stop.</string>
+    <string name="darshan_card_title">Temples, live</string>
+    <string name="darshan_card_body">OK: pick a temple to watch\nits live stream on YouTube.</string>
+    <string name="recipe_card_body">OK: watch how it\'s made.</string>
+    <string name="games_card_title">Memory · Tic-tac-toe</string>
+    <string name="games_card_body">OK: pick a game to play\nwith the remote.</string>
+    <string name="card_screen_time">Screen time</string>
+    <string name="screen_time_off">Not switched on</string>
+    <string name="screen_time_off_body">Needs usage access, given once from the computer.</string>
+    <string name="screen_time_this_week">This week %1$s</string>
+    <string name="screen_time_last_week">Last week %1$s</string>
+
+    <!-- Screensaver -->
     <string name="quiz_question">Where is this?</string>
     <string name="quiz_hint">The answer in a moment…</string>
 </resources>

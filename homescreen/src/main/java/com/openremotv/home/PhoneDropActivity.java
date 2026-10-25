@@ -61,6 +61,7 @@ public class PhoneDropActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
+        L10n.init(this);
         density = getResources().getDisplayMetrics().density;
         FrameLayout root = new FrameLayout(this);
         boolean comic = false;
@@ -98,7 +99,7 @@ public class PhoneDropActivity extends Activity {
             LinearLayout strip = new LinearLayout(this);
             strip.setGravity(Gravity.CENTER_VERTICAL);
             strip.addView(new ComicHome.Remo(this), new LinearLayout.LayoutParams(dp(84), dp(84)));
-            TextView bubble = text(20, 0xFFFFFFFF, "Scan me with your phone!");
+            TextView bubble = text(20, 0xFFFFFFFF, getString(R.string.drop_scan_me));
             bubble.setBackground(new ComicHome.BubbleDrawable(density));
             bubble.setPadding(dp(16), dp(8), dp(16), dp(18));
             LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -107,16 +108,14 @@ public class PhoneDropActivity extends Activity {
             strip.addView(bubble, bp);
             text.addView(strip);
         }
-        text.addView(text(32, 0xFFFFFFFF, comic ? "SEND FROM YOUR PHONE!" : "Send from your phone"));
-        TextView how = text(19, 0xE6FFFFFF, "1.  Open your phone's camera and point it at the code.\n"
-                + "2.  Tap the link that appears (your phone must be on the same Wi-Fi).\n"
-                + "3.  Paste a YouTube link, or pick a photo, and press Send.");
+        text.addView(text(32, 0xFFFFFFFF, comic ? getString(R.string.drop_title).toUpperCase(java.util.Locale.getDefault()) : getString(R.string.drop_title)));
+        TextView how = text(19, 0xE6FFFFFF, getString(R.string.drop_steps));
         how.setLineSpacing(dp(8), 1f);
         LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         hp.topMargin = dp(18);
         text.addView(how, hp);
-        status = text(17, 0xFFFFD54F, address == null ? "The TV is not on the network." : "Waiting for your phone…");
+        status = text(17, 0xFFFFD54F, getString(address == null ? R.string.drop_no_network : R.string.drop_waiting));
         if (comic) {
             status.setBackground(new ComicHome.CaptionDrawable(density));
             status.setPadding(dp(10), dp(4), dp(10), dp(4));
@@ -125,7 +124,7 @@ public class PhoneDropActivity extends Activity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         sp.topMargin = dp(22);
         text.addView(status, sp);
-        text.addView(text(15, 0x99FFFFFF, "Press Back to close. The link stops working when this page closes."), sp);
+        text.addView(text(15, 0x99FFFFFF, getString(R.string.drop_close)), sp);
 
         photo = new ImageView(this);
         photo.setBackgroundColor(Color.BLACK);
@@ -179,7 +178,7 @@ public class PhoneDropActivity extends Activity {
                 }
             }
         } catch (Exception e) {
-            runOnUiThread(() -> status.setText("Could not open the page on port " + PORT + "."));
+            runOnUiThread(() -> status.setText(getString(R.string.drop_port_failed, PORT)));
         }
     }
 
