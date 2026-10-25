@@ -244,20 +244,23 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                 else "Optional. A new home screen only stays if it really takes over Home.") {
                 Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HomeChoice("MANGAHOME", "Ink-black manga pages, comic-panel cards and Remo, on the clean tile home screen.") {
+                        if (busy.isNotEmpty()) return@HomeChoice
+                        busy = "Putting MangaHome on your TV…"
                         run {
-                            val ok = sweeper.installHome("manga") { busy = it }
-                            busy = ""
+                            val ok = try { sweeper.installHome("manga") { busy = it } } finally { busy = "" }
                             if (ok) { homeName = "MangaHome"; if (homeOnly) { homeOnly = false; step = null; say("MangaHome is on your TV!") } else step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
                     HomeChoice("INDIAMINIMALIST", "Monuments of India and the world, the Panchang, festivals and glass cards.") {
+                        if (busy.isNotEmpty()) return@HomeChoice
+                        busy = "Putting IndiaMinimalist on your TV…"
                         run {
-                            val ok = sweeper.installHome("india") { busy = it }
-                            busy = ""
+                            val ok = try { sweeper.installHome("india") { busy = it } } finally { busy = "" }
                             if (ok) { homeName = "IndiaMinimalist"; if (homeOnly) { homeOnly = false; step = null; say("IndiaMinimalist is on your TV!") } else step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
                     HomeChoice(if (homeOnly) "CANCEL" else "KEEP MY HOME SCREEN", "Leave it as it is.") {
+                        if (busy.isNotEmpty()) return@HomeChoice
                         if (homeOnly) { homeOnly = false; step = null } else step = Step.DONE
                     }
                     if (busy.isNotEmpty()) SpeechBubble(busy)
