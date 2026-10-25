@@ -101,10 +101,18 @@ class Tv(private val context: Context) {
 
     private suspend fun keyStream(): dadb.AdbStream = keysLock.withLock {
         keys ?: withContext(Dispatchers.IO) {
+            // Written through the shell rather than pushed: a push racing the other commands left an empty file.
+            val dex = context.assets.open("keyserver.dex").use { it.readBytes() }
+            val b64 = android.util.Base64.encodeToString(dex, android.util.Base64.NO_WRAP)
+            // In pieces small enough for any ADB connection's packet size.
+            shell("rm -f /data/local/tmp/km8keys.b64")
+            b64.chunked(2000).forEach { shell("echo -n $it >> /data/local/tmp/km8keys.b64") }
+            val size = shell(
+                "base64 -d /data/local/tmp/km8keys.b64 > /data/local/tmp/km8keys.dex && rm /data/local/tmp/km8keys.b64 && " +
+                        "stat -c %s /data/local/tmp/km8keys.dex"
+            ).trim()
+            check(size == dex.size.toString()) { "key helper not copied ($size)" }
             val d = lock.withLock { dadb ?: open() }
-            val dex = File(context.cacheDir, "keyserver.dex")
-            context.assets.open("keyserver.dex").use { input -> dex.outputStream().use { input.copyTo(it) } }
-            d.push(dex, "/data/local/tmp/km8keys.dex", 420, System.currentTimeMillis())
             val stream = d.open("shell:CLASSPATH=/data/local/tmp/km8keys.dex exec app_process / KeyServer")
             // Read its answers as they come so its output never backs up; the stream closing means it ended.
             Thread {
