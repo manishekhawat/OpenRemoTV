@@ -102,7 +102,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     // ADB over Wi-Fi to the TV (pairing by the TV's "Allow USB debugging?" prompt, shell, file push).
-    implementation("dev.mobile:dadb:1.2.10")
+    implementation("dev.mobile:dadb:2.0.0")
 
     testImplementation("junit:junit:4.13.2")
 }
