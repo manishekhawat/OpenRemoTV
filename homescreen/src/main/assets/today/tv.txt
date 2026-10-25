@@ -1,9 +1,12 @@
-# Live TV: name | language and what it shows | stream address. Seven free HD channels, Hindi first, from
+# Live TV: name | language and what it shows | stream address. Ten free HD channels: Hindi news, movies and sport, then English, from
 # the iptv-org India list (live-tv/refresh.sh), each from the broadcaster's own or its partner's server, and each
 # played when checked on 2026-10-26. Free streams come and go: recheck with live-tv/check.py.
 DD National HD | Hindi · Doordarshan, India's public channel | https://mumbai-edge.smartplaytv.in/DDNational/index.m3u8
 Aaj Tak HD | Hindi · News | https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8
 News18 India | Hindi · News | https://n18syndication.akamaized.net/bpk-tv/News18_India_NW18_MOB/output01/master.m3u8
+The Movie Club | Hindi · Movies | https://sis-global.prod.samsungtv.plus/v1/tvpprd/sc-mp2ar4ca425xo.m3u8
+Zee South Flix | Hindi · South Indian films in Hindi | https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c9-amgplt0173/playlist.m3u8
+DD Sports | Hindi · Sport from Doordarshan | https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/b17adfe543354fdd8d189b110617cddd/index.m3u8
 DD India | English · Doordarshan's world channel | https://mumbai-edge.smartplaytv.in/DDIndia/index.m3u8
 India Today | English · News | https://d1rc86nwwc9fag.cloudfront.net/vglive-sk-293160/master.m3u8
 CNN-News18 | English · News | https://n18syndication.akamaized.net/bpk-tv/CNN_News18_NW18_MOB/output01/master.m3u8
