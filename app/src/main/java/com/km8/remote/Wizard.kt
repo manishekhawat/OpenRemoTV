@@ -107,6 +107,8 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
     var homeName by remember { mutableStateOf("Unchanged") }
     var search by remember { mutableStateOf("") }
     var confirmUndo by remember { mutableStateOf(false) }
+    /** Came straight to the home screen choice from the start page, not through a sweep. */
+    var homeOnly by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { run { info = Lists.info(tv) } }
 
@@ -146,6 +148,7 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                     ?: "Looking at your TV…")
                 Steps(listOf("Backup", "Sweep", "Home", "Done", "Share"))
                 MangaButton("START THE SWEEP!", Modifier.fillMaxWidth(), loud = true) { step = Step.BACKUP }
+                MangaButton("🎨  CHANGE HOME SCREEN THEME", Modifier.fillMaxWidth()) { homeOnly = true; step = Step.HOME }
                 MangaButton("↩  UNDO ANYTIME", Modifier.fillMaxWidth()) { confirmUndo = true }
                 Text("Apps are turned off, never deleted. Your first backup is kept forever.", color = Ink.muted, fontSize = 13.sp)
             }
@@ -236,23 +239,27 @@ internal fun SweepScreen(tv: Tv, apps: Apps, run: (suspend () -> Unit) -> Unit, 
                 SpeechBubble(progress.ifEmpty { "Here we go!" })
             }
 
-            Step.HOME -> Page("4 · CLEAN HOME SCREEN", "Optional. A new home screen only stays if it really takes over Home.") {
+            Step.HOME -> Page(if (homeOnly) "HOME SCREEN THEME" else "4 · CLEAN HOME SCREEN",
+                if (homeOnly) "Pick a look for the TV's home screen. It only stays if it really takes over Home."
+                else "Optional. A new home screen only stays if it really takes over Home.") {
                 Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     HomeChoice("MANGAHOME", "Ink-black manga pages, comic-panel cards and Remo, on the clean tile home screen.") {
                         run {
                             val ok = sweeper.installHome("manga") { busy = it }
                             busy = ""
-                            if (ok) { homeName = "MangaHome"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
+                            if (ok) { homeName = "MangaHome"; if (homeOnly) { homeOnly = false; step = null; say("MangaHome is on your TV!") } else step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
                     HomeChoice("INDIAMINIMALIST", "Monuments of India and the world, the Panchang, festivals and glass cards.") {
                         run {
                             val ok = sweeper.installHome("india") { busy = it }
                             busy = ""
-                            if (ok) { homeName = "IndiaMinimalist"; step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
+                            if (ok) { homeName = "IndiaMinimalist"; if (homeOnly) { homeOnly = false; step = null; say("IndiaMinimalist is on your TV!") } else step = Step.DONE } else say("Your TV kept its old home screen; nothing changed.")
                         }
                     }
-                    HomeChoice("KEEP MY HOME SCREEN", "Leave it as it is.") { step = Step.DONE }
+                    HomeChoice(if (homeOnly) "CANCEL" else "KEEP MY HOME SCREEN", "Leave it as it is.") {
+                        if (homeOnly) { homeOnly = false; step = null } else step = Step.DONE
+                    }
                     if (busy.isNotEmpty()) SpeechBubble(busy)
                 }
             }
