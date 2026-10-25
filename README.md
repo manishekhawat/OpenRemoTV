@@ -1,67 +1,111 @@
 # OpenRemoTV
 
-A phone app for Android TV, Google TV and Fire TV, inspired by [TidyTV](https://github.com/jolan94/tidytv) (MIT),
-with a manga look and an original mascot, Remo. It talks to the TV over Wi-Fi with ADB (port 5555), using
-[dadb](https://github.com/mobile-dev-inc/dadb), plus a small helper it starts on the TV (`keyserver/`) for instant
-keys, files and app switches.
+**OpenRemoTV is a free, open-source phone app that remotes, debloats and restyles Android TV, Google TV and Fire TV
+over Wi-Fi, with no root.** It turns off the bloatware your TV came with (disabled, never uninstalled), backs
+everything up first, and puts it all back with one tap. It also gives your TV a clean manga or India-themed home
+screen.
 
-First run: **Pick my TV** (Android TV, Google TV or Fire TV, with the steps to turn on network debugging) and
-**Connect**. Then the **Sweep** tab walks through **Backup** (always first; the first backup of each TV is kept as
-the original), the **tested list** for this TV (260 TVs from cleanyourtv's `examples/`, matched by model, or the
-common list), a switch per app, the **sweep** itself, an optional **clean home screen** (MangaHome or IndiaMinimalist, on the bundled cleanyourtv launcher, or keep the current one), **Done**, **Share it** (a manga card through the share sheet)
-and **Undo anytime** (back to the original backup). Rebuild the lists with `python3 tools/make-lists.py ../cleanyourtv`.
+<p>
+  <img src="docs/screenshots/phone-remote.png" alt="The OpenRemoTV remote on a phone" width="200">
+  <img src="docs/screenshots/phone-sweep.png" alt="The Sweep screen, with Backup, Sweep, Home, Done and Share steps" width="200">
+  <img src="docs/screenshots/phone-pick.png" alt="Picking the kind of TV" width="200">
+</p>
+<img src="docs/screenshots/tv-mangahome.png" alt="The MangaHome home screen on a TV: comic panels for the clock, weather, today and apps" width="620">
 
-- **Remote:** arrows, OK, back, home, play/pause, volume, mute, power, and typing into the TV.
-- **Apps:** everything on the TV's home screen; tap to open it on the TV.
-- **Send:** a YouTube link plays in YouTube on the TV; a photo or video opens on the TV; any file lands in the TV's
-  Download/OpenRemoTV folder. Share from YouTube, Photos or Files to "OpenRemoTV" to send in one tap.
-- **Sweep:** turn apps off and on (disabled, never uninstalled); apps the TV needs are locked. "Undo everything"
-  turns back on all that this phone turned off. Each change is logged on the TV in /sdcard/OpenRemoTV/changes.txt.
-- **Check:** finds apps a TV update switched back on (compared with the last backup on this phone and this app's own changes).
+## What it does
 
-## What's in this repo
+- **Remote.** Arrows, OK, Back, Home, play and pause, volume, mute, power, and typing on the TV. Keys land in about
+  15 ms, and holding an arrow repeats it.
+- **Apps.** Every app on the TV; tap one to open it on the TV.
+- **Send.** A YouTube link plays on the TV; a photo, video or any file opens there. Share from YouTube, Photos or
+  Files straight to OpenRemoTV.
+- **Sweep (debloat).** Backup → pick a tested list for your TV (260 TVs) or the common list → choose apps → sweep →
+  optional clean home screen → done → share it. **Undo anytime** goes back to your very first backup.
+- **Check.** Finds apps a TV update switched back on, and turns them off again.
+- **Two home screens.** **MangaHome**, a whole comic page with Remo the mascot, and **IndiaMinimalist**, with monuments
+  and landscapes of India, the Panchang and festivals. Switch between them any time from the Sweep tab.
+- **English and Hindi.**
 
-| Folder | What it is |
-|---|---|
-| `app/` | The OpenRemoTV phone app (Kotlin, Jetpack Compose). |
-| `app/src/main/assets/themes/manga` | The **MangaHome** theme: a full comic-page home screen (`manga_layout`), Remo and six manga wallpapers. |
-| `app/src/main/assets/themes/india` | The **IndiaMinimalist** theme: monuments and landscapes of India, the Panchang, festivals and glass cards. |
-| `homescreen/` | The TV home screen both themes run on: OpenRemoTV Home (`com.openremotv.home`), built on the cleanyourtv launcher by Gathin (MIT, see `homescreen/LICENSE-cleanyourtv`) with the MangaHome comic page, Today, radio, games, Phone to TV and the other additions. |
-| `keyserver/` | The small helper OpenRemoTV starts on the TV for instant keys, files and app switches. Its built `keyserver.dex` is in `app/src/main/assets`. |
-| `tools/` | `make-lists.py` rebuilds the tested debloat lists; `build-all.sh` builds the home screen and the app; `build-keyserver.sh` rebuilds the TV helper. |
+## Install
 
-## Build and install
+1. Download the latest `OpenRemoTV-<version>.apk` from [Releases](../../releases) on your phone and open it
+   (allow "Install unknown apps" for your browser or file manager).
+2. On the TV, turn on developer options and network debugging. The app shows the exact steps for Android TV,
+   Google TV and Fire TV.
+3. Open OpenRemoTV, tap **Find my TV**, then **Connect**, and on the TV tick **Always allow** and press OK.
 
-`tools/build-all.sh` builds the home screen, bundles it into the app as `assets/manga-home.apk` (OpenRemoTV installs it
-on the TV when you pick MangaHome or IndiaMinimalist), then builds the app. JDK 17 and the Android SDK (platform 34)
-are needed. Or build the app alone, if `assets/manga-home.apk` is already there:
+## FAQ
+
+### How do I remove bloatware from Android TV without root?
+
+Use ADB's "disable for this user" command (`pm disable-user`), which turns an app off without uninstalling it. Root
+isn't needed, and every app can be turned back on. OpenRemoTV does this for you from your phone, one switch per
+app, starting from a list tested on a TV like yours.
+
+### Is it safe?
+
+OpenRemoTV only disables apps, never uninstalls them, and it backs up first. Apps the TV needs to work (Android
+itself, settings, the keyboard, the Play Store, remote pairing, the TV inputs) are locked and can't be switched off.
+See [SECURITY.md](SECURITY.md).
+
+### How do I undo it?
+
+Open **Sweep** and tap **Undo anytime**. Every app that was on in your first backup comes back on, along with the
+original home screen and animation speeds. **Sweep by hand** has an **Undo everything** button too.
+
+### Which TVs work?
+
+Any TV or box running Android TV or Google TV on Android 8 or newer, and Fire TV for sweeping. The tested lists
+cover 260 models from TCL, Sony, Xiaomi, Philips, Hisense, Skyworth, Amazon Fire TV, Google, OnePlus, NVIDIA Shield and more.
+
+### Does it collect any data?
+
+No. There are no accounts, analytics or ads. See [PRIVACY.md](PRIVACY.md).
+
+### Is network debugging left open?
+
+ADB stays on until you turn it off. When you've finished sweeping, turn network debugging off again on the TV,
+because ADB's port 5555 isn't encrypted.
+
+## Build from source
+
+You need JDK 17 and the Android SDK (platform 35, build-tools 35).
 
 ```bash
-JAVA_HOME=$(/usr/libexec/java_home) ANDROID_HOME=/opt/homebrew/share/android-commandlinetools ./gradlew assembleRelease
+./gradlew :app:assembleRelease
 ```
 
-The APK is `app/build/outputs/apk/release/app-release.apk`. Copy it to the phone and open it to install
-(allow "Install unknown apps" for the app you open it with).
+That one command builds the TV helper (`keyserver/`) and the TV home screen (`homescreen/`), bundles both into the
+app, and writes `app/build/outputs/apk/release/app-release.apk`. Without a release key it is signed with your debug
+key; see [CONTRIBUTING.md](CONTRIBUTING.md) for tests, screenshots and signing.
 
-## First connection
+## Repository layout
 
-Phone and TV on the same Wi-Fi. Open the app, press "Find my TV" (or type its address, for example 192.168.1.50), then
-"Connect". The TV shows "Allow USB debugging?": tick "Always allow" and press OK. That is needed only once.
+| Folder | What it is |
+| --- | --- |
+| `app/` | The phone app (Kotlin, Jetpack Compose): `tv/` talks to the TV, `sweep/` debloats and restores, `send/` sends links and files, `ui/` draws the manga screens |
+| `app/src/main/assets/themes/` | The **MangaHome** and **IndiaMinimalist** themes: settings, wallpapers, captions and facts |
+| `homescreen/` | **OpenRemoTV Home**, the TV home screen the themes run on (Java, a fork of cleanyourtv) |
+| `keyserver/` | The small helper the app starts on the TV for instant keys, files and app switches |
+| `tools/make-lists.py` | Rebuilds `assets/lists.json` from cleanyourtv's tested TV lists |
+| `docs/` | Screenshots and the project website |
 
-`LiveTvTest` checks the library against a real TV from a computer: `OPENREMOTV_TV_HOST=192.168.1.50 ./gradlew testReleaseUnitTest`
-(macOS must allow Java on the local network).
+## How it works
 
-## Security
+The phone talks to the TV with ADB over Wi-Fi (port 5555), approved once on the TV. For instant keys it then starts
+a helper on the TV (port 8766). The helper answers only the phone that started it, and it signs in with an
+HMAC challenge, so its secret never crosses the network. Picking a home screen installs OpenRemoTV Home and copies
+the chosen theme's files into it.
 
-OpenRemoTV talks to the TV through ADB over Wi-Fi (port 5555), which the TV owner turns on and approves once per
-phone. Turn network debugging off again when you're done with the Sweep. For instant keys the app starts a small
-helper on the TV (port 8766). It answers only the phone that started it, and it signs in with a challenge, so its
-secret never crosses the network.
+## Contributing
 
-## Licence
+Bug reports, TV lists, translations and themes are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[code of conduct](CODE_OF_CONDUCT.md). Report security problems privately, as [SECURITY.md](SECURITY.md) describes.
+
+## Licence and credits
 
 OpenRemoTV is released under the [MIT licence](LICENSE). The home screen is a fork of
-[cleanyourtv](https://github.com/Gathin23/cleanyourtv) by Gathin (MIT). The IndiaMinimalist wallpapers are
-Wikimedia Commons photos under their own Creative Commons licences, credited in
+[cleanyourtv](https://github.com/Gathin23/cleanyourtv) by Gathin (MIT), and the tested TV lists come from its
+contributors. The Sweep flow was inspired by [TidyTV](https://github.com/jolan94/tidytv). The IndiaMinimalist
+photos are from Wikimedia Commons under their own Creative Commons licences, credited in
 [CREDITS.md](app/src/main/assets/themes/india/CREDITS.md). See [NOTICE.md](NOTICE.md) for everything else.
-

@@ -1,0 +1,36 @@
+name: Bug report
+description: Something doesn't work as it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open Sweep\n2. Tap …"
+  - type: input
+    id: app
+    attributes:
+      label: OpenRemoTV version
+      description: Tap the name in the bottom bar to see it on the About screen.
+    validations:
+      required: true
+  - type: input
+    id: tv
+    attributes:
+      label: TV model, Android version and firmware
+      placeholder: "MECOOL KM8, Android TV 8.0, firmware …"
+    validations:
+      required: true
+  - type: input
+    id: phone
+    attributes:
+      label: Phone and Android version
+  - type: markdown
+    attributes:
+      value: "Please don't paste IP addresses, Wi-Fi names, serial numbers or account details."

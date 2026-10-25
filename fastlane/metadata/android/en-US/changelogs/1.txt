@@ -1,0 +1,1 @@
+First open-source release: remote, apps, send, sweep with 260 tested TV lists, check, undo anytime, MangaHome and IndiaMinimalist home screens, English and Hindi.
